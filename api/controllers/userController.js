@@ -306,3 +306,113 @@ export const updatePassword = async (req, res) => {
     });
   }
 };
+
+
+
+
+
+export const upgradeToDealer = async (req, res) => {
+  try {
+    const userId = req.user.id; 
+
+    const {
+      businessName,
+      businessRegistrationNumber,
+      businessAddress,
+      state,
+      lga,
+      phoneNumber,
+      website,
+      description,
+      logo,
+      yearEstablished,
+    } = req.body;
+
+    // 1. Prevent already dealers or higher roles
+    const user = await User.findById(userId);
+    if (user.role === 'dealer') {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'You are already a registered dealer.',
+      });
+    }
+
+    if (user.role === 'service-provider' || user.role === 'superadmin') {
+      return res.status(403).json({
+        status: 'fail',
+        message: 'This account type cannot be converted to dealer.',
+      });
+    }
+
+    // 2. Validate required dealer fields
+    if (!businessName || !businessRegistrationNumber || !businessAddress || !state || !lga || !phoneNumber) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Please provide all required dealer information: business name, registration number, address, state, LGA, and phone number.',
+      });
+    }
+
+    // 3. Check if businessRegistrationNumber is already taken
+    const existingDealer = await User.findOne({
+      'dealerInfo.businessRegistrationNumber': businessRegistrationNumber,
+    });
+
+    if (existingDealer) {
+      return res.status(409).json({
+        status: 'fail',
+        message: 'This business registration number is already registered.',
+      });
+    }
+
+    // 4. Update user: change role + add dealerInfo
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        role: 'dealer',
+        phoneNumber,
+        dealerInfo: {
+          businessName: businessName.trim(),
+          businessRegistrationNumber: businessRegistrationNumber.trim(),
+          businessAddress: businessAddress.trim(),
+          state: state.trim(),
+          lga: lga.trim(),
+          website: website?.trim() || '',
+          description: description?.trim() || '',
+          logo: logo || user.avatar || '', // fallback to profile avatar
+          yearEstablished: yearEstablished ? Number(yearEstablished) : undefined,
+          verified: false, // admin must approve (optional)
+          verificationRequestedAt: new Date(),
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    ).select('-password');
+
+    // Optional: Send notification/email to admin
+    // await sendDealerVerificationRequestEmail(updatedUser);
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Congratulations! You are now a verified car dealer.',
+      data: {
+        user: updatedUser,
+      },
+    });
+  } catch (err) {
+    console.log('Upgrade to dealer error →'.red, err);
+
+    if (err.code === 11000) {
+      return res.status(409).json({
+        status: 'fail',
+        message: 'This business registration number is already in use.',
+      });
+    }
+
+    res.status(400).json({
+      status:  'fail',
+      message: err.message || 'Failed to upgrade account to dealer. Please try again.',
+    });
+  }
+};

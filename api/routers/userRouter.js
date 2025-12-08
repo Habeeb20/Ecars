@@ -1,6 +1,6 @@
 // routes/authRoutes.js
 import express from 'express';
-import { register, login, forgotPassword, resetPassword, getDashboard, getMe, updateMe, updatePassword } from '../controllers/userController.js';
+import { register, login, forgotPassword, resetPassword, getDashboard, getMe, updateMe, updatePassword, upgradeToDealer } from '../controllers/userController.js';
 import { protect } from '../middleware/verifyToken.js';
 
 
@@ -13,7 +13,7 @@ router.patch('/resetpassword/:token', resetPassword);
 // router.get("/me", protect, getDashboard)
 router.get("/me", protect, getMe)
 
-
+router.patch('/upgrade-to-dealer', protect, upgradeToDealer);
 
 router.put('/update-me', updateMe);
 router.put('/update-password', updatePassword);

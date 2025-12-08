@@ -127,7 +127,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'dealer', 'superadmin'],
+    enum: ['user', 'dealer','service-provider', 'superadmin'],
     default: 'user',
   },
   uniqueNumber: {
@@ -139,6 +139,12 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+    emailVerified: {
+    type: Boolean,
+    default: false,
+  },
+  emailVerificationToken: String,
+  emailVerificationExpires: Date,
 
   // === NEW OPTIONAL FIELDS ===
   phoneNumber: {
@@ -168,13 +174,48 @@ const userSchema = new mongoose.Schema({
     trim: true,
     maxlength: 200,
   },
+
+dealerInfo: {
+  businessName: {
+    type: String,
+    trim: true,
+    validate: {
+      validator: function (v) { return this.role !== 'dealer' || !!v; },
+      message: 'Business name is required',
+    },
+  },
+  businessRegistrationNumber: {
+    type: String,
+    trim: true,
+    unique: true,
+    sparse: true,
+    validate: {
+      validator: function (v) { return this.role !== 'dealer' || !!v; },
+      message: 'Business registration number is required',
+    },
+  },
+  businessAddress: {
+    type: String,
+    validate: { validator: function (v) { return this.role !== 'dealer' || !!v; }, message: 'Business address required' }
+  },
+  state: {
+    type: String,
+    validate: { validator: function (v) { return this.role !== 'dealer' || !!v; }, message: 'State required' }
+  },
+  lga: {
+    type: String,
+    validate: { validator: function (v) { return this.role !== 'dealer' || !!v; }, message: 'LGA required' }
+  },
+  // ... rest optional
+  verified: { type: Boolean, default: false },
+},
 }, { timestamps: true });
 
 // Hash password only when modified
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password, 12);
-  next();
+ 
 });
 
 // Generate unique 4-digit number
@@ -195,7 +236,7 @@ userSchema.pre('save', async function (next) {
   }
 
   if (!isUnique) return next(new Error('Failed to generate unique number'));
-  next();
+
 });
 
 // Password comparison
@@ -213,3 +254,53 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
 };
 
 export default mongoose.model('User', userSchema);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

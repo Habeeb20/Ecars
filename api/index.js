@@ -6,7 +6,9 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import { connectDb } from "./db.js";
 import router from "./routers/userRouter.js";
-
+import User from "./models/user.js";
+import adminRouter from "./routers/adminRouter.js";
+import carListingRouter from "./routers/carListingRoute.js"
 dotenv.config();
 connectDb()
 
@@ -38,6 +40,20 @@ app.get("/", (req, res) => {
 
 
 app.use("/api/users", router)
+app.use("/api/admin", adminRouter)
+app.use("/api/carlisting", carListingRouter)
+
+
+
+// await User.create({
+//   firstName: 'Admin',
+//   lastName: 'Boss',
+//   email: 'ecars@gmail.com',
+//   password: 'essential01',
+//   role: 'superadmin'
+// });
+
+// console.log('Superadmin created!');
 
 
 // Start server
