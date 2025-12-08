@@ -251,14 +251,14 @@ serviceProviderInfo: {
 
 // Hash password only when modified
 userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+  if (!this.isModified('password')) return ;
   this.password = await bcrypt.hash(this.password, 12);
  
 });
 
 // Generate unique 4-digit number
 userSchema.pre('save', async function (next) {
-  if (this.uniqueNumber) return next();
+  if (this.uniqueNumber) return ;
 
   let isUnique = false;
   let attempts = 0;

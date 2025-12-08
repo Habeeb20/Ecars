@@ -626,3 +626,10 @@ export const searchServiceAndDealers = async (req, res) => {
 
 
 
+
+
+
+
+
+
+// controllers/authController.js  ← Add this function

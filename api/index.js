@@ -40,8 +40,10 @@ app.get("/", (req, res) => {
 
 
 app.use("/api/users", router)
+
+app.use("/api/auth", router)
 app.use("/api/admin", adminRouter)
-app.use("/api/carlisting", carListingRouter)
+app.use("/api/cars", carListingRouter)
 
 
 

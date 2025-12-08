@@ -11,6 +11,8 @@ import ForgotPassword from './pages/auth/ForgotPassword';
 import ResetPassword from './pages/auth/ResetPassword';
 import DashboardLayout from './components/dashboard/DashboardLayout';
 import NavbarLayout from './components/layout/NavbarLayout';
+import AdminDashboardLayout from './pages/admin.jsx/AdminDashboard';
+import AdminLogin from './pages/admin.jsx/AdminLogin';
 
 const App = () => {
   return (
@@ -33,6 +35,12 @@ const App = () => {
         <Route element={<NavbarLayout />}>
             
         <Route path="/dashboard" element={<DashboardLayout />} />
+            
+        <Route path="/admin/dashboard" element={<AdminDashboardLayout />} />
+      
+        <Route path="/admin/login" element={<AdminLogin />} />
+
+
         </Route>
 
         {/* Pages WITHOUT Navbar + Footer */}

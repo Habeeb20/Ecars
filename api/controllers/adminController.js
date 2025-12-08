@@ -91,7 +91,24 @@ export const adminLogin = async (req, res) => {
 
 
 
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({})
+      .select('-password')
+      .sort('-createdAt');
 
+    res.status(200).json({
+      status: 'success',
+      results: users.length,
+      data: { users },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to fetch users',
+    });
+  }
+};
 
 export const getPendingDealers = async (req, res) => {
   try {
@@ -173,5 +190,55 @@ export const rejectDealer = async (req, res) => {
     });
   } catch (err) {
     res.status(400).json({ status: 'fail', message: err.message });
+  }
+};
+
+// controllers/adminController.js
+
+export const verifyUserEmail = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'User not found',
+      });
+    }
+
+    if (user.emailVerified) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Email is already verified',
+      });
+    }
+
+    // Manually verify email
+    user.emailVerified = true;
+    user.emailVerificationToken = undefined;
+    user.emailVerificationExpires = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+      
+      status: 'success',
+      message: `Email verified manually for ${user.email}`,
+      data: {
+        user: {
+          _id: user._id,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          emailVerified: true,
+        },
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to verify email',
+    });
   }
 };
