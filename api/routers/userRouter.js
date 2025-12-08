@@ -1,6 +1,6 @@
 // routes/authRoutes.js
 import express from 'express';
-import { register, login, forgotPassword, resetPassword, getDashboard, getMe, updateMe, updatePassword, upgradeToDealer } from '../controllers/userController.js';
+import { register, login, forgotPassword, resetPassword, getDashboard, getMe, updateMe, updatePassword, upgradeToDealer, upgradeToServiceProvider, getAllDealers, getAllServiceProviders, searchServiceAndDealers } from '../controllers/userController.js';
 import { protect } from '../middleware/verifyToken.js';
 
 
@@ -17,6 +17,15 @@ router.patch('/upgrade-to-dealer', protect, upgradeToDealer);
 
 router.put('/update-me', updateMe);
 router.put('/update-password', updatePassword);
+
+
+
+
+// routes/userRoutes.js
+router.patch('/upgrade-service-provider', protect, upgradeToServiceProvider);
+router.get('/dealers', getAllDealers);
+router.get('/service-providers', getAllServiceProviders);
+router.get('/search-providers', searchServiceAndDealers); // /api/users/search-providers?q=ahmed&state=lagos&type=mechanic
 
 export default router;
 

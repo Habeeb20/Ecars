@@ -89,6 +89,8 @@ const carListingSchema = new mongoose.Schema({
   },
   isFeatured: { type: Boolean, default: false },
   views: { type: Number, default: 0 },
+
+featuredUntil: Date,
 }, { timestamps: true });
 
 // Index for search

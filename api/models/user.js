@@ -208,7 +208,45 @@ dealerInfo: {
   },
   // ... rest optional
   verified: { type: Boolean, default: false },
+   isFeatured: { type: Boolean, default: false },
+  featuredUntil: Date,
 },
+
+// models/user.js — add inside userSchema
+
+serviceProviderInfo: {
+  type: {
+    type: String,
+    enum: ['mechanic', 'panel_beater', 'rewire', 'auto_electrician', 'vulcanizer', 'car_wash', 'detailer', 'upholsterer', 'ac_specialist', 'other'],
+    required: [function() { return this.role === 'service-provider'; }, 'Service type is required'],
+  },
+  businessName: {
+    type: String,
+    trim: true,
+    required: [function() { return this.role === 'service-provider'; }, 'Business name required'],
+  },
+  businessAddress: String,
+  state: {
+    type: String,
+    required: [function() { return this.role === 'service-provider'; }, 'State required'],
+  },
+  lga: {
+    type: String,
+    required: [function() { return this.role === 'service-provider'; }, 'LGA required'],
+  },
+  phoneNumber: String,
+  whatsappNumber: String,
+  yearsOfExperience: Number,
+  servicesOffered: [String], // e.g. ["Engine repair", "AC fix", "Painting"]
+  workshopPhotos: [String], // Cloudinary URLs
+  verified: { type: Boolean, default: false }, // admin approval
+  rating: { type: Number, default: 0, min: 0, max: 5 },
+  totalJobs: { type: Number, default: 0 },
+  available: { type: Boolean, default: true },
+  verificationRequestedAt: Date,
+  isFeatured: { type: Boolean, default: false },
+  featuredUntil: Date,
+}
 }, { timestamps: true });
 
 // Hash password only when modified
@@ -254,11 +292,6 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
 };
 
 export default mongoose.model('User', userSchema);
-
-
-
-
-
 
 
 
