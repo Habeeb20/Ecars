@@ -7,7 +7,9 @@ import { useState } from 'react';
 import { 
   Car, Settings, MessageSquare, Upload, User, Grid,
   LogOut, X, ShieldAlert, Users, FileText, BarChart, Bell, ListChecks,
-  Mail
+  Mail,
+  SubscriptIcon,
+  SquircleDashedIcon
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import UploadCars from './UploadCars';
@@ -16,6 +18,8 @@ import Overview from './Overview';
 import ProfileSettings from './ProfileSettings';
 import VerifyEmailModal from './VerifyEmailModal';
 import { SomePage } from './VerifyEmailPage';
+import SubscriptionPlans from './SubscriptionPlans';
+import MySubscriptions from './MySubscription';
 // Import your dashboard pages directly
 
 // import ManageCars from '../../pages/dashboard/ManageCars';
@@ -39,11 +43,11 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     upload: <UploadCars />,
     listings: <MyListings />,
     verifyEmail: <SomePage />,
-    // messages: <Messages />,
+  subscription: <SubscriptionPlans/>,
     // notifications: <Notifications />,
     profile: <ProfileSettings />,
     // settings: <SettingsPage />,
-    // adminUsers: <AdminUsers />,
+    myplans: <MySubscriptions />,
     // adminReports: <AdminReports />,
     // adminContent: <AdminContent />,
     // adminAnalytics: <AdminAnalytics />,
@@ -63,7 +67,8 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     { icon: Car, label: 'Manage Cars', view: 'manageCars' },
     { icon: MessageSquare, label: 'Messages', view: 'messages' },
     { icon: Bell, label: 'Notifications', view: 'notifications' },
-      { icon: Settings, label: 'Subscribe To Plans', view: 'settings' },
+    { icon: SquircleDashedIcon, label: 'My Plans', view: 'myplans' },
+      { icon: SubscriptIcon, label: 'Subscribe To Plans', view: 'subscription' },
     { icon: User, label: 'Profile', view: 'profile' },
   
   ];

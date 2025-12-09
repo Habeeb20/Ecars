@@ -19,6 +19,10 @@ import { mockAuctions, formatPrice, getTimeRemaining, getAuctionStatus } from '.
 import { filterParts, mockCarParts } from '../data/carParts';
 import { mockBlogPosts } from '../data/blog';
 import { useTheme } from '../contexts/ThemeContext';
+import StatsSection from '../components/Landing/carNumbers';
+
+import ReportAndRequestSection from '../components/Landing/reportCar';
+import FeaturedCar from '../components/Landing/FeaturedCar';
 
 // Mock data (kept exactly as in your original code)
 const mockServiceProviders = [
@@ -225,7 +229,7 @@ const Home = () => {
       </section>
 
       {/* Statistics Section */}
-      <section className="py-12 bg-white dark:bg-gray-800">
+      {/* <section className="py-12 bg-white dark:bg-gray-800">
         <div className="container">
           <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
             eCars in Numbers
@@ -260,77 +264,16 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
+
+      <StatsSection/>
 
       {/* Safety & Support Section */}
-      <section className="py-12 bg-gray-50 dark:bg-gray-900">
-        <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Report Scam Card */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-              <div className="p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <AlertTriangle className="h-6 w-6 text-red-500" />
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                    Report a Car Deal Scam
-                  </h3>
-                </div>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
-                  Have you been the victim of a car deal scam? We're here to help. Report suspicious activities and protect other buyers.
-                </p>
-                <Link
-                  to="/report-scam"
-                  className="inline-flex items-center text-red-600 hover:text-red-700 font-medium"
-                >
-                  <FileText className="h-4 w-4 mr-2" />
-                  File a Report
-                </Link>
-              </div>
-            </div>
-
-            {/* Make Request Card */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-              <div className="p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <Truck className="h-6 w-6 text-primary-500" />
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                    Make a Request
-                  </h3>
-                </div>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
-                  Can't find what you're looking for? Let us know your requirements and we'll help you find the perfect match.
-                </p>
-                <Link
-                  to="/request"
-                  className="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium"
-                >
-                  <ArrowRight className="h-4 w-4 mr-2" />
-                  Submit Request
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ReportAndRequestSection/>
+   
 
       {/* Featured Cars Section */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-900">
-        <div className="container">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Featured Cars</h2>
-            <Link to="/cars" className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 flex items-center group">
-              <span>View all</span>
-              <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredCars.slice(0, 6).map((car) => (
-              <CarCard key={car.id} car={car} />
-            ))}
-          </div>
-        </div>
-      </section>
+    <FeaturedCar/>
 
       {/* Value Your Asset & Sell Your Car Sections */}
       <section className="py-16 bg-gray-50 dark:bg-gray-900">

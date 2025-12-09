@@ -9,6 +9,11 @@ import router from "./routers/userRouter.js";
 import User from "./models/user.js";
 import adminRouter from "./routers/adminRouter.js";
 import carListingRouter from "./routers/carListingRoute.js"
+import statsRoute from "./routers/statsRouter.js"
+import reportRouter from "./routers/reportRoute.js";
+import paymentRouter from "./routers/paymentRoute.js"
+import plansRouter from "./routers/plansRoutes.js"
+import valueRouter from "./routers/valueAssetsRoutes.js"
 dotenv.config();
 connectDb()
 
@@ -44,7 +49,11 @@ app.use("/api/users", router)
 app.use("/api/auth", router)
 app.use("/api/admin", adminRouter)
 app.use("/api/cars", carListingRouter)
-
+app.use("/api/stats", statsRoute)
+app.use("/api/reports", reportRouter)
+app.use("/api/payments", paymentRouter)
+app.use("/api/subscriptions", plansRouter)
+app.use("/api/value", valueRouter)
 
 
 // await User.create({

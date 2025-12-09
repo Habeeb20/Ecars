@@ -5,9 +5,9 @@ import Subscription from '../models/subscriptionSchema.js';
 import User from '../models/user.js';
 import CarListing from '../models/carListing.js';
 
-
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
 const PAYSTACK_BASE_URL = 'https://api.paystack.co';
+
 
 // 1. Initialize Payment (Frontend calls this)
 export const initializePayment = async (req, res) => {
@@ -34,20 +34,16 @@ export const initializePayment = async (req, res) => {
     const amountInKobo = amountInNaira * 100;
 
     const reference = `ecars_${type}_${Date.now()}_${user._id}`;
-
-    const payload = {
-      email: user.email,
-      amount: amountInKobo,
-      reference,
-      metadata: {
-        userId: user._id.toString(),
-        type,
-        duration,
-        listingId: listingId || null,
-      },
-      channels: ['card', 'bank_transfer', 'ussd', 'mobile_money'],
-      callback_url: `${process.env.FRONTEND_URL}/payment/success`,
-    };
+// In your initializePayment controller
+const payload = {
+  email: user.email,
+  amount: amountInKobo,
+  reference,
+  metadata: { userId: user._id.toString(), type, duration },
+  channels: ['card', 'bank_transfer'],
+  callback_url: `${process.env.FRONTEND_URL}/payment/success`, // ← This one!
+};
+   
 
     const response = await axios.post(
       'https://api.paystack.co/transaction/initialize',
@@ -92,70 +88,70 @@ export const initializePayment = async (req, res) => {
   }
 };
 // 2. Paystack Webhook (CRITICAL – This activates the feature!)
-export const paystackWebhook = async (req, res) => {
-  try {
-    const hash = crypto
-      .createHmac('sha512', PAYSTACK_SECRET_KEY)
-      .update(JSON.stringify(req.body))
-      .digest('hex');
+// export const paystackWebhook = async (req, res) => {
+//   try {
+//     const hash = crypto
+//       .createHmac('sha512', PAYSTACK_SECRET_KEY)
+//       .update(JSON.stringify(req.body))
+//       .digest('hex');
 
-    if (hash !== req.headers['x-paystack-signature']) {
-      return res.status(400).send('Invalid signature');
-    }
+//     if (hash !== req.headers['x-paystack-signature']) {
+//       return res.status(400).send('Invalid signature');
+//     }
 
-    const event = req.body;
+//     const event = req.body;
 
-    if (event.event === 'charge.success') {
-      const ref = event.data.reference;
-      const metadata = event.data.metadata;
+//     if (event.event === 'charge.success') {
+//       const ref = event.data.reference;
+//       const metadata = event.data.metadata;
 
-      const subscription = await Subscription.findOneAndUpdate(
-        { reference: ref },
-        { status: 'active' },
-        { new: true }
-      ).populate('user');
+//       const subscription = await Subscription.findOneAndUpdate(
+//         { reference: ref },
+//         { status: 'active' },
+//         { new: true }
+//       ).populate('user');
 
-      if (!subscription) return res.status(200).send('OK');
+//       if (!subscription) return res.status(200).send('OK');
 
-      const endDate = subscription.endDate;
+//       const endDate = subscription.endDate;
 
-      // Activate the actual feature
-      switch (subscription.type) {
-        case 'featured_listing':
-          if (subscription.listing) {
-            await CarListing.findByIdAndUpdate(subscription.listing, {
-              isFeatured: true,
-              featuredUntil: endDate,
-            });
-          }
-          break;
+//       // Activate the actual feature
+//       switch (subscription.type) {
+//         case 'featured_listing':
+//           if (subscription.listing) {
+//             await CarListing.findByIdAndUpdate(subscription.listing, {
+//               isFeatured: true,
+//               featuredUntil: endDate,
+//             });
+//           }
+//           break;
 
-        case 'featured_dealer':
-          await User.findByIdAndUpdate(subscription.user._id, {
-            'dealerInfo.isFeatured': true,
-            'dealerInfo.featuredUntil': endDate,
-          });
-          break;
+//         case 'featured_dealer':
+//           await User.findByIdAndUpdate(subscription.user._id, {
+//             'dealerInfo.isFeatured': true,
+//             'dealerInfo.featuredUntil': endDate,
+//           });
+//           break;
 
-        case 'featured_service_provider':
-          await User.findByIdAndUpdate(subscription.user._id, {
-            'serviceProviderInfo.isFeatured': true,
-            'serviceProviderInfo.featuredUntil': endDate,
-          });
-          break;
+//         case 'featured_service_provider':
+//           await User.findByIdAndUpdate(subscription.user._id, {
+//             'serviceProviderInfo.isFeatured': true,
+//             'serviceProviderInfo.featuredUntil': endDate,
+//           });
+//           break;
 
-        case 'newest_listings_access':
-          // Just active subscription gives access
-          break;
-      }
-    }
+//         case 'newest_listings_access':
+//           // Just active subscription gives access
+//           break;
+//       }
+//     }
 
-    res.status(200).send('OK');
-  } catch (err) {
-    console.log('Webhook error:', err);
-    res.status(500).send('Error');
-  }
-};
+//     res.status(200).send('OK');
+//   } catch (err) {
+//     console.log('Webhook error:', err);
+//     res.status(500).send('Error');
+//   }
+// };
 
 // 3. Verify Payment (Frontend can call this after redirect)
 export const verifyPayment = async (req, res) => {
@@ -173,5 +169,119 @@ export const verifyPayment = async (req, res) => {
     });
   } catch (err) {
     res.status(400).json({ status: 'fail', message: 'Verification failed' });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export const paystackWebhook = async (req, res) => {
+  try {
+    // Verify signature
+    const hash = crypto
+      .createHmac('sha512', PAYSTACK_SECRET_KEY)
+      .update(JSON.stringify(req.body))
+      .digest('hex');
+
+    if (hash !== req.headers['x-paystack-signature']) {
+      return res.status(400).send('Invalid signature');
+    }
+
+    const event = req.body;
+
+    // Only handle successful payments
+    if (event.event === 'charge.success') {
+      const ref = event.data.reference;
+      const metadata = event.data.metadata;
+
+      // Find and activate subscription
+      const subscription = await Subscription.findOneAndUpdate(
+        { reference: ref },
+        { status: 'active' },
+        { new: true }
+      ).populate('user');
+
+      if (!subscription) {
+        console.log('Subscription not found for ref:', ref);
+        return res.status(200).send('OK');
+      }
+
+      const endDate = subscription.endDate;
+
+      console.log(`Activating plan: ${subscription.type} for user ${subscription.user._id}`);
+
+      // ACTIVATE THE FEATURES
+      switch (subscription.type) {
+        case 'featured_listing':
+          if (subscription.listing) {
+            await CarListing.findByIdAndUpdate(subscription.listing, {
+              isFeatured: true,                    // THIS WAS MISSING IN YOUR DUPLICATE!
+              featuredUntil: endDate,
+            });
+            console.log('Car boosted:', subscription.listing);
+          }
+          break;
+
+        case 'featured_dealer':
+          await User.findByIdAndUpdate(subscription.user._id, {
+            'dealerInfo.isFeatured': true,
+            'dealerInfo.featuredUntil': endDate,
+          });
+          console.log('Dealer featured:', subscription.user._id);
+          break;
+
+        case 'featured_service_provider':
+          await User.findByIdAndUpdate(subscription.user._id, {
+            'serviceProviderInfo.isFeatured': true,
+            'serviceProviderInfo.featuredUntil': endDate,
+          });
+          console.log('Service provider featured:', subscription.user._id);
+          break;
+
+        case 'newest_listings_access':
+          console.log('Newest listings access granted');
+          break;
+      }
+    }
+
+    res.status(200).send('OK');
+  } catch (err) {
+    console.error('Paystack webhook error:', err);
+    res.status(500).send('Error');
   }
 };

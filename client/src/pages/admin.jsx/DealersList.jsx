@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Search, Check, X, Shield, Phone, MapPin, Calendar } from 'lucide-react';
 import { toast } from 'sonner';
-
+import { Mail } from 'lucide-react';
 const DealersList = () => {
   const [dealers, setDealers] = useState([]);
   const [loading, setLoading] = useState(true);

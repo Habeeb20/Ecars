@@ -13,6 +13,7 @@ import DashboardLayout from './components/dashboard/DashboardLayout';
 import NavbarLayout from './components/layout/NavbarLayout';
 import AdminDashboardLayout from './pages/admin.jsx/AdminDashboard';
 import AdminLogin from './pages/admin.jsx/AdminLogin';
+import PaymentSuccess from './pages/PaymentSuccess';
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/register" element={<Register/>} />
         <Route path="/forgot-password" element={<ForgotPassword/>} />
         <Route path="/resetpassword" element={<ResetPassword/>} />
+        <Route path="/payment/success" element={<PaymentSuccess/>} />
 
           {/* Add more pages here */}
         </Route>

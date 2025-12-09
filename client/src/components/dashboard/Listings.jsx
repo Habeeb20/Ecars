@@ -94,7 +94,7 @@
 import { useState, useEffect } from 'react';
 import { Car, Edit, Trash2, Eye, X, Check, Upload } from 'lucide-react';
 import { toast } from 'sonner';
-
+import { Star } from 'lucide-react';
 const MyListings = () => {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -136,6 +136,38 @@ const MyListings = () => {
       toast.error('Failed to delete car');
     }
   };
+
+
+  const initiatePayment = async (planType, listingId = null) => {
+  setLoading(true);
+  try {
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/payments/paystack/initialize`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        type: planType,
+        duration: 'monthly',
+        listingId,
+      }),
+    });
+
+    const data = await res.json();
+    if (data.status === 'success') {
+      window.location.href = data.data.authorization_url;
+    } else {
+      toast.error(data.message);
+    }
+  } catch (err) {
+    toast.error('Payment failed');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const startEdit = (car) => {
     setEditingCar(car._id);
@@ -313,6 +345,16 @@ const MyListings = () => {
                   </div>
                 ) : (
                   <>
+             
+{car.status === 'active' && (
+  <button
+    onClick={() => initiatePayment('featured_listing', car._id)}
+    className="mt-4 w-full py-3 bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-bold rounded-xl shadow-lg flex items-center justify-center gap-2 transition transform hover:scale-105"
+  >
+    <Star className="h-5 w-5" />
+    Boost This Car
+  </button>
+)}
                     <h3 className="text-xl font-bold text-gray-800 dark:text-white">{car.title}</h3>
                     <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mt-2">
                       ₦{car.price.toLocaleString()}
