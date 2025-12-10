@@ -12,6 +12,7 @@ import {
 import { CarCard } from '../components/car/CarCard';
 import { getFeaturedCars } from '../data/cars';
 import SearchFilters from '../components/car/SearchFilters';
+
 import { featuredDealers } from '../data/dealers';
 import { mockInventory } from '../data/cars';
 import carBrands from '../data/brandData';
@@ -23,6 +24,9 @@ import StatsSection from '../components/Landing/carNumbers';
 
 import ReportAndRequestSection from '../components/Landing/reportCar';
 import FeaturedCar from '../components/Landing/FeaturedCar';
+import NewListing from '../components/Landing/NewListing';
+import FeaturedDealers from '../components/Landing/FeaturedDealers';
+import { FeaturedServiceProvider } from '../components/Landing/FeaturedServiceProvider';
 
 // Mock data (kept exactly as in your original code)
 const mockServiceProviders = [
@@ -334,31 +338,64 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Rest of your sections (Recent Listings, Dealers, Auctions, etc.) */}
-      {/* ... (all your original sections below - unchanged) ... */}
-
-      {/* I'll keep the rest exactly as you wrote it */}
-      {/* Only the TypeScript parts were removed/converted */}
+     
 
       {/* Recent Listings */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-900">
+      <NewListing/>
+
+      <FeaturedDealers/>
+
+      <FeaturedServiceProvider/>
+
+         <section className="py-16 bg-gray-50 dark:bg-gray-900">
         <div className="container">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Newest Listings</h2>
-            <Link to="/cars" className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 flex items-center group">
-              <span>View all</span>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Latest Automotive Insights</h2>
+            <Link to="/blog" className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 flex items-center group">
+              <span>See More</span>
               <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {newestListings.map((car) => (
-              <CarCard key={car.id} car={car} />
+            {featuredBlogPosts.map((post) => (
+              <Link
+                to={`/blog/${post.slug}`}
+                key={post.id}
+                className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300"
+              >
+                <img
+                  src={post.imageUrl}
+                  alt={post.title}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="p-6">
+                  <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
+                    <Tag className="w-4 h-4 mr-1" />
+                    {post.category}
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                    {post.title}
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+                    {post.excerpt}
+                  </p>
+                  <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                    <Calendar className="w-4 h-4 mr-1" />
+                    {new Date(post.date).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })}
+                  </div>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
+  
       {/* ... continue with all your other sections exactly as written ... */}
       {/* (Featured Dealers, Auctions, Service Providers, Car Parts, Stolen Cars, Blog, Brands, Why Choose Us, CTA) */}
 

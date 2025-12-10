@@ -10,11 +10,8 @@ import {
   X,
   Camera,
   Info,
-  Shield,
-  Clock,
-  Star
+  Loader2
 } from 'lucide-react';
-import { toast } from 'react-hot-toast';
 
 const ValueAsset = () => {
   const [formData, setFormData] = useState({
@@ -35,36 +32,21 @@ const ValueAsset = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const carBrands = [
-    'Toyota', 'Honda', 'Mercedes-Benz', 'BMW', 'Audi', 'Lexus',
-    'Volkswagen', 'Ford', 'Nissan', 'Hyundai', 'Kia', 'Mazda',
-    'Peugeot', 'Infiniti', 'Acura', 'Subaru', 'Mitsubishi', 'Jaguar'
+    'Toyota', 'Honda', 'Mercedes-Benz', 'BMW', 'Audi', 'Volkswagen', 
+    'Ford', 'Chevrolet', 'Nissan', 'Hyundai', 'Kia', 'Mazda', 
+    'Lexus', 'Infiniti', 'Acura', 'Subaru', 'Mitsubishi', 'Peugeot'
   ];
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
   const handleFileUpload = (file, type) => {
-    if (!file) return;
-
-    const validImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-    const validDocTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
-
-    const allowedTypes = type === 'legal' ? validDocTypes : validImageTypes;
-
-    if (!allowedTypes.includes(file.type)) {
-      toast.error('Invalid file type. Please upload JPG, PNG, GIF or PDF (for documents)');
-      return;
-    }
-
-    if (file.size > 15 * 1024 * 1024) {
-      toast.error('File too large. Maximum 15MB allowed');
-      return;
-    }
-
     if (type === 'display') {
       setFormData(prev => ({ ...prev, displayImage: file }));
-      toast.success('Display image uploaded!');
     } else if (type === 'additional') {
       setFormData(prev => ({ 
         ...prev, 
@@ -72,7 +54,6 @@ const ValueAsset = () => {
       }));
     } else if (type === 'legal') {
       setFormData(prev => ({ ...prev, legalTender: file }));
-      toast.success('Document uploaded!');
     }
   };
 
@@ -105,158 +86,356 @@ const ValueAsset = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     if (!formData.agreeToTerms) {
-      toast.error('You must agree to the terms and conditions');
+      alert('Please agree to the terms and conditions');
       return;
     }
-
-    if (!formData.displayImage) {
-      toast.error('Please upload at least one display image');
-      return;
-    }
-
+    
     setIsSubmitting(true);
-
-    await new Promise(resolve => setTimeout(resolve, 2500));
-
-    toast.success('Valuation request submitted! We\'ll get back to you within 24 hours.', {
-      duration: 6000,
-      icon: 'Success',
-    });
-
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 2000));
     setIsSubmitting(false);
+    alert('Asset valuation request submitted successfully!');
   };
 
   const isFormValid = formData.assetType && formData.brand && formData.model && 
                      formData.displayImage && formData.agreeToTerms;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-indigo-900/30">
-      {/* Hero */}
-      <section className="relative py-24 text-center bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-700 overflow-hidden">
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative container mx-auto px-6">
-          <h1 className="text-5xl md:text-7xl font-black text-white mb-6">
-            Know Your Car's <span className="text-yellow-400">True Value</span>
-          </h1>
-          <p className="text-2xl text-white/90 max-w-4xl mx-auto">
-            Free professional valuation by certified experts — accurate, fast, and trusted
-          </p>
-        </div>
-      </section>
-
-      <div className="container mx-auto px-6 py-16 max-w-5xl">
-        <form onSubmit={handleSubmit} className="space-y-12">
-          {/* Asset Type */}
-          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-10">
-            <h2 className="text-3xl font-bold mb-8">Vehicle Type</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                { value: 'new', label: 'Brand New', emoji: 'Sparkles', gradient: 'from-emerald-500 to-teal-600' },
-                { value: 'foreign', label: 'Foreign Used', emoji: 'Globe', gradient: 'from-blue-500 to-indigo-600' },
-                { value: 'locally-used', label: 'Nigerian Used', emoji: 'Home', gradient: 'from-purple-500 to-pink-600' }
-              ].map((opt) => (
-                <label key={opt.value} className="cursor-pointer">
-                  <input
-                    type="radio"
-                    name="assetType"
-                    value={opt.value}
-                    checked={formData.assetType === opt.value}
-                    onChange={(e) => handleInputChange('assetType', e.target.value)}
-                    className="sr-only"
-                  />
-                  <div className={`relative p-10 rounded-3xl text-white text-center transition-all ${
-                    formData.assetType === opt.value 
-                      ? `bg-gradient-to-br ${opt.gradient} shadow-2xl scale-105 ring-4 ring-white/50` 
-                      : 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600'
-                  }`}>
-                    <div className="text-6xl mb-4">{opt.emoji}</div>
-                    <h3 className={`text-2xl font-bold ${formData.assetType === opt.value ? '' : 'text-gray-900 dark:text-white'}`}>
-                      {opt.label}
-                    </h3>
-                    {formData.assetType === opt.value && (
-                      <Check className="w-12 h-12 absolute top-4 right-4 bg-white/20 rounded-full p-2" />
-                    )}
-                  </div>
-                </label>
-              ))}
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 mt-12">
+      {/* Hero Header */}
+      <div className="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 dark:from-indigo-800 dark:via-purple-800 dark:to-blue-800">
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="relative container mx-auto px-4 py-16">
+          <div className="flex items-center mb-8">
+            <button className="inline-flex items-center text-white/80 hover:text-white transition-colors">
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              Go back
+            </button>
           </div>
+          <div className="text-center">
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
+              Get Your Values Worth
+            </h1>
+            <p className="text-xl text-white/90 max-w-2xl mx-auto">
+              Professional asset valuation service to determine the true market value of your vehicle
+            </p>
+          </div>
+        </div>
+        
+        {/* Decorative 3D Elements */}
+        <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl"></div>
+        <div className="absolute top-32 right-20 w-32 h-32 bg-purple-400/20 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-10 left-1/4 w-24 h-24 bg-blue-400/20 rounded-full blur-xl"></div>
+      </div>
 
-          {/* Display Image */}
-          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-10">
-            <h2 className="text-3xl font-bold mb-8">Main Display Photo</h2>
-            <div
-              className={`border-4 border-dashed rounded-3xl p-20 text-center transition-all ${
-                dragActive ? 'border-indigo-500 bg-indigo-50/50' : 'border-gray-300 dark:border-gray-600'
-              }`}
-              onDragEnter={handleDrag}
-              onDragLeave={handleDrag}
-              onDragOver={handleDrag}
-              onDrop={(e) => handleDrop(e, 'display')}
-            >
-              {formData.displayImage ? (
-                <div>
-                  <img
-                    src={URL.createObjectURL(formData.displayImage)}
-                    alt="Display"
-                    className="mx-auto max-h-96 rounded-2xl shadow-2xl"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleInputChange('displayImage', null)}
-                    className="mt-6 px-8 py-4 bg-red-600 hover:bg-red-700 text-white rounded-full font-bold"
+      <div className="container mx-auto px-4 py-12">
+        <div className="max-w-4xl mx-auto">
+          <form onSubmit={handleSubmit} className="space-y-8">
+            {/* Asset Type Selection */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Select Asset Type</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {[
+                  { value: 'new', label: 'New', icon: '✨' },
+                  { value: 'foreign', label: 'Foreign', icon: '🌍' },
+                  { value: 'locally-used', label: 'Locally Used', icon: '🏠' }
+                ].map((option) => (
+                  <label
+                    key={option.value}
+                    className={`relative flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all hover:shadow-md ${
+                      formData.assetType === option.value
+                        ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20 dark:border-indigo-400'
+                        : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                    }`}
                   >
-                    Change Photo
-                  </button>
+                    <input
+                      type="radio"
+                      name="assetType"
+                      value={option.value}
+                      checked={formData.assetType === option.value}
+                      onChange={(e) => handleInputChange('assetType', e.target.value)}
+                      className="sr-only"
+                    />
+                    <div className="flex items-center space-x-3">
+                      <span className="text-2xl">{option.icon}</span>
+                      <span className="font-medium text-gray-900 dark:text-white">{option.label}</span>
+                    </div>
+                    {formData.assetType === option.value && (
+                      <Check className="absolute top-2 right-2 w-5 h-5 text-indigo-500" />
+                    )}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Display Image Upload */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Upload Display Image</h2>
+              <div
+                className={`relative border-2 border-dashed rounded-xl p-12 text-center transition-all ${
+                  dragActive
+                    ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
+                    : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
+                }`}
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={(e) => handleDrop(e, 'display')}
+              >
+                {formData.displayImage ? (
+                  <div className="space-y-4">
+                    <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto">
+                      <Check className="w-10 h-10 text-green-600 dark:text-green-400" />
+                    </div>
+                    <p className="text-gray-900 dark:text-white font-medium">{formData.displayImage.name}</p>
+                    <button
+                      type="button"
+                      onClick={() => handleInputChange('displayImage', null)}
+                      className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto">
+                      <Camera className="w-10 h-10 text-gray-400 dark:text-gray-500" />
+                    </div>
+                    <div>
+                      <p className="text-gray-900 dark:text-white font-medium mb-2">
+                        Drag and drop your image here, or
+                      </p>
+                      <label className="inline-flex items-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl cursor-pointer transition-colors">
+                        <Upload className="w-5 h-5 mr-2" />
+                        Choose a file
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], 'display')}
+                          className="sr-only"
+                        />
+                      </label>
+                    </div>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      PNG, JPG, GIF up to 10MB
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Asset Information */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Asset Information</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-indigo-600 dark:text-indigo-400 mb-2">
+                    Brand
+                  </label>
+                  <select
+                    value={formData.brand}
+                    onChange={(e) => handleInputChange('brand', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-colors"
+                  >
+                    <option value="">Select Car Brand</option>
+                    {carBrands.map(brand => (
+                      <option key={brand} value={brand}>{brand}</option>
+                    ))}
+                  </select>
                 </div>
-              ) : (
-                <>
-                  <Camera className="w-24 h-24 mx-auto mb-6 text-gray-400" />
-                  <p className="text-2xl font-bold mb-4">Drop your best photo here</p>
-                  <label className="inline-flex items-center px-10 py-5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold text-xl rounded-full cursor-pointer shadow-2xl">
-                    <Upload className="w-8 h-8 mr-3" />
-                    Choose Photo
+
+                <div>
+                  <label className="block text-sm font-medium text-indigo-600 dark:text-indigo-400 mb-2">
+                    Model
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.model}
+                    onChange={(e) => handleInputChange('model', e.target.value)}
+                    placeholder="Enter Model"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-indigo-600 dark:text-indigo-400 mb-2">
+                    Color
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.color}
+                    onChange={(e) => handleInputChange('color', e.target.value)}
+                    placeholder="Enter Car Color"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-indigo-600 dark:text-indigo-400 mb-2">
+                    Mileage
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.mileage}
+                    onChange={(e) => handleInputChange('mileage', e.target.value)}
+                    placeholder="Enter Mileage"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-colors"
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-indigo-600 dark:text-indigo-400 mb-2">
+                    Engine Type
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.engineType}
+                    onChange={(e) => handleInputChange('engineType', e.target.value)}
+                    placeholder="Enter Type"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-colors"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Additional Images */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">More of Car Image</h2>
+              <div className="space-y-4">
+                {formData.additionalImages.length > 0 && (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    {formData.additionalImages.map((file, index) => (
+                      <div key={index} className="relative group">
+                        <div className="aspect-video bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
+                          <img
+                            src={URL.createObjectURL(file)}
+                            alt={`Additional ${index + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeAdditionalImage(index)}
+                          className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
+                <div
+                  className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
+                  onDragEnter={handleDrag}
+                  onDragLeave={handleDrag}
+                  onDragOver={handleDrag}
+                  onDrop={(e) => handleDrop(e, 'additional')}
+                >
+                  <label className="inline-flex items-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl cursor-pointer transition-colors">
+                    <Plus className="w-5 h-5 mr-2" />
+                    Add More Images
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], 'display')}
-                      className="hidden"
+                      multiple
+                      onChange={(e) => {
+                        if (e.target.files) {
+                          Array.from(e.target.files).forEach(file => 
+                            handleFileUpload(file, 'additional')
+                          );
+                        }
+                      }}
+                      className="sr-only"
                     />
                   </label>
-                </>
-              )}
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* Vehicle Info */}
-          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-10">
-            <h2 className="text-3xl font-bold mb-8">Vehicle Details</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <input type="text" placeholder="Brand" value={formData.brand} onChange={(e) => handleInputChange('brand', e.target.value)} className="px-6 py-5 rounded-2xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-lg focus:border-indigo-500 transition" />
-              <input type="text" placeholder="Model" value={formData.model} onChange={(e) => handleInputChange('model', e.target.value)} className="px-6 py-5 rounded-2xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-lg focus:border-indigo-500 transition" />
-              <input type="text" placeholder="Color" value={formData.color} onChange={(e) => handleInputChange('color', e.target.value)} className="px-6 py-5 rounded-2xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-lg focus:border-indigo-500 transition" />
-              <input type="number" placeholder="Mileage (km)" value={formData.mileage} onChange={(e) => handleInputChange('mileage', e.target.value)} className="px-6 py-5 rounded-2xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-lg focus:border-indigo-500 transition" />
-              <input type="text" placeholder="Engine & Transmission" value={formData.engineType} onChange={(e) => handleInputChange('engineType', e.target.value)} className="md:col-span-2 px-6 py-5 rounded-2xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-lg focus:border-indigo-500 transition" />
+            {/* Legal Information */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Legal Information</h2>
+              
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-indigo-600 dark:text-indigo-400 mb-2">
+                  Legal Tender
+                </label>
+                <div className="flex items-center space-x-4">
+                  <label className="flex-1 flex items-center px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    <FileText className="w-5 h-5 text-gray-400 dark:text-gray-500 mr-3" />
+                    <span className="text-gray-700 dark:text-gray-300">
+                      {formData.legalTender ? formData.legalTender.name : 'Choose Files'}
+                    </span>
+                    <input
+                      type="file"
+                      accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                      onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], 'legal')}
+                      className="sr-only"
+                    />
+                  </label>
+                  {formData.legalTender && (
+                    <button
+                      type="button"
+                      onClick={() => handleInputChange('legalTender', null)}
+                      className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-indigo-600 dark:text-indigo-400 mb-2">
+                  Description
+                </label>
+                <textarea
+                  value={formData.description}
+                  onChange={(e) => handleInputChange('description', e.target.value)}
+                  rows={6}
+                  placeholder="Provide detailed description of your asset..."
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white transition-colors resize-none"
+                />
+              </div>
+
+              <div className="flex items-start space-x-3 mb-8">
+                <input
+                  type="checkbox"
+                  id="terms"
+                  checked={formData.agreeToTerms}
+                  onChange={(e) => handleInputChange('agreeToTerms', e.target.checked)}
+                  className="mt-1 w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                />
+                <label htmlFor="terms" className="text-sm text-gray-700 dark:text-gray-300">
+                  <span className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 cursor-pointer underline">
+                    Agree to Terms and Conditions
+                  </span>
+                </label>
+              </div>
+
+              <button
+                type="submit"
+                disabled={!isFormValid || isSubmitting}
+                className={`w-full py-4 px-6 rounded-xl font-semibold text-white transition-all ${
+                  isFormValid && !isSubmitting
+                    ? 'bg-indigo-600 hover:bg-indigo-700 hover:shadow-lg transform hover:-translate-y-0.5'
+                    : 'bg-gray-400 dark:bg-gray-600 cursor-not-allowed'
+                }`}
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center justify-center">
+                    <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                    Processing...
+                  </div>
+                ) : (
+                  'Submit for Valuation'
+                )}
+              </button>
             </div>
-          </div>
-
-          {/* Submit */}
-          <div className="text-center">
-            <button
-              type="submit"
-              disabled={!isFormValid || isSubmitting}
-              className={`px-16 py-8 rounded-3xl font-black text-3xl transition-all shadow-2xl ${
-                isFormValid && !isSubmitting
-                  ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white hover:scale-105'
-                  : 'bg-gray-400 text-gray-600 cursor-not-allowed'
-              }`}
-            >
-              {isSubmitting ? 'Submitting...' : 'Get Free Valuation Now'}
-            </button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );

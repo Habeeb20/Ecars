@@ -6,7 +6,7 @@ import { createSendToken,  } from '../utils/functions.js';
 import { signToken } from '../utils/functions.js';
 import 'colors';
 import { protect } from '../middleware/verifyToken.js';
-
+import CarListing from '../models/carListing.js';
 import { sendPasswordResetEmail } from '../utils/functions.js';
 // REGISTER → returns token so user logs in immediately
 // controllers/authController.js
@@ -498,24 +498,6 @@ export const upgradeToServiceProvider = async (req, res) => {
 
 
 
-export const getAllDealers = async (req, res) => {
-  try {
-    const dealers = await User.find({
-      role: 'dealer',
-      'dealerInfo.verified': true
-    })
-    .select('firstName dealerInfo.businessName dealerInfo.logo dealerInfo.state dealerInfo.lga dealerInfo.verified phoneNumber')
-    .sort('-dealerInfo.verifiedAt');
-
-    res.status(200).json({
-      status: 'success',
-      results: dealers.length,
-      data: { dealers }
-    });
-  } catch (err) {
-    res.status(500).json({ status: 'error', message: err.message });
-  }
-};
 
 // Get all verified service providers
 export const getAllServiceProviders = async (req, res) => {
@@ -629,7 +611,144 @@ export const searchServiceAndDealers = async (req, res) => {
 
 
 
+export const getFeaturedDealers = async (req, res) => {
+  try {
+    const featuredDealers = await User.find({
+      role: 'dealer',
+      'dealerInfo.isFeatured': true,
+      'dealerInfo.featuredUntil': { $gt: new Date() },
+    }).select('firstName lastName email phoneNumber state lga address avatar bio dealerInfo');
+
+    res.status(200).json({
+      status: 'success',
+      results: featuredDealers.length,
+      data: { dealers: featuredDealers },
+    });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Failed to fetch featured dealers' });
+  }
+};
+
+
+// controllers/userController.js
+export const searchDealers = async (req, res) => {
+  try {
+    const { q } = req.query;
+    const query = { role: 'dealer' };
+
+    if (q) {
+      query.$or = [
+        { firstName: { $regex: q, $options: 'i' } },
+        { lastName: { $regex: q, $options: 'i' } },
+        { 'dealerInfo.businessName': { $regex: q, $options: 'i' } },
+        { 'dealerInfo.businessAddress': { $regex: q, $options: 'i' } },
+        { 'dealerInfo.state': { $regex: q, $options: 'i' } },
+        { 'dealerInfo.lga': { $regex: q, $options: 'i' } },
+        { phoneNumber: { $regex: q, $options: 'i' } },
+        { state: { $regex: q, $options: 'i' } },
+        { lga: { $regex: q, $options: 'i' } },
+        { address: { $regex: q, $options: 'i' } },
+        { bio: { $regex: q, $options: 'i' } },
+      ];
+    }
+
+    const dealers = await User.find(query).select('firstName lastName email phoneNumber state lga address avatar bio dealerInfo');
+
+    res.status(200).json({
+      status: 'success',
+      results: dealers.length,
+      data: { dealers },
+    });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Failed to search dealers' });
+  }
+};
+
+
+// controllers/dealerController.js (or userController.js)
+export const getAllDealers = async (req, res) => {
+
+  try {
+    const dealers = await User.find({ role: 'dealer' }).select('firstName lastName email phoneNumber state lga address avatar bio dealerInfo');
+    
+    res.status(200).json({
+      status: 'success',
+      data: { dealers },
+    });
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ status: 'error', message: 'Failed to fetch dealers' });
+  }
+};
 
 
 
-// controllers/authController.js  ← Add this function
+export const getDealerById = async (req, res) => {
+  try {
+    const dealer = await User.findById(req.params?.id).select('firstName lastName email phoneNumber state lga address avatar bio dealerInfo');
+    
+    const cars = await CarListing.find({ postedBy: dealer._id }).select('title price images year mileage');
+
+    res.status(200).json({
+      status: 'success',
+      data: { dealer, cars },
+    });
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ status: 'error', message: 'Failed to fetch dealer details' });
+  }
+};
+
+export const getFeaturedServiceProvider = async (req, res) => {
+  try {
+    const featuredDealers = await User.find({
+      role: 'service-provider',
+      'serviceProviderInfo.isFeatured': true,
+      'serviceProviderInfo.featuredUntil': { $gt: new Date() },
+    }).select('firstName lastName email phoneNumber state lga address avatar bio dealerInfo');
+
+    res.status(200).json({
+      status: 'success',
+      results: featuredDealers.length,
+      data: { dealers: featuredDealers },
+    });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Failed to fetch featured dealers' });
+  }
+};
+
+
+// export const getAllServiceProviders = async (req, res) => {
+//   try {
+//     const providers = await User.find({ role: 'service-provider' })
+//       .select('firstName lastName phoneNumber serviceProviderInfo');
+//     res.status(200).json({
+//       status: 'success',
+//       data: { providers },
+//     });
+//   } catch (err) {
+//     res.status(500).json({ status: 'error', message: 'Failed to fetch providers' });
+//   }
+// };
+
+export const searchServiceProviders = async (req, res) => {
+  try {
+    const { serviceType, location, rating, specialization } = req.query;
+    const query = { role: 'service-provider' };
+
+    if (serviceType) query['serviceProviderInfo.type'] = { $regex: serviceType, $options: 'i' };
+    if (location) query['serviceProviderInfo.state'] = { $regex: location, $options: 'i' };
+    if (rating) query['serviceProviderInfo.rating'] = { $gte: Number(rating) };
+    if (specialization) query['serviceProviderInfo.specialization'] = { $regex: specialization, $options: 'i' };
+
+    const providers = await User.find(query)
+      .select('firstName lastName phoneNumber serviceProviderInfo');
+
+    res.status(200).json({
+      status: 'success',
+      data: { providers },
+    });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Failed to search providers' });
+  }
+};

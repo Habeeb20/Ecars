@@ -3,6 +3,7 @@ import { Home, Users, Car, Wrench, DollarSign, Settings, LogOut } from 'lucide-r
 import Overview from './Overview';
 import AllUsers from './AllUsers';
 import DealersList from './DealersList';
+import SuperadminSubscriptions from './superAdminSubscription';
 // import UsersList from './UsersList';
 // import DealersList from './DealersList';
 // import ServiceProvidersList from './ServiceProvidersList';
@@ -15,7 +16,7 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     { name: 'All Users', icon: Users, component: <AllUsers /> },
     { name: 'Dealers', icon: Car, component: <DealersList /> },
     // { name: 'Service Providers', icon: Wrench, component: <ServiceProvidersList /> },
-    // { name: 'Payments', icon: DollarSign, component: <Payments /> },
+    { name: 'subscription', icon: DollarSign, component: <SuperadminSubscriptions /> },
     // { name: 'Settings', icon: Settings, component: <SettingsPage /> },
   ];
 

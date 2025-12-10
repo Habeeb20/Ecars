@@ -1,8 +1,11 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { Car, DollarSign, FileText, Image as ImageIcon, Calendar, Loader2, X } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-import { useAuth } from '@/contexts/AuthContext';
-
+import { useAuth } from '../contexts/AuthContext';
+import { motion } from 'framer-motion';
+import { Shield } from 'lucide-react';
+import { ThumbsUp } from 'lucide-react';
 const SellCar = () => {
   const { user } = useAuth();
   const [formData, setFormData] = useState({
@@ -104,7 +107,7 @@ const SellCar = () => {
           >
             <Car className="w-20 h-20 text-white" />
           </motion.div>
-          <h1 className="text-5xl font-black text-gray-900 dark:text-white mb-4">
+          <h1 className="text-3xl font-black text-gray-900 dark:text-white mb-4">
             Sell Your Car Fast & Easy
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">

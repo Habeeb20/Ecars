@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Search, MapPin, Phone, Star, ExternalLink, X, Loader2, MessageCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '../../contexts/AuthContext';
-
+import car from "../../assets/car.jpeg";
 
 const Dealership = () => {
   const [dealers, setDealers] = useState([]);
@@ -47,7 +47,7 @@ const Dealership = () => {
   const fetchAllDealers = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users/dealers`);
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users/alldealers`);
       const data = await res.json();
 
       if (data.status === 'success') {
@@ -128,7 +128,7 @@ const Dealership = () => {
     setChatLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/messages/send`, {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/messages/send`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -251,37 +251,37 @@ const Dealership = () => {
             >
               <div className="h-48 overflow-hidden">
                 <img 
-                  src={dealer.imageUrl || dealer.avatar || '/placeholder-dealer.jpg'} 
-                  alt={dealer.name}
+                  src={dealer.avatar || car || '/placeholder-dealer.jpg'} 
+                  alt={dealer.dealerInfo?.businessName || dealer.firstName}
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="p-6">
                 <div className="flex justify-between items-start mb-4">
                   <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                    {dealer.name}
+                    {dealer.dealerInfo?.businessName || `${dealer.firstName} ${dealer.lastName}`}
                   </h3>
                   <div className="flex text-yellow-400">
                     {[...Array(5)].map((_, i) => (
                       <Star 
                         key={i} 
-                        className={`h-4 w-4 ${i < Math.floor(dealer.rating) ? 'fill-current' : 'fill-none stroke-current'}`}
+                        className={`h-4 w-4 ${i < Math.floor(dealer.dealerInfo?.rating || dealer.rating || 0) ? 'fill-current' : 'fill-none stroke-current'}`}
                       />
                     ))}
                   </div>
                 </div>
                 <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                   <div className="flex items-center">
-                    <MapPin className="h-4 w-4 mr-2" />
-                    <span>{dealer.address}</span>
+                    <Phone className="h-4 w-4 mr-2" />
+                    <span>{dealer.phoneNumber}</span>
                   </div>
                   <div className="flex items-center">
-                    <Phone className="h-4 w-4 mr-2" />
-                    <span>{dealer.phone}</span>
+                    <MapPin className="h-4 w-4 mr-2" />
+                    <span>{dealer.dealerInfo?.state || dealer.state}, {dealer.dealerInfo?.lga || dealer.lga}</span>
                   </div>
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {dealer.brands.map((brand, index) => (
+                  {dealer.dealerInfo?.brands?.map((brand, index) => (
                     <span 
                       key={index}
                       className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs rounded-full"
@@ -325,10 +325,10 @@ const Dealership = () => {
       {/* DEALER DETAILS MODAL */}
       {selectedDealer && (
         <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className=" dark:bg-gray-800 rounded-3xl max-w-4xl w-full my-8 shadow-2xl max-h-[90vh] flex flex-col">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl max-w-4xl w-full my-8 shadow-2xl max-h-[90vh] flex flex-col">
             {/* Header */}
             <div className="p-6 border-b flex justify-between flex-shrink-0">
-              <h2 className="text-2xl font-bold">{selectedDealer.name}</h2>
+              <h2 className="text-2xl font-bold">{selectedDealer.dealerInfo?.businessName || `${selectedDealer.firstName} ${selectedDealer.lastName}`}</h2>
               <button onClick={() => setSelectedDealer(null)}>
                 <X className="h-6 w-6" />
               </button>
@@ -337,8 +337,8 @@ const Dealership = () => {
             {/* Scrollable Body */}
             <div className="flex-1 overflow-y-auto p-8 space-y-6">
               <img
-                src={selectedDealer.imageUrl || selectedDealer.avatar || '/placeholder-dealer.jpg'}
-                alt={selectedDealer.name}
+                src={selectedDealer.avatar || car || '/placeholder-dealer.jpg'}
+                alt={selectedDealer.dealerInfo?.businessName}
                 className="w-full h-80 object-cover rounded-2xl"
               />
               <div className="flex items-center gap-2">
@@ -346,20 +346,29 @@ const Dealership = () => {
                   {[...Array(5)].map((_, i) => (
                     <Star 
                       key={i} 
-                      className={`h-6 w-6 ${i < Math.floor(selectedDealer.rating) ? 'fill-current' : 'fill-none stroke-current'}`}
+                      className={`h-6 w-6 ${i < Math.floor(selectedDealer.dealerInfo?.rating || selectedDealer.rating || 0) ? 'fill-current' : 'fill-none stroke-current'}`}
                     />
                   ))}
                 </div>
-                <span className="text-xl font-bold">{selectedDealer.rating.toFixed(1)}</span>
+                <span className="text-xl font-bold">{selectedDealer.dealerInfo?.rating?.toFixed(1) || 'N/A'}</span>
               </div>
+
               <div className="grid grid-cols-2 gap-4">
-                <p><strong>Business Name:</strong> {selectedDealer.businessName}</p>
-                <p><strong>Type:</strong> {selectedDealer.type}</p>
-                <p><strong>Address:</strong> {selectedDealer.address}</p>
-                <p><strong>Phone:</strong> {selectedDealer.phone}</p>
-                <p><strong>Location:</strong> {selectedDealer.location}</p>
-                <p><strong>Brands:</strong> {selectedDealer.brands.join(', ')}</p>
+                <p><strong>Business Name:</strong> {selectedDealer.dealerInfo?.businessName}</p>
+                <p><strong>First Name:</strong> {selectedDealer.firstName}</p>
+                <p><strong>Last Name:</strong> {selectedDealer.lastName}</p>
+                <p><strong>Email:</strong> {selectedDealer.email}</p>
+                <p><strong>Phone:</strong> {selectedDealer.phoneNumber}</p>
+                <p><strong>Business Address:</strong> {selectedDealer.dealerInfo?.businessAddress}</p>
+                <p><strong>State:</strong> {selectedDealer.dealerInfo?.state}</p>
+                <p><strong>LGA:</strong> {selectedDealer.dealerInfo?.lga}</p>
+                <p><strong>Verified:</strong> {selectedDealer.dealerInfo?.verified ? 'Yes' : 'No'}</p>
+                <p><strong>Featured:</strong> {selectedDealer.dealerInfo?.isFeatured ? 'Yes' : 'No'}</p>
+                <p><strong>Featured Until:</strong> {selectedDealer.dealerInfo?.featuredUntil ? new Date(selectedDealer.dealerInfo.featuredUntil).toLocaleString() : 'N/A'}</p>
               </div>
+
+              <h3 className="text-xl font-bold mt-6">Brands</h3>
+              <p>{selectedDealer.dealerInfo?.brands?.join(', ') || 'N/A'}</p>
 
               <h3 className="text-xl font-bold mt-6">Listed Cars</h3>
               {dealerLoading ? (

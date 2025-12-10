@@ -2,7 +2,7 @@
 
 import CarListing from '../models/carListing.js';
 import User from '../models/user.js';
-
+import Subscription from '../models/subscriptionSchema.js';
 export const createCarListing = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -110,71 +110,71 @@ export const getMyCars = async (req, res) => {
 };
 
 // Advanced Search for Cars (public - with filters)
-export const searchCars = async (req, res) => {
-  try {
-    const {
-      bodyType,
-      make,
-      year,
-      minMileage,
-      maxMileage,
-      minPrice,
-      maxPrice,
-      fuelType,
-      transmission,
-      sort = '-createdAt', // default newest
-      limit = 20, // default page size
-      page = 1,
-    } = req.query;
+// export const searchCars = async (req, res) => {
+//   try {
+//     const {
+//       bodyType,
+//       make,
+//       year,
+//       minMileage,
+//       maxMileage,
+//       minPrice,
+//       maxPrice,
+//       fuelType,
+//       transmission,
+//       sort = '-createdAt', // default newest
+//       limit = 20, // default page size
+//       page = 1,
+//     } = req.query;
 
-    // Build query object
-    const query = { status: 'active' };
+//     // Build query object
+//     const query = { status: 'active' };
 
-    if (bodyType) query.bodyType = bodyType.toLowerCase();
-    if (make) query.make = { $regex: make, $options: 'i' }; // case-insensitive
-    if (year) query.year = Number(year);
-    if (fuelType) query.fuelType = fuelType.toLowerCase();
-    if (transmission) query.transmission = transmission.toLowerCase();
+//     if (bodyType) query.bodyType = bodyType.toLowerCase();
+//     if (make) query.make = { $regex: make, $options: 'i' }; // case-insensitive
+//     if (year) query.year = Number(year);
+//     if (fuelType) query.fuelType = fuelType.toLowerCase();
+//     if (transmission) query.transmission = transmission.toLowerCase();
 
-    // Ranges
-    if (minMileage || maxMileage) {
-      query.mileage = {};
-      if (minMileage) query.mileage.$gte = Number(minMileage);
-      if (maxMileage) query.mileage.$lte = Number(maxMileage);
-    }
+//     // Ranges
+//     if (minMileage || maxMileage) {
+//       query.mileage = {};
+//       if (minMileage) query.mileage.$gte = Number(minMileage);
+//       if (maxMileage) query.mileage.$lte = Number(maxMileage);
+//     }
 
-    if (minPrice || maxPrice) {
-      query.price = {};
-      if (minPrice) query.price.$gte = Number(minPrice);
-      if (maxPrice) query.price.$lte = Number(maxPrice);
-    }
+//     if (minPrice || maxPrice) {
+//       query.price = {};
+//       if (minPrice) query.price.$gte = Number(minPrice);
+//       if (maxPrice) query.price.$lte = Number(maxPrice);
+//     }
 
-    // Pagination
-    const skip = (page - 1) * limit;
+//     // Pagination
+//     const skip = (page - 1) * limit;
 
-    const cars = await CarListing.find(query)
-      .populate('postedBy', 'firstName lastName role dealerInfo.businessName dealerInfo.verified phoneNumber avatar')
-      .sort(sort)
-      .skip(skip)
-      .limit(Number(limit));
+//     const cars = await CarListing.find(query)
+//       .populate('postedBy', 'firstName lastName role dealerInfo.businessName dealerInfo.verified phoneNumber avatar')
+//       .sort(sort)
+//       .skip(skip)
+//       .limit(Number(limit));
 
-    const total = await CarListing.countDocuments(query);
+//     const total = await CarListing.countDocuments(query);
 
-    res.status(200).json({
-      status: 'success',
-      results: cars.length,
-      total,
-      page: Number(page),
-      pages: Math.ceil(total / limit),
-      data: { cars },
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      message: err.message || 'Search failed',
-    });
-  }
-};
+//     res.status(200).json({
+//       status: 'success',
+//       results: cars.length,
+//       total,
+//       page: Number(page),
+//       pages: Math.ceil(total / limit),
+//       data: { cars },
+//     });
+//   } catch (err) {
+//     res.status(400).json({
+//       status: 'fail',
+//       message: err.message || 'Search failed',
+//     });
+//   }
+// };
 
 
 // controllers/carController.js
@@ -309,6 +309,118 @@ export const deleteCarListing = async (req, res) => {
     res.status(500).json({
       status: 'error',
       message: 'Failed to delete car',
+    });
+  }
+};
+
+
+
+
+// Backend: controllers/carController.js (Add this export for search)
+export const searchCars = async (req, res) => {
+  try {
+    const {
+      make, model, minPrice, maxPrice, minYear, maxYear, keywords, location,
+      fuelType, minMileage, maxMileage, vehicleType
+    } = req.query;
+
+    const query = {};
+
+    if (make) query.make = { $regex: new RegExp(make, 'i') };
+    if (model) query.model = { $regex: new RegExp(model, 'i') };
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.$gte = Number(minPrice);
+      if (maxPrice) query.price.$lte = Number(maxPrice);
+    }
+    if (minYear || maxYear) {
+      query.year = {};
+      if (minYear) query.year.$gte = Number(minYear);
+      if (maxYear) query.year.$lte = Number(maxYear);
+    }
+    if (keywords) {
+      query.$or = [
+        { make: { $regex: new RegExp(keywords, 'i') } },
+        { model: { $regex: new RegExp(keywords, 'i') } },
+        { description: { $regex: new RegExp(keywords, 'i') } }, // Assuming description field
+      ];
+    }
+    if (location) query.location = { $regex: new RegExp(location, 'i') };
+    if (fuelType) query.fuelType = { $regex: new RegExp(fuelType, 'i') }; // Add fuelType to schema if needed
+    if (minMileage || maxMileage) {
+      query.mileage = {};
+      if (minMileage) query.mileage.$gte = Number(minMileage);
+      if (maxMileage) query.mileage.$lte = Number(maxMileage);
+    }
+    if (vehicleType) query.vehicleType = vehicleType;
+
+    const cars = await Car.find(query).sort({ createdAt: -1 }).limit(100); // Limit for performance
+
+    res.status(200).json({
+      success: true,
+      data: cars,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+
+
+export const getNewestListings = async (req, res) => {
+  try {
+    // Find all users with active "newest_listings_access" subscription
+    const activeSubscribers = await Subscription.find({
+      type: 'newest_listings_access',
+      status: 'active',
+      endDate: { $gt: new Date() },
+    }).distinct('user');
+
+    // Find cars posted by these users
+    const newestCars = await CarListing.find({
+      postedBy: { $in: activeSubscribers },
+      status: 'active',
+    })
+      .populate('postedBy', 'firstName lastName phoneNumber role dealerInfo')
+      .sort({ createdAt: -1 })  // newest first
+      .limit(50);
+
+    res.status(200).json({
+      status: 'success',
+      results: newestCars.length,
+      data: { cars: newestCars },
+    });
+  } catch (err) {
+    console.error('Error fetching newest listings:', err);
+    res.status(500).json({ status: 'error', message: 'Failed to fetch newest listings' });
+  }
+};
+
+
+
+// Get single car details
+export const getCarById = async (req, res) => {
+  try {
+    const car = await CarListing.findById(req.params.id)
+      .populate('postedBy', 'firstName lastName phoneNumber role dealerInfo avatar')
+      .populate('features', 'name'); 
+
+    if (!car) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'Car not found',
+      });
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: { car },
+    });
+  } catch (err) {
+    console.error('Error fetching car:', err);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to fetch car details',
     });
   }
 };

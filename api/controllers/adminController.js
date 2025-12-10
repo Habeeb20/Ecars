@@ -242,3 +242,158 @@ export const verifyUserEmail = async (req, res) => {
     });
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Get ALL cars (for admin)
+export const getAllCarsAdmin = async (req, res) => {
+  try {
+    const cars = await CarListing.find({})
+      .populate('postedBy', 'firstName lastName role dealerInfo')
+      .sort('-createdAt');
+
+    res.status(200).json({
+      status: 'success',
+      results: cars.length,
+      data: { cars },
+    });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Failed to fetch cars' });
+  }
+};
+
+// Get ALL dealers (for admin)
+export const getAllDealersAdmin = async (req, res) => {
+  try {
+    const dealers = await User.find({ role: 'dealer' })
+      .select('firstName lastName phoneNumber dealerInfo')
+      .sort('-createdAt');
+
+    res.status(200).json({
+      status: 'success',
+      results: dealers.length,
+      data: { dealers },
+    });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Failed to fetch dealers' });
+  }
+};
+
+// Make a car Featured
+export const makeCarFeatured = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const car = await CarListing.findByIdAndUpdate(
+      id,
+      {
+        isFeatured: true,
+        featuredUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+      },
+      { new: true }
+    );
+
+    if (!car) return res.status(404).json({ status: 'fail', message: 'Car not found' });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Car is now featured!',
+      data: { car },
+    });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Failed to feature car' });
+  }
+};
+
+// Make a car Newest (just reset createdAt)
+export const makeCarNewest = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const car = await CarListing.findByIdAndUpdate(
+      id,
+      { createdAt: new Date() },
+      { new: true }
+    );
+
+    if (!car) return res.status(404).json({ status: 'fail', message: 'Car not found' });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Car moved to newest listings!',
+      data: { car },
+    });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Failed to refresh car' });
+  }
+};
+
+// Make a dealer Featured
+export const makeDealerFeatured = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const dealer = await User.findByIdAndUpdate(
+      id,
+      {
+        'dealerInfo.isFeatured': true,
+        'dealerInfo.featuredUntil': new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      },
+      { new: true }
+    );
+
+    if (!dealer) return res.status(404).json({ status: 'fail', message: 'Dealer not found' });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Dealer is now featured!',
+      data: { dealer },
+    });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Failed to feature dealer' });
+  }
+};
+
+// Make a service provider Featured
+export const makeServiceProviderFeatured = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const provider = await User.findByIdAndUpdate(
+      id,
+      {
+        'serviceProviderInfo.isFeatured': true,
+        'serviceProviderInfo.featuredUntil': new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      },
+      { new: true }
+    );
+
+    if (!provider) return res.status(404).json({ status: 'fail', message: 'Provider not found' });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Service provider is now featured!',
+      data: { provider },
+    });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Failed to feature provider' });
+  }
+};
