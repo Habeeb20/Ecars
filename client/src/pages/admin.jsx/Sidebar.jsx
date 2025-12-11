@@ -4,6 +4,7 @@ import Overview from './Overview';
 import AllUsers from './AllUsers';
 import DealersList from './DealersList';
 import SuperadminSubscriptions from './superAdminSubscription';
+import BlogManagement from '../blog/BlogManagement';
 // import UsersList from './UsersList';
 // import DealersList from './DealersList';
 // import ServiceProvidersList from './ServiceProvidersList';
@@ -15,6 +16,7 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     { name: 'Overview', icon: Home, component: <Overview /> },
     { name: 'All Users', icon: Users, component: <AllUsers /> },
     { name: 'Dealers', icon: Car, component: <DealersList /> },
+    { name: 'Blog', icon: Car, component: <BlogManagement /> },
     // { name: 'Service Providers', icon: Wrench, component: <ServiceProvidersList /> },
     { name: 'subscription', icon: DollarSign, component: <SuperadminSubscriptions /> },
     // { name: 'Settings', icon: Settings, component: <SettingsPage /> },
