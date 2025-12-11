@@ -45,6 +45,7 @@ app.get("/", (req, res) => {
 });
 
 
+
 app.use("/api/users", router)
 
 app.use("/api/auth", router)

@@ -402,7 +402,7 @@ export const getNewestListings = async (req, res) => {
 // Get single car details
 export const getCarById = async (req, res) => {
   try {
-    const car = await CarListing.findById(req.params.id)
+    const car = await CarListing.findById(req.params?.id)
       .populate('postedBy', 'firstName lastName phoneNumber role dealerInfo avatar')
       .populate('features', 'name'); 
 
