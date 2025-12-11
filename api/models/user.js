@@ -175,6 +175,24 @@ const userSchema = new mongoose.Schema({
     maxlength: 200,
   },
 
+    blacklisted: {
+    type: Boolean,
+    default: false,
+  },
+  blacklistedAt: {
+    type: Date,
+    default: null,
+  },
+  blacklistedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: null,
+  },
+  blacklistedReason: {
+    type: String,
+    default: '',
+  },
+
 dealerInfo: {
   businessName: {
     type: String,
@@ -246,6 +264,7 @@ serviceProviderInfo: {
   verificationRequestedAt: Date,
   isFeatured: { type: Boolean, default: false },
   featuredUntil: Date,
+
 }
 }, { timestamps: true });
 

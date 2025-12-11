@@ -5,16 +5,25 @@ const carSchema = new mongoose.Schema({
   userId: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'User', 
-    required: true 
+   
+  },
+  phoneNumber:{
+type:String,
+required: true
   },
   vin: { 
     type: String, 
-    required: true, 
+    required: false, 
     unique: true, // Global uniqueness for VIN
     uppercase: true,
     match: /^[A-HJ-NPR-Z0-9]{17}$/ // Standard VIN regex
   },
   make: { 
+    type: String, 
+    required: true,
+    trim: true
+  },
+  carImage: { 
     type: String, 
     required: true,
     trim: true

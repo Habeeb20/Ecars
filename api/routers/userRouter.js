@@ -1,8 +1,9 @@
 // routes/authRoutes.js
 import express from 'express';
-import { register, login, forgotPassword, resetPassword, getDashboard, getMe, updateMe, updatePassword, upgradeToDealer, upgradeToServiceProvider, getAllDealers, getAllServiceProviders, searchServiceAndDealers, getFeaturedDealers, searchDealers, getFeaturedServiceProvider, searchServiceProviders, getDealerById } from '../controllers/userController.js';
+import { register, login, forgotPassword, resetPassword, getDashboard, getMe, updateMe, updatePassword, upgradeToDealer, upgradeToServiceProvider, getAllDealers, getAllServiceProviders, searchServiceAndDealers, getFeaturedDealers, searchDealers, getFeaturedServiceProvider, searchServiceProviders, getDealerById, searchBlacklistedUsers } from '../controllers/userController.js';
 import { protect } from '../middleware/verifyToken.js';
 import { sendVerificationEmail } from '../utils/functions.js';
+import { getBlacklistedUsers } from '../controllers/adminController.js';
 
 
 const router = express.Router();
@@ -36,9 +37,11 @@ router.put('/upgrade-service-provider', protect, upgradeToServiceProvider);
 
 router.get('/service-providers', getAllServiceProviders);
 
-
+router.get("/blacklistedusers", getBlacklistedUsers)
 router.post('/send-verification-email', protect, sendVerificationEmail);
-router.get('/search-providers', searchServiceAndDealers); // /api/users/search-providers?q=ahmed&state=lagos&type=mechanic
+router.get('/search-providers', searchServiceAndDealers); 
+// Search blacklisted users (supports all filters + search)
+router.get('/blacklistedusers/search',  searchBlacklistedUsers);
 
 export default router;
 

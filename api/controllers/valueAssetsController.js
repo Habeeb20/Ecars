@@ -10,6 +10,7 @@ export const valueAsset = async (userId, carData) => {
     vin, 
     make, 
     model, 
+    carImage,
     year, 
     mileage, 
     condition, 
@@ -22,11 +23,11 @@ export const valueAsset = async (userId, carData) => {
   try {
     // Step 1: Validate Input
     const upperVin = vin.toUpperCase();
-    if (!vin || vin.length !== 17 || !/^[A-HJ-NPR-Z0-9]{17}$/.test(upperVin)) {
-      log.success = false;
-      log.errors.push('Invalid VIN: Must be 17 alphanumeric characters (no I/O/Q)');
-      return log;
-    }
+    // if (!vin || vin.length !== 17 || !/^[A-HJ-NPR-Z0-9]{17}$/.test(upperVin)) {
+    //   log.success = false;
+    //   log.errors.push('Invalid VIN: Must be 17 alphanumeric characters (no I/O/Q)');
+    //   return log;
+    // }
     if (year > new Date().getFullYear() + 1) {
       log.warnings.push('Future year detected; capping at next year for valuation');
       year = new Date().getFullYear() + 1;
@@ -76,6 +77,7 @@ export const valueAsset = async (userId, carData) => {
       model,
       year,
       mileage,
+      carImage,
       condition,
       type,
       features,
@@ -146,25 +148,36 @@ const computeAdjustedValue = (base, mileage, condition, features, year, type) =>
 // Create/Update Car (Arrow function)
 export const createOrUpdateCar = async (req, res) => {
   try {
-    const { user } = req; // Assuming auth middleware adds req.user
-    const userId = user.id;
+    const userId = req.user?.id; // Optional - only if authenticated
     const log = await valueAsset(userId, req.body);
     if (!log.success) return res.status(400).json(log);
 
     // Persist to DB
-    let car = await Car.findOne({ vin: log.data.car.vin, userId });
+    let car = await Car.findOne({ vin: log.data.car.vin });
+
+    const carData = {
+      ...log.data.car,
+      phoneNumber: req.body.phoneNumber || null, // Save phone number
+      userId: userId || null, // Optional userId
+    };
+
     if (car) {
-      // Update
-      car = await Car.findByIdAndUpdate(car._id, log.data.car, { new: true });
+      // Update existing car
+      car = await Car.findByIdAndUpdate(car._id, carData, { new: true });
     } else {
-      // Create & Link
-      car = new Car(log.data.car);
+      // Create new car
+      car = new Car(carData);
       await car.save();
-      await User.findByIdAndUpdate(userId, { $addToSet: { assets: car._id } });
+
+      // Only link to user if userId exists
+      if (userId) {
+        await User.findByIdAndUpdate(userId, { $addToSet: { assets: car._id } });
+      }
     }
 
     res.json({ success: true, data: { car, ...log.data } });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ success: false, error: err.message });
   }
 };
@@ -199,5 +212,133 @@ export const getUserCars = async (req, res) => {
     res.json({ success: true, data: cars });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+
+
+// // Get all valued cars (Superadmin only)
+// export const getAllValuedCars = async (req, res) => {
+//   try {
+//     const {
+//       page = 1,
+//       limit = 20,
+//       status,           // e.g. 'pending', 'completed', 'rejected'
+//       userId,
+//       make,
+//       model,
+//       year,
+//       vin,
+//     } = req.query;
+
+//     const query = {};
+
+//     if (status) query.status = status;
+//     if (userId) query.userId = userId;
+//     if (make) query.make = { $regex: make, $options: 'i' };
+//     if (model) query.model = { $regex: model, $options: 'i' };
+//     if (year) query.year = Number(year);
+//     if (vin) query.vin = vin.toUpperCase();
+
+//     const skip = (page - 1) * limit;
+
+//     const cars = await Car.find(query)
+//       .populate('userId', 'firstName lastName email phoneNumber') // User details
+//       .sort({ valuationDate: -1 })
+//       .skip(skip)
+//       .limit(Number(limit));
+
+//     const total = await Car.countDocuments(query);
+
+//     res.status(200).json({
+//       status: 'success',
+//       results: cars.length,
+//       total,
+//       page: Number(page),
+//       pages: Math.ceil(total / limit),
+//       data: { cars },
+//     });
+//   } catch (err) {
+//     res.status(500).json({
+//       status: 'error',
+//       message: 'Failed to fetch valued cars',
+//       error: err.message,
+//     });
+//   }
+// };
+
+
+// controllers/carController.js
+
+// Get all valued cars (Superadmin only) - works with or without filters/search
+export const getAllValuedCars = async (req, res) => {
+  try {
+    const {
+      page = 1,
+      limit = 20,
+      status,           // 'pending', 'completed', 'rejected'
+      userId,
+      make,
+      model,
+      year,
+      vin,
+      search,           // Optional: general search across multiple fields
+    } = req.query;
+
+    // Build dynamic query
+    const query = {};
+
+    // Status filter
+    if (status) query.status = status;
+
+    // User filter
+    if (userId) query.userId = userId;
+
+    // Make, Model, Year, VIN filters (case-insensitive)
+    if (make) query.make = { $regex: make, $options: 'i' };
+    if (model) query.model = { $regex: model, $options: 'i' };
+    if (year) query.year = Number(year);
+    if (vin) query.vin = vin.toUpperCase();
+
+    // General search across multiple fields (if search param is provided)
+    if (search) {
+      query.$or = [
+        { make: { $regex: search, $options: 'i' } },
+        { model: { $regex: search, $options: 'i' } },
+        { vin: { $regex: search, $options: 'i' } },
+        { 'userId.firstName': { $regex: search, $options: 'i' } },
+        { 'userId.lastName': { $regex: search, $options: 'i' } },
+        { 'userId.email': { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    // Pagination
+    const skip = (Number(page) - 1) * Number(limit);
+
+    // Fetch cars with populated user data
+    const cars = await Car.find(query)
+      .populate('userId', 'firstName lastName email phoneNumber')
+      .sort({ valuationDate: -1 }) // Newest first
+      .skip(skip)
+      .limit(Number(limit));
+
+    // Total count for pagination
+    const total = await Car.countDocuments(query);
+
+    res.status(200).json({
+      status: 'success',
+      results: cars.length,
+      total,
+      page: Number(page),
+      pages: Math.ceil(total / limit),
+      data: { cars },
+    });
+  } catch (err) {
+    console.error('Error fetching valued cars:', err);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to fetch valued cars',
+      error: err.message,
+    });
   }
 };

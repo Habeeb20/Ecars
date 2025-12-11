@@ -3,6 +3,7 @@
 import CarListing from '../models/carListing.js';
 import User from '../models/user.js';
 import Subscription from '../models/subscriptionSchema.js';
+
 export const createCarListing = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -422,5 +423,25 @@ export const getCarById = async (req, res) => {
       status: 'error',
       message: 'Failed to fetch car details',
     });
+  }
+};
+
+
+
+
+
+
+// controllers/carListingController.js
+export const createListingForOthers = async (req, res) => {
+  try {
+    const payload = {
+      ...req.body,
+      postedBy: req.user?._id || null, // Optional for guests
+    };
+    const listing = new CarListing(payload);
+    await listing.save();
+    res.status(201).json({ status: 'success', data: { listing } });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Failed to create listing' });
   }
 };

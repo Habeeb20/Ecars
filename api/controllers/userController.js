@@ -752,3 +752,99 @@ export const searchServiceProviders = async (req, res) => {
     res.status(500).json({ status: 'error', message: 'Failed to search providers' });
   }
 };
+
+
+
+
+
+
+
+
+
+
+// Search blacklisted users (Superadmin only)
+export const searchBlacklistedUsers = async (req, res) => {
+  try {
+    const {
+      category,      // 'car dealers', 'private sellers', 'buyers', 'service providers'
+      location,
+      date,          // YYYY-MM-DD
+      status,
+      search,        // general search (name or email)
+      page = 1,
+      limit = 20,
+    } = req.query;
+
+    const query = { blacklisted: true };
+
+    // Category filter (map to role)
+    if (category) {
+      const roleMap = {
+        'car dealers': 'dealer',
+        'private sellers': 'private-seller',
+        'buyers': 'buyer',
+        'service providers': 'service-provider',
+      };
+      query.role = roleMap[category.toLowerCase()];
+      if (!query.role) {
+        return res.status(400).json({ status: 'fail', message: 'Invalid category' });
+      }
+    }
+
+    // Location filter (case-insensitive)
+    if (location) {
+      query.location = { $regex: location, $options: 'i' };
+    }
+
+    // Date filter (exact date added)
+    if (date) {
+      const start = new Date(date);
+      const end = new Date(start);
+      end.setDate(end.getDate() + 1);
+      query.blacklistedAt = { $gte: start, $lt: end };
+    }
+
+    // Status filter (if you add a status field later)
+    if (status) {
+      // You can add a 'status' field later if needed
+      // For now, we just return active blacklisted users
+    }
+
+    // General search (name or email)
+    if (search) {
+      query.$or = [
+        { firstName: { $regex: search, $options: 'i' } },
+        { lastName: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    // Pagination
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const users = await User.find(query)
+      .select('firstName lastName email phoneNumber role location blacklistedAt blacklistedReason blacklistedBy')
+      .populate('blacklistedBy', 'firstName lastName email')
+      .sort({ blacklistedAt: -1 })
+      .skip(skip)
+      .limit(Number(limit));
+
+    const total = await User.countDocuments(query);
+
+    res.status(200).json({
+      status: 'success',
+      results: users.length,
+      total,
+      page: Number(page),
+      pages: Math.ceil(total / limit),
+      data: { users },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to search blacklisted users',
+      error: err.message,
+    });
+  }
+};

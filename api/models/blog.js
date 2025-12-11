@@ -22,7 +22,7 @@ const blogSchema = new mongoose.Schema({
     type: String,
     maxlength: 300,
   },
-  featuredImage: {
+  image: {
     type: String, // Cloudinary URL sent from frontend
   
   },

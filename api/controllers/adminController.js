@@ -397,3 +397,103 @@ export const makeServiceProviderFeatured = async (req, res) => {
     res.status(500).json({ status: 'error', message: 'Failed to feature provider' });
   }
 };
+
+
+
+
+
+
+
+// Blacklist a user (Superadmin only)
+export const blacklistUser = async (req, res) => {
+  try {
+    const { userId, reason } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ status: 'fail', message: 'User ID is required' });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ status: 'fail', message: 'User not found' });
+    }
+
+    if (user.blacklisted) {
+      return res.status(400).json({ status: 'fail', message: 'User is already blacklisted' });
+    }
+
+    user.blacklisted = true;
+    user.blacklistedAt = new Date();
+    user.blacklistedBy = req.user?._id;
+    user.blacklistedReason = reason || 'No reason provided';
+
+    await user.save();
+
+    res.status(200).json({
+      status: 'success',
+      message: 'User has been blacklisted',
+      data: { user },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to blacklist user',
+      error: err.message,
+    });
+  }
+};
+
+// Unblacklist a user (Superadmin only)
+export const unblacklistUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ status: 'fail', message: 'User not found' });
+    }
+
+    if (!user.blacklisted) {
+      return res.status(400).json({ status: 'fail', message: 'User is not blacklisted' });
+    }
+
+    user.blacklisted = false;
+    user.blacklistedAt = null;
+    user.blacklistedBy = null;
+    user.blacklistedReason = '';
+
+    await user.save();
+
+    res.status(200).json({
+      status: 'success',
+      message: 'User has been unblacklisted',
+      data: { user },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to unblacklist user',
+      error: err.message,
+    });
+  }
+};
+
+// Get all blacklisted users (Superadmin only)
+export const getBlacklistedUsers = async (req, res) => {
+  try {
+    const users = await User.find({ blacklisted: true })
+      .select('firstName lastName email phoneNumber blacklistedAt blacklistedReason blacklistedBy')
+      .populate('blacklistedBy', 'firstName lastName email');
+
+    res.status(200).json({
+      status: 'success',
+      data: { blacklistedUsers: users },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to fetch blacklisted users',
+      error: err.message,
+    });
+  }
+};

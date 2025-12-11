@@ -1,5 +1,5 @@
 import express from "express"
-import { adminLogin, approveDealer, createSuperAdmin, getAllCarsAdmin, getAllDealersAdmin, getAllUsers, getPendingDealers, makeCarFeatured, makeCarNewest, makeDealerFeatured, makeServiceProviderFeatured, rejectDealer, verifyUserEmail } from "../controllers/adminController.js";
+import { adminLogin, approveDealer, blacklistUser, createSuperAdmin, getAllCarsAdmin, getAllDealersAdmin, getAllUsers, getBlacklistedUsers, getPendingDealers, makeCarFeatured, makeCarNewest, makeDealerFeatured, makeServiceProviderFeatured, rejectDealer, unblacklistUser, verifyUserEmail } from "../controllers/adminController.js";
 import { protect } from "../middleware/verifyToken.js";
 import { restrictTo } from "../middleware/verifyToken.js";
 
@@ -31,6 +31,9 @@ adminRouter.patch('/cars/:id/featured', makeCarFeatured);
 adminRouter.patch('/cars/:id/newest', makeCarNewest);
 adminRouter.patch('/dealers/:id/featured', makeDealerFeatured);
 adminRouter.patch('/service-providers/:id/featured', makeServiceProviderFeatured);
+adminRouter.post("/blacklist", blacklistUser)
+adminRouter.delete('/blacklist/:userId', unblacklistUser)
+adminRouter.get('/blacklisted', getBlacklistedUsers)
 
 
 export default adminRouter

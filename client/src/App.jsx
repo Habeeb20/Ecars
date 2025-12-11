@@ -24,6 +24,8 @@ import ValueAsset from './pages/ValueAsset';
 import Dealership from './components/Landing/DealerShip';
 import DealerDetails from './components/Landing/DealerDetails';
 import ServiceProvider from './components/Landing/ServiceProvider';
+import Blog from './components/Landing/Blog';
+import Blacklist from './pages/Blacklist';
 
 // import Blog from './pages/Blog';
 const App = () => {
@@ -43,12 +45,16 @@ const App = () => {
         <Route path="/payment/success" element={<PaymentSuccess/>} />
         <Route path="/stolen-cars" element={<StolenCars/>} />
         <Route path="/vehicles" element={<Vehicles/>} />
-        <Route path="/blog/:slug" element={<Article/>} />
+        <Route path="/blog/:id" element={<Article/>} />
         <Route path="/cars/:id" element={<CarDetails />} />
         <Route path="/dealerships" element={<Dealership />} />
         <Route path='/dealers/:id' element={<DealerDetails />} />
         <Route path="/sell-car" element={<SellCar />} />
         <Route path="/value-asset" element={<ValueAsset />} />
+        <Route path="/blog" element={<Blog />} />
+        
+        <Route path="/blacklist" element={<Blacklist />} />
+        
         <Route path="/service-providers" element={<ServiceProvider />} />
         
 

@@ -70,6 +70,7 @@ const carListingSchema = new mongoose.Schema({
     type: String,
     required: [true, 'At least one image is required'],
   }],
+    phoneNumber: { type: String, required: true },
 
   // At least 4 images, max 20
   features: [String], // e.g. ["AC", "Leather seats", "Reverse camera"]
@@ -78,7 +79,7 @@ const carListingSchema = new mongoose.Schema({
   postedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    // required: true,
   },
 
   // Status
@@ -97,3 +98,9 @@ featuredUntil: Date,
 carListingSchema.index({ make: 'text', model: 'text', title: 'text' });
 
 export default mongoose.model('CarListing', carListingSchema);
+
+
+
+
+
+

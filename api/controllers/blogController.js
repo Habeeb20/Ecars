@@ -6,7 +6,7 @@ import User from "../models/user.js";
 // Create Blog (Superadmin only)
 export const createBlog = async (req, res) => {
   try {
-    const { title, content, excerpt, featuredImage, additionalImages, category, tags, isPublished } = req.body;
+    const { title, content, excerpt, image, additionalImages, category, tags, isPublished } = req.body;
 
     if (!req.user.role === 'superadmin') {
       return res.status(403).json({ status: 'error', message: 'Superadmin access required' });
@@ -16,11 +16,11 @@ export const createBlog = async (req, res) => {
       title,
       content,
       excerpt,
-      featuredImage,
+      image,
       additionalImages,
       category,
       tags,
-      isPublished,
+      isPublished : true,
       author: req.user._id,
     });
 
@@ -49,9 +49,8 @@ export const getAllBlogs = async (req, res) => {
     const blogs = await Blog.find()
       .populate('author', 'firstName lastName avatar')
       .sort({ publishedAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(Number(limit));
-
+   
+  
     // const total = await Blog.countDocuments(query);
 console.log(blogs)
     res.status(200).json({
@@ -68,8 +67,9 @@ console.log(blogs)
 
 // Get Single Blog (Public)
 export const getBlogById = async (req, res) => {
+  console.log (req.params.id)
   try {
-    const blog = await Blog.findOne({ _id: req.params.id, isPublished: true })
+    const blog = await Blog.findOne({ _id: req.params.id })
       .populate('author', 'firstName lastName avatar');
 
     if (!blog) {
