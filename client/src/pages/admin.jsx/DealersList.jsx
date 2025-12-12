@@ -1,58 +1,41 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Search, MapPin, Phone, Star, ExternalLink, X, Loader2, MessageCircle } from 'lucide-react';
+import { User } from 'lucide-react';
+import { 
+  Loader2, 
+  Search, 
+  CheckCircle, 
+  XCircle, 
+  UserCheck, 
+  UserX, 
+  Mail, 
+  Phone,
+  ShieldCheck,
+  ShieldX
+} from 'lucide-react';
 import { toast } from 'sonner';
-import { useAuth } from '../../contexts/AuthContext';
 
-
-const Dealership = () => {
+const DealerList = () => {
   const [dealers, setDealers] = useState([]);
-  const [filteredDealers, setFilteredDealers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedDealer, setSelectedDealer] = useState(null);
-  const [dealerCars, setDealerCars] = useState([]);
-  const [dealerLoading, setDealerLoading] = useState(false);
-  const [showChatModal, setShowChatModal] = useState(false);
-  const [chatMessage, setChatMessage] = useState('');
-  const [chatLoading, setChatLoading] = useState(false);
-
-  const [filters, setFilters] = useState({
-    brand: '',
-    location: '',
-    rating: '',
-    type: '',
-  });
-
-  const { isLoggedIn } = useAuth();
-
-  const brands = [
-    'Toyota', 'Honda', 'Ford', 'Chevrolet', 'BMW', 'Mercedes-Benz', 'Audi', 'Lexus', 'Volkswagen', 'Hyundai',
-  ];
-
-  const dealerTypes = [
-    'New Cars', 'Used Cars', 'Certified Pre-Owned', 'All Types',
-  ];
-
-  const ratings = [
-    { label: '4+ Stars', value: '4' },
-    { label: '3+ Stars', value: '3' },
-    { label: '2+ Stars', value: '2' },
-  ];
+  const [searchQuery, setSearchQuery] = useState('');
+  const [updating, setUpdating] = useState(null);
 
   useEffect(() => {
-    fetchAllDealers();
+    fetchDealers();
   }, []);
 
-  const fetchAllDealers = async () => {
+  const fetchDealers = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users/dealers`);
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/dealers`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       const data = await res.json();
 
       if (data.status === 'success') {
-        setDealers(data.data.dealers);
-        setFilteredDealers(data.data.dealers);
+        setDealers(data.data.dealers || []);
       } else {
         toast.error('Failed to load dealers');
       }
@@ -63,373 +46,196 @@ const Dealership = () => {
     }
   };
 
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters(prev => ({ ...prev, [name]: value }));
-    applyFilters({ ...filters, [name]: value });
-  };
-
-  const applyFilters = async (newFilters) => {
-    setLoading(true);
-    try {
-      const query = new URLSearchParams();
-      Object.keys(newFilters).forEach(key => {
-        if (newFilters[key]) query.append(key, newFilters[key]);
-      });
-
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users/dealers/search?${query.toString()}`);
-      const data = await res.json();
-
-      if (data.status === 'success') {
-        setFilteredDealers(data.data.dealers);
-      } else {
-        toast.error('No dealers found');
-        setFilteredDealers([]);
-      }
-    } catch (err) {
-      toast.error('Filter failed');
-      setFilteredDealers([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const openDealerDetails = async (dealer) => {
-    setSelectedDealer(dealer);
-    setDealerLoading(true);
-    try {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users/dealers/${dealer._id}`);
-      const data = await res.json();
-
-      if (data.status === 'success') {
-        setDealerCars(data.data.cars || []);
-      } else {
-        toast.error('Failed to load dealer details');
-      }
-    } catch (err) {
-      toast.error('Network error');
-    } finally {
-      setDealerLoading(false);
-    }
-  };
-
-  const openChat = () => {
-    if (!isLoggedIn) {
-      toast.error('Please login to chat');
-      window.location.href = '/login';
-      return;
-    }
-    setShowChatModal(true);
-  };
-
-  const sendMessage = async () => {
-    if (!chatMessage.trim()) return toast.error('Message cannot be empty');
-
-    setChatLoading(true);
+  const handleVerify = async (dealerId) => {
+    if (updating === dealerId) return;
+    setUpdating(dealerId);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/messages/send`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          receiverId: selectedDealer._id,
-          message: chatMessage,
-        }),
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/dealers/${dealerId}/approve`, {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${token}` },
       });
+      const data = await res.json();
 
-      if (res.ok) {
-        toast.success('Message sent successfully!');
-        setChatMessage('');
-        setShowChatModal(false);
+      if (data.status === 'success') {
+        toast.success('Dealer verified successfully');
+        fetchDealers();
       } else {
-        toast.error('Failed to send message');
+        toast.error(data.message || 'Failed to verify');
       }
     } catch (err) {
       toast.error('Network error');
     } finally {
-      setChatLoading(false);
+      setUpdating(null);
     }
   };
 
+  const handleUnverify = async (dealerId) => {
+    if (updating === dealerId) return;
+    setUpdating(dealerId);
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/dealers/unverify/${dealerId}`, {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+
+      if (data.status === 'success') {
+        toast.success('Dealer unverified successfully');
+        fetchDealers();
+      } else {
+        toast.error(data.message || 'Failed to unverify');
+      }
+    } catch (err) {
+      toast.error('Network error');
+    } finally {
+      setUpdating(null);
+    }
+  };
+
+  const filteredDealers = dealers.filter(dealer =>
+    `${dealer.firstName} ${dealer.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    dealer?.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    dealer.businessName?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-        Car Dealerships
-      </h1>
-
-      {/* Filters */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Brand
-            </label>
-            <select
-              name="brand"
-              className="input"
-              value={filters.brand}
-              onChange={handleFilterChange}
-            >
-              <option value="">All Brands</option>
-              {brands.map(brand => (
-                <option key={brand} value={brand.toLowerCase()}>
-                  {brand}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Location
-            </label>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12 px-4">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-10">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            Dealer Verification
+          </h1>
+          <div className="mt-4 md:mt-0 relative">
             <input
               type="text"
-              name="location"
-              className="input"
-              placeholder="Enter city or ZIP code..."
-              value={filters.location}
-              onChange={handleFilterChange}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by name, email, or business..."
+              className="w-full md:w-80 h-12 pl-10 pr-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-md"
             />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Rating
-            </label>
-            <select
-              name="rating"
-              className="input"
-              value={filters.rating}
-              onChange={handleFilterChange}
-            >
-              <option value="">Any Rating</option>
-              {ratings.map(rating => (
-                <option key={rating.value} value={rating.value}>
-                  {rating.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Dealer Type
-            </label>
-            <select
-              name="type"
-              className="input"
-              value={filters.type}
-              onChange={handleFilterChange}
-            >
-              <option value="">All Types</option>
-              {dealerTypes.map(type => (
-                <option key={type} value={type.toLowerCase()}>
-                  {type}
-                </option>
-              ))}
-            </select>
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
           </div>
         </div>
-      </div>
 
-      {/* Results */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Table */}
         {loading ? (
-          <div className="col-span-full flex justify-center py-20">
-            <Loader2 className="h-12 w-12 text-primary-600 animate-spin" />
+          <div className="flex justify-center py-20">
+            <Loader2 className="h-12 w-12 text-indigo-600 animate-spin" />
           </div>
-        ) : filteredDealers.length > 0 ? (
-          filteredDealers.map(dealer => (
-            <div 
-              key={dealer._id} 
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden cursor-pointer"
-              onClick={() => openDealerDetails(dealer)}
-            >
-              <div className="h-48 overflow-hidden">
-                <img 
-                  src={dealer.imageUrl || dealer.avatar || '/placeholder-dealer.jpg'} 
-                  alt={dealer.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                    {dealer.name}
-                  </h3>
-                  <div className="flex text-yellow-400">
-                    {[...Array(5)].map((_, i) => (
-                      <Star 
-                        key={i} 
-                        className={`h-4 w-4 ${i < Math.floor(dealer.rating) ? 'fill-current' : 'fill-none stroke-current'}`}
-                      />
-                    ))}
-                  </div>
-                </div>
-                <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                  <div className="flex items-center">
-                    <MapPin className="h-4 w-4 mr-2" />
-                    <span>{dealer.address}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Phone className="h-4 w-4 mr-2" />
-                    <span>{dealer.phone}</span>
-                  </div>
-                </div>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {dealer.brands.map((brand, index) => (
-                    <span 
-                      key={index}
-                      className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs rounded-full"
-                    >
-                      {brand}
-                    </span>
-                  ))}
-                </div>
-                <div className="mt-4 flex space-x-2">
-                  <Link 
-                    to={`/dealers/${dealer._id}`}
-                    className="flex-1 btn btn-primary"
-                  >
-                    View Inventory
-                  </Link>
-                  <a
-                    href="#"
-                    className="btn btn-outline flex items-center justify-center"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
-                </div>
-              </div>
-            </div>
-          ))
-        ) : (
-          <div className="col-span-full text-center py-12">
-            <Search className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-              No dealerships found
+        ) : filteredDealers.length === 0 ? (
+          <div className="text-center py-20 bg-white dark:bg-gray-800 rounded-3xl shadow-xl">
+            <Search className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              No dealers found
             </h3>
-            <p className="text-gray-500 dark:text-gray-400">
-              Try adjusting your filters or search terms
+            <p className="text-gray-600 dark:text-gray-400">
+              Try different search terms
             </p>
+          </div>
+        ) : (
+          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50 dark:bg-gray-700">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 dark:text-gray-400">Dealer</th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 dark:text-gray-400">Business</th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 dark:text-gray-400">Contact</th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 dark:text-gray-400">Status</th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 dark:text-gray-400">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                  {filteredDealers.map(dealer => (
+                    <tr key={dealer._id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center">
+                          <div className="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center">
+                            <User className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                          </div>
+                          <div className="ml-3">
+                            <p className="font-medium text-gray-900 dark:text-white">
+                              {dealer.firstName} {dealer.lastName}
+                            </p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                              {dealer.email}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                        {dealer?.dealerInfo?.businessName || 'N/A'}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                        <div className="flex flex-col">
+                          <span>{dealer.phoneNumber || 'N/A'}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${
+                          dealer.dealerInfo?.verified 
+                            ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' 
+                            : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
+                        }`}>
+                          {dealer.dealerInfo?.verified ? (
+                            <>
+                              <CheckCircle className="h-4 w-4" />
+                              Verified
+                            </>
+                          ) : (
+                            <>
+                              <XCircle className="h-4 w-4" />
+                              Unverified
+                            </>
+                          )}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        {dealer.verified ? (
+                          <button
+                            onClick={() => handleUnverify(dealer._id)}
+                            disabled={updating === dealer._id}
+                            className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 flex items-center gap-1"
+                          >
+                            {updating === dealer._id ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <>
+                                <ShieldX className="h-4 w-4" />
+                                Unverify
+                              </>
+                            )}
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleVerify(dealer._id)}
+                            disabled={updating === dealer._id}
+                            className="text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300 flex items-center gap-1"
+                          >
+                            {updating === dealer._id ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <>
+                                <ShieldCheck className="h-4 w-4" />
+                                Verify
+                              </>
+                            )}
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>
-
-      {/* DEALER DETAILS MODAL */}
-      {selectedDealer && (
-        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className=" dark:bg-gray-800 rounded-3xl max-w-4xl w-full my-8 shadow-2xl max-h-[90vh] flex flex-col">
-            {/* Header */}
-            <div className="p-6 border-b flex justify-between flex-shrink-0">
-              <h2 className="text-2xl font-bold">{selectedDealer.name}</h2>
-              <button onClick={() => setSelectedDealer(null)}>
-                <X className="h-6 w-6" />
-              </button>
-            </div>
-
-            {/* Scrollable Body */}
-            <div className="flex-1 overflow-y-auto p-8 space-y-6">
-              <img
-                src={selectedDealer.imageUrl || selectedDealer.avatar || '/placeholder-dealer.jpg'}
-                alt={selectedDealer.name}
-                className="w-full h-80 object-cover rounded-2xl"
-              />
-              <div className="flex items-center gap-2">
-                <div className="flex text-yellow-400">
-                  {[...Array(5)].map((_, i) => (
-                    <Star 
-                      key={i} 
-                      className={`h-6 w-6 ${i < Math.floor(selectedDealer.rating) ? 'fill-current' : 'fill-none stroke-current'}`}
-                    />
-                  ))}
-                </div>
-                <span className="text-xl font-bold">{selectedDealer.rating.toFixed(1)}</span>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <p><strong>Business Name:</strong> {selectedDealer.businessName}</p>
-                <p><strong>Type:</strong> {selectedDealer.type}</p>
-                <p><strong>Address:</strong> {selectedDealer.address}</p>
-                <p><strong>Phone:</strong> {selectedDealer.phone}</p>
-                <p><strong>Location:</strong> {selectedDealer.location}</p>
-                <p><strong>Brands:</strong> {selectedDealer.brands.join(', ')}</p>
-              </div>
-
-              <h3 className="text-xl font-bold mt-6">Listed Cars</h3>
-              {dealerLoading ? (
-                <div className="flex justify-center py-8">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary-600" />
-                </div>
-              ) : dealerCars.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {dealerCars.map(car => (
-                    <div key={car._id} className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
-                      <img src={car.images[0]} alt={car.title} className="w-full h-32 object-cover rounded-lg mb-2" />
-                      <p className="font-bold">{car.title}</p>
-                      <p className="text-sm">₦{car.price.toLocaleString()}</p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-gray-600 dark:text-gray-400">No cars listed yet</p>
-              )}
-            </div>
-
-            {/* Fixed Footer */}
-            <div className="p-6 border-t flex-shrink-0">
-              <button
-                onClick={openChat}
-                className="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl flex items-center justify-center gap-3"
-              >
-                <MessageCircle className="h-6 w-6" />
-                Chat with Dealer
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* CHAT MODAL */}
-      {showChatModal && selectedDealer && (
-        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white dark:bg-gray-800 rounded-3xl max-w-lg w-full my-8 shadow-2xl max-h-[90vh] flex flex-col">
-            <div className="p-6 border-b flex justify-between flex-shrink-0">
-              <h3 className="text-2xl font-bold">Chat with Dealer</h3>
-              <button onClick={() => setShowChatModal(false)}>
-                <X className="h-6 w-6" />
-              </button>
-            </div>
-            <div className="flex-1 overflow-y-auto p-8">
-              <p className="text-gray-600 dark:text-gray-300 mb-4">Send a message to the dealer</p>
-              <textarea
-                rows="8"
-                value={chatMessage}
-                onChange={(e) => setChatMessage(e.target.value)}
-                placeholder="Hello, I'm interested in your dealership..."
-                className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 resize-none"
-              />
-            </div>
-            <div className="p-6 border-t flex-shrink-0">
-              <button
-                onClick={sendMessage}
-                disabled={chatLoading}
-                className="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold rounded-xl flex items-center justify-center gap-3"
-              >
-                {chatLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : <MessageCircle className="h-6 w-6" />}
-                {chatLoading ? 'Sending...' : 'Send Message'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
-export default Dealership;
+export default DealerList;

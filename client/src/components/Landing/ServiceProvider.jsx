@@ -60,10 +60,11 @@ const ServiceProvider = () => {
       setLoading(true);
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users/all-service-providers`);
       const data = await res.json();
+      console.log(data)
 
       if (data.status === 'success') {
-        setProviders(data.data.providers);
-        setFilteredProviders(data.data.providers);
+        setProviders(data.data?.providers);
+        setFilteredProviders(data.data?.providers);
       } else {
         toast.error('Failed to load service providers');
       }

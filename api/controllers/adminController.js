@@ -193,6 +193,93 @@ export const rejectDealer = async (req, res) => {
   }
 };
 
+
+
+
+
+export const getPendingServiceProvider = async (req, res) => {
+  try {
+    const dealers = await User.find({
+      role: 'service-provider',
+      'serviceProviderInfo.verified': false,
+    }).select('-password');
+
+    res.status(200).json({
+      status: 'success',
+      count: dealers.length,
+      data: { dealers },
+    });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: err.message });
+  }
+};
+
+// Approve a dealer
+export const approveServiceProvider = async (req, res) => {
+  try {
+    const dealer = await User.findOneAndUpdate(
+      { _id: req.params.id, role   : 'service-provider', },
+      {
+ 
+      'serviceProviderInfo.verified': true,
+        'serviceProviderInfo.verifiedAt': new Date(),
+      },
+      { new: true, runValidators: true }
+    ).select('-password');
+
+    if (!dealer) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'service provider  not found',
+      });
+    }
+
+    // Optional: send email to dealer
+    // await sendDealerApprovedEmail(dealer.email);
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Dealer verified successfully!',
+      data: { dealer },
+    });
+  } catch (err) {
+    res.status(400).json({ status: 'fail', message: err.message });
+  }
+};
+
+// Reject a dealer (with reason)
+export const rejectserviceProvider = async (req, res) => {
+  try {
+    const { reason } = req.body; // e.g. "Invalid CAC document"
+
+    const dealer = await User.findOneAndUpdate(
+      { _id: req.params.id, role: 'service-provider' },
+      {
+        role: 'user', // downgrade back to user
+        'serviceProviderInfo.verified': false,
+        'serviceProviderInfo.rejected': true,
+        'serviceProviderInfo.rejectionReason': reason || 'Incomplete information',
+        'serviceProviderInfo.rejectedAt': new Date(),
+      },
+      { new: true }
+    );
+
+    if (!dealer) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'service provider not found',
+      });
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: 'service provider application rejected and downgraded to user',
+      data: { dealer },
+    });
+  } catch (err) {
+    res.status(400).json({ status: 'fail', message: err.message });
+  }
+};
 // controllers/adminController.js
 
 export const verifyUserEmail = async (req, res) => {
@@ -295,6 +382,23 @@ export const getAllDealersAdmin = async (req, res) => {
       status: 'success',
       results: dealers.length,
       data: { dealers },
+    });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Failed to fetch dealers' });
+  }
+};
+// Get ALL service provider (for admin)
+export const getAllServiceProviders = async (req, res) => {
+  try {
+    const providers = await User.find({ role: 'service-provider' })
+      .select('firstName lastName phoneNumber serviceProviderInfo')
+      .sort('-createdAt');
+      
+
+    res.status(200).json({
+      status: 'success',
+      results: providers.length,
+      data: { providers },
     });
   } catch (err) {
     res.status(500).json({ status: 'error', message: 'Failed to fetch dealers' });

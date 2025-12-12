@@ -349,6 +349,8 @@ const Home = () => {
       <FeaturedServiceProvider/>
 
      <Blog/>
+
+     
   
       {/* ... continue with all your other sections exactly as written ... */}
       {/* (Featured Dealers, Auctions, Service Providers, Car Parts, Stolen Cars, Blog, Brands, Why Choose Us, CTA) */}

@@ -8,6 +8,7 @@ import { getBlacklistedUsers } from '../controllers/adminController.js';
 
 const router = express.Router();
 router.get('/alldealers', getAllDealers);
+router.get('/dealers', getAllDealers);
 router.get('/all-service-providers', getAllServiceProviders);
 
 router.post('/register', register);

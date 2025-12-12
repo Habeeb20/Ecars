@@ -1,5 +1,5 @@
 import express from "express"
-import { adminLogin, approveDealer, blacklistUser, createSuperAdmin, getAllCarsAdmin, getAllDealersAdmin, getAllUsers, getBlacklistedUsers, getPendingDealers, makeCarFeatured, makeCarNewest, makeDealerFeatured, makeServiceProviderFeatured, rejectDealer, unblacklistUser, verifyUserEmail } from "../controllers/adminController.js";
+import { adminLogin, approveDealer, approveServiceProvider, blacklistUser, createSuperAdmin, getAllCarsAdmin, getAllDealersAdmin, getAllServiceProviders, getAllUsers, getBlacklistedUsers, getPendingDealers, getPendingServiceProvider, makeCarFeatured, makeCarNewest, makeDealerFeatured, makeServiceProviderFeatured, rejectDealer, rejectserviceProvider, unblacklistUser, verifyUserEmail } from "../controllers/adminController.js";
 import { protect } from "../middleware/verifyToken.js";
 import { restrictTo } from "../middleware/verifyToken.js";
 
@@ -22,7 +22,12 @@ adminRouter.get('/dealers/pending', getPendingDealers);
 adminRouter.put('/dealers/:id/approve', approveDealer);
 
 adminRouter.put('/dealers/:id/reject', rejectDealer);
+adminRouter.get('/service-providers/pending', getPendingServiceProvider);
 
+adminRouter.put('/service-providers/:id/approve', approveServiceProvider);
+
+adminRouter.put('/service-providers/:id/reject', rejectserviceProvider);
+adminRouter.get('/service-providers', getAllServiceProviders);
 
 adminRouter.get('/cars', getAllCarsAdmin);
 adminRouter.get('/dealers', getAllDealersAdmin);

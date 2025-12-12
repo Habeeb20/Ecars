@@ -32,9 +32,9 @@ export const FeaturedServiceProvider = () => {
       
       const res = await fetch(url);
       const data = await res.json();
-
+console.log(data)
       if (data.status === 'success') {
-        const fetchedDealers = data.data.dealers || [];
+        const fetchedDealers = data?.data?.dealers || [];
         if (query) {
           setSearchResults(fetchedDealers); // search mode
         } else {
@@ -170,26 +170,26 @@ export const FeaturedServiceProvider = () => {
                   className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
                 >
                   <div className="h-48 overflow-hidden">
-                    {/* <img 
-                      src={dealer.avatar || car || 'https://via.placeholder.com/400x200?text=Dealer+Logo'} 
-                      alt={dealer.dealerInfo?.businessName}
-                      className="w-full h-full object-cover"
-                    /> */}
+                   <img
+                src={dealer?.avatar || `https://ui-avatars.com/api/?name=${dealer?.firstName}+${dealer?.lastName}&background=6366f1&color=fff&bold=true&size=128`}
+                alt="Profile"
+                className="w-32 h-32 rounded-full mx-auto border-4 border-indigo-500 shadow-lg"
+              />
                   </div>
                   <div className="p-4">
                     <h3 className="text-xl font-bold mb-1 text-gray-900 dark:text-gray-100">
-                      {dealer.dealerInfo?.businessName}
+                      {dealer.serviceProviderInfo?.businessName}
                     </h3>
                     <p className="text-sm mb-3 text-gray-600 dark:text-gray-400">
-                      {dealer.dealerInfo?.phoneNumber}
+                      {dealer.serviceProviderInfo?.phoneNumber}
                     </p>
                     <p className="text-sm mb-3 text-gray-600 dark:text-gray-400">
-                      {dealer.dealerInfo?.state || dealer.state}, {dealer.dealerInfo?.lga || dealer.lga}
+                      {dealer.serviceProviderInfo?.state || dealer.state}, {dealer.serviceProviderInfo?.lga || dealer.lga}
                     </p>
 
                     <div className="flex items-center gap-2 mb-3">
                       <div className="flex text-yellow-500">
-                        {[...Array(5)].map((_, i) => (
+                        {/* {[...Array(5)].map((_, i) => (
                           <svg
                             key={i}
                             className={`w-4 h-4 ${i < Math.floor(dealer.dealerInfo?.rating || dealer.rating || 0) ? 'fill-current' : 'fill-none stroke-current'}`}
@@ -198,12 +198,18 @@ export const FeaturedServiceProvider = () => {
                           >
                             <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                           </svg>
-                        ))}
+                        ))} */}
                       </div>
-                      <span className="text-sm text-gray-600 dark:text-gray-400">
-                        {dealer.dealerInfo?.rating?.toFixed(1) || dealer.rating?.toFixed(1) || 'N/A'}
+                      <span className="text-semibold text-gray-600 dark:text-gray-400">
+                        {dealer.firstName } {dealer.lastName}
+                      
+                     
                       </span>
+                     
                     </div>
+                     <span className="text-semibold text-gray-600 dark:text-gray-400">
+                       {dealer.phoneNumber}
+                      </span>
 
                     <div className="flex flex-wrap gap-2">
                       {dealer.dealerInfo?.brands?.map((brand, index) => (
@@ -229,7 +235,7 @@ export const FeaturedServiceProvider = () => {
           <div className="bg-white dark:bg-gray-800 rounded-3xl max-w-4xl w-full my-8 shadow-2xl max-h-[90vh] flex flex-col">
             {/* Header */}
             <div className="p-6 border-b flex justify-between flex-shrink-0">
-              <h2 className="text-2xl font-bold">{selectedDealer.dealerInfo?.businessName || `${selectedDealer.firstName} ${selectedDealer.lastName}`}</h2>
+              <h2 className="text-2xl font-bold">{selectedDealer.serviceProviderInfo?.businessName || `${selectedDealer.firstName} ${selectedDealer.lastName}`}</h2>
               <button onClick={() => setSelectedDealer(null)}>
                 <X className="h-6 w-6" />
               </button>
@@ -243,8 +249,11 @@ export const FeaturedServiceProvider = () => {
                 className="w-full h-80 object-cover rounded-2xl"
               /> */}
               <p className="text-3xl font-bold text-primary-600">
-                {selectedDealer.dealerInfo?.rating ? `${selectedDealer.dealerInfo.rating.toFixed(1)} ★` : 'N/A'}
+                {selectedDealer.serviceProviderInfo?.businessName}
               </p>
+              {/* <p className="text-3xl font-bold text-primary-600">
+                {selectedDealer.serviceProviderInfo?.rating ? `${selectedDealer.serviceProviderInfo.rating.toFixed(1)} ★` : 'N/A'}
+              </p> */}
 
               <div className="grid grid-cols-2 gap-4">
                 <p><strong>First Name:</strong> {selectedDealer.firstName}</p>
@@ -255,18 +264,18 @@ export const FeaturedServiceProvider = () => {
                 <p><strong>Unique Number:</strong> {selectedDealer.uniqueNumber}</p>
                 <p><strong>Active:</strong> {selectedDealer.isActive ? 'Yes' : 'No'}</p>
                 <p><strong>Email Verified:</strong> {selectedDealer.emailVerified ? 'Yes' : 'No'}</p>
-                <p><strong>State:</strong> {selectedDealer.dealerInfo?.state}</p>
-                <p><strong>LGA:</strong> {selectedDealer.dealerInfo?.lga}</p>
+                <p><strong>State:</strong> {selectedDealer.serviceProviderInfo?.state}</p>
+                <p><strong>LGA:</strong> {selectedDealer.serviceProviderInfo?.lga}</p>
                 <p><strong>Address:</strong> {selectedDealer.address}</p>
                 <p><strong>Bio:</strong> {selectedDealer.bio}</p>
-                <p><strong>Business Name:</strong> {selectedDealer.dealerInfo?.businessName}</p>
-                <p><strong>Business Reg No:</strong> {selectedDealer.dealerInfo?.businessRegistrationNumber}</p>
-                <p><strong>Business Address:</strong> {selectedDealer.dealerInfo?.businessAddress}</p>
-                <p><strong>Dealer State:</strong> {selectedDealer.dealerInfo?.state}</p>
-                <p><strong>Dealer LGA:</strong> {selectedDealer.dealerInfo?.lga}</p>
-                <p><strong>Verified:</strong> {selectedDealer.dealerInfo?.verified ? 'Yes' : 'No'}</p>
-                <p><strong>Featured:</strong> {selectedDealer.dealerInfo?.isFeatured ? 'Yes' : 'No'}</p>
-                <p><strong>Featured Until:</strong> {selectedDealer.dealerInfo?.featuredUntil ? new Date(selectedDealer.dealerInfo.featuredUntil).toLocaleString() : 'N/A'}</p>
+                <p><strong>Business Name:</strong> {selectedDealer.serviceProviderInfo?.businessName}</p>
+                <p><strong>Business Reg No:</strong> {selectedDealer.serviceProviderInfo?.businessRegistrationNumber}</p>
+                <p><strong>Business Address:</strong> {selectedDealer.serviceProviderInfo?.businessAddress}</p>
+                <p><strong>Dealer State:</strong> {selectedDealer.serviceProviderInfo?.state}</p>
+                <p><strong>Dealer LGA:</strong> {selectedDealer.serviceProviderInfo?.lga}</p>
+                <p><strong>Verified:</strong> {selectedDealer.serviceProviderInfo?.verified ? 'Yes' : 'No'}</p>
+                <p><strong>Featured:</strong> {selectedDealer.serviceProviderInfo?.isFeatured ? 'Yes' : 'No'}</p>
+                <p><strong>Featured Until:</strong> {selectedDealer.serviceProviderInfo?.featuredUntil ? new Date(selectedDealer.serviceProviderInfo.featuredUntil).toLocaleString() : 'N/A'}</p>
               </div>
 
               <h3 className="text-xl font-bold mt-6">Brands</h3>

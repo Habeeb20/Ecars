@@ -509,6 +509,7 @@ export const getAllServiceProviders = async (req, res) => {
     .select('firstName serviceProviderInfo.businessName serviceProviderInfo.type serviceProviderInfo.state serviceProviderInfo.lga serviceProviderInfo.workshopPhotos serviceProviderInfo.rating phoneNumber')
     .sort('-serviceProviderInfo.verifiedAt');
 
+    console.log(providers)
     res.status(200).json({
       status: 'success',
       results: providers.length,
@@ -683,21 +684,7 @@ export const getAllDealers = async (req, res) => {
 
 
 
-export const getDealerById = async (req, res) => {
-  try {
-    const dealer = await User.findById(req.params?.id).select('firstName lastName email phoneNumber state lga address avatar bio dealerInfo');
-    
-    const cars = await CarListing.find({ postedBy: dealer._id }).select('title price images year mileage');
 
-    res.status(200).json({
-      status: 'success',
-      data: { dealer, cars },
-    });
-  } catch (err) {
-    console.log(err)
-    res.status(500).json({ status: 'error', message: 'Failed to fetch dealer details' });
-  }
-};
 
 export const getFeaturedServiceProvider = async (req, res) => {
   try {
@@ -705,7 +692,7 @@ export const getFeaturedServiceProvider = async (req, res) => {
       role: 'service-provider',
       'serviceProviderInfo.isFeatured': true,
       'serviceProviderInfo.featuredUntil': { $gt: new Date() },
-    }).select('firstName lastName email phoneNumber state lga address avatar bio dealerInfo');
+    }).select('firstName lastName email phoneNumber state lga address avatar bio serviceProviderInfo');
 
     res.status(200).json({
       status: 'success',
@@ -846,5 +833,25 @@ export const searchBlacklistedUsers = async (req, res) => {
       message: 'Failed to search blacklisted users',
       error: err.message,
     });
+  }
+};
+
+
+
+
+
+export const getDealerById = async (req, res) => {
+  try {
+    const dealer = await User.findById(req.params?.id).select('firstName lastName email phoneNumber state lga address avatar bio dealerInfo');
+    
+    const cars = await CarListing.find({ postedBy: dealer._id }).select('title price images year mileage');
+
+    res.status(200).json({
+      status: 'success',
+      data: { dealer, cars },
+    });
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ status: 'error', message: 'Failed to fetch dealer details' });
   }
 };

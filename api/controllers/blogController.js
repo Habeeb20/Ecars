@@ -51,8 +51,7 @@ export const getAllBlogs = async (req, res) => {
       .sort({ publishedAt: -1 })
    
   
-    // const total = await Blog.countDocuments(query);
-console.log(blogs)
+ 
     res.status(200).json({
       status: 'success',
       results: blogs.length,
