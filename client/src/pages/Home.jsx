@@ -28,6 +28,7 @@ import NewListing from '../components/Landing/NewListing';
 import FeaturedDealers from '../components/Landing/FeaturedDealers';
 import { FeaturedServiceProvider } from '../components/Landing/FeaturedServiceProvider';
 import Blog from '../components/Landing/Blog';
+import FeaturedCarPartSellers from '../components/Landing/FeaturedCarPartSeller';
 
 // Mock data (kept exactly as in your original code)
 const mockServiceProviders = [
@@ -279,6 +280,9 @@ const Home = () => {
 
       {/* Featured Cars Section */}
     <FeaturedCar/>
+
+
+    <FeaturedCarPartSellers/>
 
       {/* Value Your Asset & Sell Your Car Sections */}
       <section className="py-16 bg-gray-50 dark:bg-gray-900">
