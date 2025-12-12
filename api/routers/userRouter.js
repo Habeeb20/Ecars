@@ -1,6 +1,6 @@
 // routes/authRoutes.js
 import express from 'express';
-import { register, login, forgotPassword, resetPassword, getDashboard, getMe, updateMe, updatePassword, upgradeToDealer, upgradeToServiceProvider, getAllDealers, getAllServiceProviders, searchServiceAndDealers, getFeaturedDealers, searchDealers, getFeaturedServiceProvider, searchServiceProviders, getDealerById, searchBlacklistedUsers } from '../controllers/userController.js';
+import { register, login, forgotPassword, resetPassword, getDashboard, getMe, updateMe, updatePassword, upgradeToDealer, upgradeToServiceProvider, getAllDealers, getAllServiceProviders, searchServiceAndDealers, getFeaturedDealers, searchDealers, getFeaturedServiceProvider, searchServiceProviders, getDealerById, searchBlacklistedUsers, upgradeToCarPartSeller, getAllCarPartSellers, verifyCarPartSeller, searchCarPartSellers } from '../controllers/userController.js';
 import { protect } from '../middleware/verifyToken.js';
 import { sendVerificationEmail } from '../utils/functions.js';
 import { getBlacklistedUsers } from '../controllers/adminController.js';
@@ -43,6 +43,12 @@ router.post('/send-verification-email', protect, sendVerificationEmail);
 router.get('/search-providers', searchServiceAndDealers); 
 // Search blacklisted users (supports all filters + search)
 router.get('/blacklistedusers/search',  searchBlacklistedUsers);
+
+
+router.put('/upgrade-carpart-seller', protect, upgradeToCarPartSeller);
+router.get('/carpart-sellers', getAllCarPartSellers);
+
+router.get('/carpart-sellers/search',  searchCarPartSellers);
 
 export default router;
 

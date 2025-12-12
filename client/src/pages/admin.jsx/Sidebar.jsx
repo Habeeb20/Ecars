@@ -8,6 +8,7 @@ import BlogManagement from '../blog/BlogManagement';
 import AdminValuedCars from './ValueAsset';
 import AdminBlacklist from './BlacklistUsers';
 import ServiceProviderList from './ServiceProviders';
+import CarPartSellerList from './CarpartSellerList';
 // import UsersList from './UsersList';
 // import DealersList from './DealersList';
 // import ServiceProvidersList from './ServiceProvidersList';
@@ -21,6 +22,7 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     { name: 'Dealers', icon: Car, component: <DealersList /> },
     { name: 'Blog', icon: Car, component: <BlogManagement /> },
     { name: 'ValuedAssets', icon: Car, component: <AdminValuedCars /> },
+    { name: 'car parts sellers', icon: Car, component: <CarPartSellerList /> },
     { name: 'Service Providers', icon: Wrench, component: <ServiceProviderList /> },
     { name: 'subscription', icon: DollarSign, component: <SuperadminSubscriptions /> },
     { name: 'Blacklist', icon: SettingsIcon, component: <AdminBlacklist /> },

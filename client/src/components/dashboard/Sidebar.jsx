@@ -61,7 +61,7 @@ const Sidebar = ({ onClose, setCurrentView }) => {
 
   const menuItems = [
     { icon: Grid, label: 'Dashboard', view: 'overview' },
-    { icon: Upload, label: 'Upload Cars', view: 'upload' },
+    { icon: Upload, label: 'Upload Cars for sales', view: 'upload' },
     { icon: ListChecks, label: 'Listings', view: 'listings' },
     { icon: Mail, label: 'Verify Your Email', view: 'verifyEmail' },
     { icon: Car, label: 'Manage Cars', view: 'manageCars' },
@@ -72,6 +72,15 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     { icon: User, label: 'Profile', view: 'profile' },
   
   ];
+
+
+   const getLabel = (view) => {
+    if (view !== 'upload') return 'Other Item';
+
+    if (user?.role === 'dealer') return 'Upload Cars for Sale';
+    if (user?.role === 'carPart-seller') return 'Upload Car Parts for Sale';
+    return null; // hide for service-provider or others
+  };
 
   const adminMenuItems = [
     { icon: Users, label: 'User Management', view: 'adminUsers' },
@@ -119,6 +128,9 @@ const Sidebar = ({ onClose, setCurrentView }) => {
         <div className="flex-1 overflow-y-auto py-4">
           <nav className="space-y-1 px-3">
             {menuItems.map((item) => {
+                 const label = getLabel(item.view);
+        if (!label) return null;
+
               const Icon = item.icon;
               const isActive = activeView === item.view;
 
@@ -186,3 +198,20 @@ const Sidebar = ({ onClose, setCurrentView }) => {
 };
 
 export default Sidebar;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

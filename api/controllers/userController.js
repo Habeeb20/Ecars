@@ -855,3 +855,118 @@ export const getDealerById = async (req, res) => {
     res.status(500).json({ status: 'error', message: 'Failed to fetch dealer details' });
   }
 };
+
+
+
+// Backend: Controllers (controllers/userController.js or adminController.js)
+export const upgradeToCarPartSeller = async (req, res) => {
+  try {
+    const user = await User.findById(req.user?._id || req.user?.id);
+    if (!user) return res.status(404).json({ status: 'fail', message: 'User not found' });
+
+    if (user.role !== 'user') {
+      return res.status(400).json({ status: 'fail', message: 'You are already a specialized user' });
+    }
+
+    const { type, businessName, businessAddress, state, lga, phoneNumber, whatsappNumber, website, yearsOfExperience, specialties, shopPhotos } = req.body;
+
+    user.role = 'carPart-seller';
+    user.carPartSellerInfo = {
+      type,
+      businessName,
+      businessAddress,
+      state,
+      lga,
+      phoneNumber,
+      whatsappNumber,
+      website,
+      yearsOfExperience,
+      specialties,
+      shopPhotos,
+      verificationRequestedAt: new Date(),
+    };
+
+    await user.save();
+    res.status(200).json({ status: 'success', message: 'Upgrade request submitted. Waiting for admin verification.' });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Failed to upgrade' });
+  }
+};
+
+export const getAllCarPartSellers = async (req, res) => {
+  try {
+    const sellers = await User.find({ role: 'carPart-seller' })
+      .select('firstName lastName email phoneNumber carPartSellerInfo');
+    res.json({ status: 'success', data: { sellers } });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Failed to fetch car part sellers' });
+  }
+};
+
+export const verifyCarPartSeller = async (req, res) => {
+  try {
+    const seller = await User.findByIdAndUpdate(
+      req.params.id,
+      { 'carPartSellerInfo.verified': true },
+      { new: true }
+    );
+    if (!seller) return res.status(404).json({ status: 'fail', message: 'Seller not found' });
+    res.json({ status: 'success', message: 'Car part seller verified' });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Failed to verify' });
+  }
+};
+
+export const unverifyCarPartSeller = async (req, res) => {
+  try {
+    const seller = await User.findByIdAndUpdate(
+      req.params.id,
+      { 'carPartSellerInfo.verified': false },
+      { new: true }
+    );
+    if (!seller) return res.status(404).json({ status: 'fail', message: 'Seller not found' });
+    res.json({ status: 'success', message: 'Car part seller unverified' });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Failed to unverify' });
+  }
+};
+
+// Search Car Part Sellers
+export const searchCarPartSellers = async (req, res) => {
+  try {
+    const { search, page = 1, limit = 20 } = req.query;
+    const query = { role: 'carPart-seller' };
+
+    if (search) {
+      query.$or = [
+        { firstName: { $regex: search, $options: 'i' } },
+        { lastName: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+        { 'carPartSellerInfo.businessName': { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const sellers = await User.find(query)
+      .select('firstName lastName email phoneNumber carPartSellerInfo')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(Number(limit));
+
+    const total = await User.countDocuments(query);
+
+    res.status(200).json({
+      status: 'success',
+      results: sellers.length,
+      total,
+      page: Number(page),
+      pages: Math.ceil(total / limit),
+      data: { sellers },
+    });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Failed to search car part sellers' });
+  }
+};
+
+

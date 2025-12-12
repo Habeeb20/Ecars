@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'dealer','service-provider', 'superadmin'],
+    enum: ['user', 'dealer','service-provider','carPart-seller', 'superadmin'],
     default: 'user',
   },
   uniqueNumber: {
@@ -136,7 +136,6 @@ dealerInfo: {
   featuredUntil: Date,
 },
 
-// models/user.js — add inside userSchema
 
 serviceProviderInfo: {
   type: {
@@ -172,7 +171,47 @@ serviceProviderInfo: {
   isFeatured: { type: Boolean, default: false },
   featuredUntil: Date,
 
-}
+},
+
+///for carpart seller info
+carPartSellerInfo: {
+  type: {
+    type: String,
+    enum: ['new-parts', 'used-parts', 'both', 'other', 'all'],
+    required: [function() { return this.role === 'carPart-seller'; }, 'Parts type is required'],
+  },
+  businessName: {
+    type: String,
+    trim: true,
+    required: [function() { return this.role === 'carPart-seller'; }, 'Business name is required'],
+  },
+  businessAddress: {
+    type: String,
+    required: [function() { return this.role === 'carPart-seller'; }, 'Business address is required'],
+  },
+  state: {
+    type: String,
+    required: [function() { return this.role === 'carPart-seller'; }, 'State is required'],
+  },
+  lga: {
+    type: String,
+    required: [function() { return this.role === 'carPart-seller'; }, 'LGA is required'],
+  },
+  phoneNumber: String,
+  whatsappNumber: String,
+  website: String,
+  verified: { type: Boolean, default: false },
+  isFeatured: { type: Boolean, default: false },
+  featuredUntil: Date,
+
+  yearsOfExperience: Number,
+  specialties: [String],
+  shopPhotos: [String],
+  rating: { type: Number, default: 0, min: 0, max: 5 },
+  totalSales: { type: Number, default: 0 },
+  available: { type: Boolean, default: true },
+  verificationRequestedAt: Date,
+},
 }, { timestamps: true });
 
 // Hash password only when modified

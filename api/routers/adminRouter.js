@@ -2,6 +2,7 @@ import express from "express"
 import { adminLogin, approveDealer, approveServiceProvider, blacklistUser, createSuperAdmin, getAllCarsAdmin, getAllDealersAdmin, getAllServiceProviders, getAllUsers, getBlacklistedUsers, getPendingDealers, getPendingServiceProvider, makeCarFeatured, makeCarNewest, makeDealerFeatured, makeServiceProviderFeatured, rejectDealer, rejectserviceProvider, unblacklistUser, verifyUserEmail } from "../controllers/adminController.js";
 import { protect } from "../middleware/verifyToken.js";
 import { restrictTo } from "../middleware/verifyToken.js";
+import { getAllCarPartSellers, unverifyCarPartSeller, verifyCarPartSeller } from "../controllers/userController.js";
 
 const adminRouter = express.Router()
 
@@ -31,7 +32,9 @@ adminRouter.get('/service-providers', getAllServiceProviders);
 
 adminRouter.get('/cars', getAllCarsAdmin);
 adminRouter.get('/dealers', getAllDealersAdmin);
-
+adminRouter.get('/carpart-sellers', getAllCarPartSellers);
+adminRouter.put('/carpart-sellers/:id/approve', protect, restrictTo('superadmin'), verifyCarPartSeller);
+adminRouter.put('/carpart-sellers/unverify/:id', protect, restrictTo('superadmin'), unverifyCarPartSeller);
 adminRouter.patch('/cars/:id/featured', makeCarFeatured);
 adminRouter.patch('/cars/:id/newest', makeCarNewest);
 adminRouter.patch('/dealers/:id/featured', makeDealerFeatured);
