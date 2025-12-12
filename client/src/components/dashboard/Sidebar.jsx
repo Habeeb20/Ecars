@@ -206,13 +206,6 @@
 
 
 
-
-
-
-
-
-
-
 /* eslint-disable no-unused-vars */
 // src/components/dashboard/Sidebar.jsx
 import { useState } from 'react';
@@ -233,7 +226,7 @@ import { SomePage } from './VerifyEmailPage';
 import SubscriptionPlans from './SubscriptionPlans';
 import MySubscriptions from './MySubscription';
 import UploadCarPart from './UploadCarPart';
-// Import your dashboard pages directly
+import MyCarPartListings from './MyCarPartListing';
 
 const Sidebar = ({ onClose, setCurrentView }) => {
   const { user, logout } = useAuth();
@@ -243,51 +236,31 @@ const Sidebar = ({ onClose, setCurrentView }) => {
   // Map views to components
   const views = {
     overview: <Overview />,
-    upload: <UploadCars />,
+    uploadCars: <UploadCars />,
     uploadCarParts: <UploadCarPart />,
     listings: <MyListings />,
+    carPartListings: <MyCarPartListings />,
     verifyEmail: <SomePage />,
     subscription: <SubscriptionPlans />,
     myplans: <MySubscriptions />,
-    // notifications: <Notifications />,
     profile: <ProfileSettings />,
-    // settings: <SettingsPage />,
-    // adminReports: <AdminReports />,
-    // adminContent: <AdminContent />,
-    // adminAnalytics: <AdminAnalytics />,
   };
 
   const handleClick = (viewKey) => {
     setActiveView(viewKey);
-    setCurrentView(views[viewKey]); // Send to parent
-    onClose?.(); // Close mobile menu
+    setCurrentView(views[viewKey]);
+    onClose?.();
   };
 
-  const menuItems = [
+  const baseMenuItems = [
     { icon: Grid, label: 'Dashboard', view: 'overview' },
-    { icon: Upload, view: 'upload' }, // No label here – we generate it dynamically
-    { icon: ListChecks, label: 'Listings', view: 'listings' },
+    { icon: Upload, view: 'uploadCars' },       // Dynamic label + view
+    { icon: ListChecks, view: 'listings' },     // Dynamic label + view
     { icon: Mail, label: 'Verify Your Email', view: 'verifyEmail' },
     { icon: Package, label: 'My Plans', view: 'myplans' },
     { icon: SubscriptIcon, label: 'Subscribe To Plans', view: 'subscription' },
     { icon: User, label: 'Profile', view: 'profile' },
   ];
-
-  // Dynamic label based on user role (only for the upload item)
-  const getLabel = (view) => {
-    if (view !== 'upload') return null; // Only change label for upload view
-
-    if (user?.role === 'dealer') {
-      return 'Upload Cars for Sale';
-    }
-    if (user?.role === 'carPart-seller') {
-      return 'Upload Car Parts for Sale';
-    }
-    if (user?.role === 'service-provider') {
-      return null; // Completely hide for service providers
-    }
-    return null; // Hide for regular users or others
-  };
 
   const adminMenuItems = [
     { icon: Users, label: 'User Management', view: 'adminUsers' },
@@ -296,15 +269,37 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     { icon: BarChart, label: 'Analytics', view: 'adminAnalytics' },
   ];
 
+  // Dynamic label + view for upload and listings
+  const getMenuItem = (item) => {
+    if (item.view === 'uploadCars') {
+      if (user?.role === 'dealer') {
+        return { ...item, label: 'Upload Cars for Sale', view: 'uploadCars' };
+      }
+      if (user?.role === 'carPart-seller') {
+        return { ...item, label: 'Upload Car Parts for Sale', view: 'uploadCarParts' };
+      }
+      return null; // Hide for others
+    }
+
+    if (item.view === 'listings') {
+      if (user?.role === 'dealer') {
+        return { ...item, label: 'My Car Listings', view: 'listings' };
+      }
+      if (user?.role === 'carPart-seller') {
+        return { ...item, label: 'My Car Part Listings', view: 'carPartListings' };
+      }
+      return null; // Hide for others
+    }
+
+    return item; // Other items remain unchanged
+  };
+
   return (
     <div className="h-full bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
       <div className="flex flex-col h-full">
         {/* Mobile Close Button */}
         <div className="md:hidden p-4 flex justify-end">
-          <button
-            onClick={onClose}
-            className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-          >
+          <button onClick={onClose} className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
             <X className="h-5 w-5 text-gray-500 dark:text-gray-400" />
           </button>
         </div>
@@ -334,19 +329,17 @@ const Sidebar = ({ onClose, setCurrentView }) => {
         {/* Navigation */}
         <div className="flex-1 overflow-y-auto py-4">
           <nav className="space-y-1 px-3">
-            {menuItems.map((item) => {
-              const label = item.label || getLabel(item.view);
+            {baseMenuItems.map((item) => {
+              const menuItem = getMenuItem(item);
+              if (!menuItem) return null;
 
-              // Hide the item completely if no label (e.g. for service-provider)
-              if (!label) return null;
-
-              const Icon = item.icon;
-              const isActive = activeView === item.view;
+              const Icon = menuItem.icon;
+              const isActive = activeView === menuItem.view;
 
               return (
                 <button
-                  key={item.view}
-                  onClick={() => handleClick(item.view)}
+                  key={menuItem.view}
+                  onClick={() => handleClick(menuItem.view)}
                   className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
                     isActive
                       ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400 shadow-sm'
@@ -354,7 +347,7 @@ const Sidebar = ({ onClose, setCurrentView }) => {
                   }`}
                 >
                   <Icon className="h-5 w-5 mr-3" />
-                  {label}
+                  {menuItem.label}
                 </button>
               );
             })}
@@ -407,6 +400,3 @@ const Sidebar = ({ onClose, setCurrentView }) => {
 };
 
 export default Sidebar;
-
-
-

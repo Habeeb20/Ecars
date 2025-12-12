@@ -1,4 +1,4 @@
-
+import User from "../models/user.js"
 import CarPartListing from '../models/CarPartListing.js';
 export const createCarPartListing = async (req, res) => {
   try {
@@ -76,5 +76,58 @@ export const searchCarParts = async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ status: 'error', message: 'Failed to search car parts' });
+  }
+};
+
+
+
+
+// Get my car part listings (for seller)
+export const getMyCarPartListings = async (req, res) => {
+  try {
+    const listings = await CarPartListing.find({ seller: req.user._id })
+      .sort({ createdAt: -1 });
+    res.status(200).json({
+      status: 'success',
+      data: { listings },
+    });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Failed to fetch listings' });
+  }
+};
+
+// Get all car parts (public, with search by title)
+export const getAllCarParts = async (req, res) => {
+  try {
+    const { title, page = 1, limit = 20 } = req.query;
+    const query = {};
+
+    if (title) {
+      query.title = { $regex: title, $options: 'i' };
+    }
+
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const parts = await CarPartListing.find(query)
+      .populate({
+        path: 'seller',
+        select: 'firstName lastName email phoneNumber carPartSellerInfo',
+      })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(Number(limit));
+
+    const total = await CarPartListing.countDocuments(query);
+
+    res.status(200).json({
+      status: 'success',
+      results: parts.length,
+      total,
+      page: Number(page),
+      pages: Math.ceil(total / limit),
+      data: { parts },
+    });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Failed to fetch car parts' });
   }
 };

@@ -13,7 +13,7 @@ import {
   Car 
 } from 'lucide-react';
 import { toast } from 'sonner';
-
+import { FileText } from 'lucide-react';
 const UploadCarPart = () => {
   const [formData, setFormData] = useState({
     title: '',
@@ -112,7 +112,7 @@ const UploadCarPart = () => {
       };
 
       const token = localStorage.getItem('token');
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/carparts`, {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/carparts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

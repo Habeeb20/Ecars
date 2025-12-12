@@ -27,6 +27,7 @@ import ServiceProvider from './components/Landing/ServiceProvider';
 import Blog from './components/Landing/Blog';
 import Blacklist from './pages/Blacklist';
 import CompareCars from './pages/CompareCars';
+import AllCarParts from './components/Landing/CarParts';
 
 // import Blog from './pages/Blog';
 const App = () => {
@@ -54,6 +55,7 @@ const App = () => {
         <Route path="/value-asset" element={<ValueAsset />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/compare" element={<CompareCars />} />
+        <Route path="/car-parts" element={<AllCarParts />} />
         
         <Route path="/blacklist" element={<Blacklist />} />
         
