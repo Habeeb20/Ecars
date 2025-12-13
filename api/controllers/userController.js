@@ -840,24 +840,6 @@ export const searchBlacklistedUsers = async (req, res) => {
 
 
 
-export const getDealerById = async (req, res) => {
-  try {
-    const dealer = await User.findById(req.params?.id).select('firstName lastName email phoneNumber state lga address avatar bio dealerInfo');
-    
-    const cars = await CarListing.find({ postedBy: dealer._id }).select('title price images year mileage');
-
-    res.status(200).json({
-      status: 'success',
-      data: { dealer, cars },
-    });
-  } catch (err) {
-    console.log(err)
-    res.status(500).json({ status: 'error', message: 'Failed to fetch dealer details' });
-  }
-};
-
-
-
 // Backend: Controllers (controllers/userController.js or adminController.js)
 export const upgradeToCarPartSeller = async (req, res) => {
   try {
@@ -969,4 +951,22 @@ export const searchCarPartSellers = async (req, res) => {
   }
 };
 
+
+
+
+export const getDealerById = async (req, res) => {
+  try {
+    const dealer = await User.findById(req.params?.id).select('firstName lastName email phoneNumber state lga address avatar bio dealerInfo');
+    
+    const cars = await CarListing.find({ postedBy: dealer._id }).select('title price images year mileage');
+
+    res.status(200).json({
+      status: 'success',
+      data: { dealer, cars },
+    });
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ status: 'error', message: 'Failed to fetch dealer details' });
+  }
+};
 

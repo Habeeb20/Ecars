@@ -1,7 +1,7 @@
 import express from "express"
 import User from "../models/user.js"
 import { createSendToken } from "../utils/functions.js";
-
+import Message from "../models/message.js"
 
 export const createSuperAdmin = async (req, res) => {
   try {
@@ -599,5 +599,23 @@ export const getBlacklistedUsers = async (req, res) => {
       message: 'Failed to fetch blacklisted users',
       error: err.message,
     });
+  }
+};
+
+
+
+
+
+
+// controllers/adminController.js
+export const getAllMessages = async (req, res) => {
+  try {
+    const messages = await Message.find()
+      .populate('sender', 'firstName lastName email')
+      .populate('recipient', 'firstName lastName email')
+      .sort({ createdAt: -1 });
+    res.status(200).json({ status: 'success', data: { messages } });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Failed to fetch messages' });
   }
 };

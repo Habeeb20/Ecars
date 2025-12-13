@@ -214,7 +214,9 @@ import {
   LogOut, X, ShieldAlert, Users, FileText, BarChart, Bell, ListChecks,
   Mail,
   SubscriptIcon,
-  Package
+  Package,
+  MessageCircle,
+  LucideSettings2
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import UploadCars from './UploadCars';
@@ -227,6 +229,8 @@ import SubscriptionPlans from './SubscriptionPlans';
 import MySubscriptions from './MySubscription';
 import UploadCarPart from './UploadCarPart';
 import MyCarPartListings from './MyCarPartListing';
+import MyMessages from './MyMessage';
+import BrowseListings from './BrowseLisitng';
 
 const Sidebar = ({ onClose, setCurrentView }) => {
   const { user, logout } = useAuth();
@@ -238,12 +242,15 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     overview: <Overview />,
     uploadCars: <UploadCars />,
     uploadCarParts: <UploadCarPart />,
+    browseCarListing: < BrowseListings/>,
     listings: <MyListings />,
     carPartListings: <MyCarPartListings />,
     verifyEmail: <SomePage />,
     subscription: <SubscriptionPlans />,
     myplans: <MySubscriptions />,
     profile: <ProfileSettings />,
+    message: <MyMessages/>,
+  
   };
 
   const handleClick = (viewKey) => {
@@ -256,10 +263,13 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     { icon: Grid, label: 'Dashboard', view: 'overview' },
     { icon: Upload, view: 'uploadCars' },       // Dynamic label + view
     { icon: ListChecks, view: 'listings' },     // Dynamic label + view
+       { icon: LucideSettings2, label: 'Manage Listings', view: 'browseCarListing' },
     { icon: Mail, label: 'Verify Your Email', view: 'verifyEmail' },
     { icon: Package, label: 'My Plans', view: 'myplans' },
     { icon: SubscriptIcon, label: 'Subscribe To Plans', view: 'subscription' },
     { icon: User, label: 'Profile', view: 'profile' },
+    { icon: MessageCircle, label: 'Messages', view: 'message' },
+ 
   ];
 
   const adminMenuItems = [

@@ -14,7 +14,7 @@ router.get('/all-service-providers', getAllServiceProviders);
 router.post('/register', register);
 router.post('/login', login);
 router.post('/forgotpassword', forgotPassword);
-router.get("/dealers/:id", getDealerById)
+
 router.patch('/resetpassword/:token', resetPassword);
 // router.get("/me", protect, getDashboard)
 router.get("/me", protect, getMe)
@@ -49,6 +49,6 @@ router.put('/upgrade-carpart-seller', protect, upgradeToCarPartSeller);
 router.get('/carpart-sellers', getAllCarPartSellers);
 
 router.get('/carpart-sellers/search',  searchCarPartSellers);
-
+router.get("/dealers/:id", getDealerById)
 export default router;
 

@@ -16,6 +16,7 @@ import plansRouter from "./routers/plansRoutes.js"
 import valueRouter from "./routers/valueAssetsRoutes.js"
 import blogRouter from "./routers/blogRouter.js"
 import carPartRoute from "./routers/carPartListingRouter.js"
+import messagesRoute from "./routers/messagesRouter.js"
 dotenv.config();
 connectDb()
 
@@ -59,6 +60,7 @@ app.use("/api/subscriptions", plansRouter)
 app.use("/api/value", valueRouter)
 app.use("/api/blogs", blogRouter)
 app.use("/api/carparts", carPartRoute)
+app.use("/api/messages", messagesRoute)
 
 // await User.create({
 //   firstName: 'Admin',

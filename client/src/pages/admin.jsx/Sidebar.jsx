@@ -1,5 +1,5 @@
 // src/pages/admin/components/Sidebar.jsx
-import { Home, Users, Car, Wrench, DollarSign, Settings, LogOut, SettingsIcon } from 'lucide-react';
+import { Home, Users, Car, Wrench, DollarSign, Settings, LogOut, SettingsIcon, MessagesSquare } from 'lucide-react';
 import Overview from './Overview';
 import AllUsers from './AllUsers';
 import DealersList from './DealersList';
@@ -9,6 +9,7 @@ import AdminValuedCars from './ValueAsset';
 import AdminBlacklist from './BlacklistUsers';
 import ServiceProviderList from './ServiceProviders';
 import CarPartSellerList from './CarpartSellerList';
+import AdminMessages from './AdminAccessMessage';
 // import UsersList from './UsersList';
 // import DealersList from './DealersList';
 // import ServiceProvidersList from './ServiceProvidersList';
@@ -26,6 +27,7 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     { name: 'Service Providers', icon: Wrench, component: <ServiceProviderList /> },
     { name: 'subscription', icon: DollarSign, component: <SuperadminSubscriptions /> },
     { name: 'Blacklist', icon: SettingsIcon, component: <AdminBlacklist /> },
+    { name: 'View Messages', icon: MessagesSquare, component: <AdminMessages /> },
   ];
 
   const handleLogout = () => {
