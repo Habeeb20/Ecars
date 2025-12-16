@@ -215,7 +215,7 @@ const DealerOffers = () => {
           <div className="bg-white dark:bg-gray-800 rounded-3xl max-w-xl w-full h-[80vh] flex flex-col shadow-2xl">
             <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <img src={selectedOffer.user.avatar} alt={selectedOffer.user.firstName} className="h-10 w-10 rounded-full" />
+                <img src={selectedOffer?.user.avatar} alt={selectedOffer?.user.firstName} className="h-10 w-10 rounded-full" />
                 <span className="font-bold">{selectedOffer.user.firstName} {selectedOffer.user.lastName}</span>
               </div>
               <button onClick={() => setChatOpen(false)}>
