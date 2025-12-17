@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+ /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -204,8 +204,8 @@ const Home = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 to-gray-900/30"></div>
         </div>
 
-        <div className="container relative z-10">
-          <div className="max-w-lg md:max-w-2xl">
+        {/* <div className="container relative z-10 ">
+          <div className="max-w-lg  md:max-w-2xl">
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -231,7 +231,35 @@ const Home = () => {
               <SearchFilters onSearch={handleSearch} />
             </motion.div>
           </div>
-        </div>
+        </div> */}
+        <div className="container relative z-10 pt-8 sm:pt-10 md:pt-0"> {/* Mobile padding added */}
+  <div className="max-w-lg md:max-w-2xl px-4 sm:px-8"> {/* Added horizontal padding on mobile */}
+    <motion.h1 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="text-white text-3xl sm:text-3xl mt-40 md:text-5xl font-bold leading-tight"
+    >
+      Find Your Perfect Car Today
+    </motion.h1>
+    <motion.p 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.1 }}
+      className="text-gray-200 text-base sm:text-lg  mb-8 sm:mb-10 leading-relaxed"
+    >
+      Browse thousands of listings, compare vehicles, and find the perfect match for your lifestyle and budget.
+    </motion.p>
+    
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+    >
+      <SearchFilters onSearch={handleSearch} />
+    </motion.div>
+  </div>
+</div>
       </section>
 
       {/* Statistics Section */}
@@ -273,10 +301,6 @@ const Home = () => {
       </section> */}
 
       <StatsSection/>
-
-      {/* Safety & Support Section */}
-      <ReportAndRequestSection/>
-   
 
       {/* Featured Cars Section */}
     <FeaturedCar/>
@@ -351,6 +375,12 @@ const Home = () => {
       <FeaturedDealers/>
 
       <FeaturedServiceProvider/>
+
+      
+      {/* Safety & Support Section */}
+      <ReportAndRequestSection/>
+   
+
 
      <Blog/>
 

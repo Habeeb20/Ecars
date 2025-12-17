@@ -696,7 +696,7 @@ const colourOptions = [
 ];
 
 const vehicleOptions = [
-  { value: '', label: 'Any Vehicle Type' },
+  { value: '', label: 'Vehicle Type' },
   { value: 'car', label: 'Car' },
   { value: 'motorcycle', label: 'Motorcycle' },
   { value: 'truck', label: 'Truck' },
@@ -792,9 +792,9 @@ function SearchFilters({ variant = 'hero', className = '', onSearch = () => {} }
           )}
         </div>
 
-        <form onSubmit={handleSubmit}>
+        {/* <form onSubmit={handleSubmit}>
           <div className="flex flex-col md:flex-row gap-4 items-end">
-            {/* Vehicle Type */}
+       
             <div className="flex-1 min-w-[180px] w-full">
               <label htmlFor="vehicleType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Vehicle Type
@@ -817,7 +817,7 @@ function SearchFilters({ variant = 'hero', className = '', onSearch = () => {} }
               </div>
             </div>
 
-            {/* Make */}
+   
             <div className="flex-1 min-w-[180px] w-full">
               <label htmlFor="make" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Make
@@ -840,7 +840,6 @@ function SearchFilters({ variant = 'hero', className = '', onSearch = () => {} }
               </div>
             </div>
 
-            {/* Price Range */}
             <div className="flex-1 min-w-[180px] w-full">
               <label htmlFor="priceRange" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Price Range
@@ -863,7 +862,6 @@ function SearchFilters({ variant = 'hero', className = '', onSearch = () => {} }
               </div>
             </div>
 
-            {/* Year */}
             <div className="flex-1 min-w-[180px] w-full">
               <label htmlFor="year" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Year
@@ -886,7 +884,7 @@ function SearchFilters({ variant = 'hero', className = '', onSearch = () => {} }
               </div>
             </div>
 
-            {/* Body Type */}
+      
             <div className="flex-1 min-w-[180px] w-full">
               <label htmlFor="bodyType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Body Type
@@ -909,7 +907,6 @@ function SearchFilters({ variant = 'hero', className = '', onSearch = () => {} }
               </div>
             </div>
 
-            {/* Search Button */}
             <div className="flex-1 min-w-[180px] w-full">
               <button
                 type="submit"
@@ -920,7 +917,273 @@ function SearchFilters({ variant = 'hero', className = '', onSearch = () => {} }
               </button>
             </div>
           </div>
-        </form>
+        </form> */}
+
+        <form onSubmit={handleSubmit}>
+  {/* Mobile-only layout: 2 per row for first 4, then Body Type and Search button centered */}
+  <div className="md:hidden grid grid-cols-2 gap-4 items-end">
+  
+
+    {/* Vehicle Type */}
+    <div className="flex-1 min-w-[100px] w-full">
+      <label htmlFor="vehicleType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        Vehicle Type
+      </label>
+      <div className="relative">
+        <select
+          id="vehicleType"
+          name="vehicleType"
+          value={filters.vehicleType}
+          onChange={handleChange}
+          className="w-full h-12 pl-4 pr-10 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none hover:border-gray-400 dark:hover:border-gray-500"
+        >
+          {vehicleOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+      </div>
+    </div>
+
+    {/* Make */}
+    <div className="flex-1  min-w-[100px] w-full">
+      <label htmlFor="make" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        Make
+      </label>
+      <div className="relative">
+        <select
+          id="make"
+          name="make"
+          value={filters.make}
+          onChange={handleChange}
+          className="w-full h-12 pl-4 pr-10 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none hover:border-gray-400 dark:hover:border-gray-500"
+        >
+          {makeOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+      </div>
+    </div>
+
+    {/* Price Range */}
+    <div className="flex-1 min-w-[100px] w-full">
+      <label htmlFor="priceRange" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        Price Range
+      </label>
+      <div className="relative">
+        <select
+          id="priceRange"
+          name="priceRange"
+          value={filters.priceRange}
+          onChange={handleChange}
+          className="w-full h-12 pl-4 pr-10 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none hover:border-gray-400 dark:hover:border-gray-500"
+        >
+          {priceRangeOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+      </div>
+    </div>
+
+    {/* Year */}
+    <div className="flex-1 min-w-[100px] w-full">
+      <label htmlFor="year" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        Year
+      </label>
+      <div className="relative">
+        <select
+          id="year"
+          name="year"
+          value={filters.year}
+          onChange={handleChange}
+          className="w-full h-12 pl-4 pr-10 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none hover:border-gray-400 dark:hover:border-gray-500"
+        >
+          {yearOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+      </div>
+    </div>
+
+    {/* Body Type - Centered on mobile */}
+    <div className="col-span-2 flex justify-center">
+      <div className="w-full max-w-md">
+        <label htmlFor="bodyType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          Body Type
+        </label>
+        <div className="relative">
+          <select
+            id="bodyType"
+            name="bodyType"
+            value={filters.bodyType}
+            onChange={handleChange}
+            className="w-full h-12 pl-4 pr-10 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none hover:border-gray-400 dark:hover:border-gray-500"
+          >
+            {bodyTypeOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+        </div>
+      </div>
+    </div>
+
+    {/* Search Button - Centered on mobile */}
+    <div className="col-span-2 flex justify-center">
+      <div className="w-full max-w-md">
+        <button
+          type="submit"
+          className="w-full h-12 mb-10 px-6 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 flex items-center justify-center space-x-2"
+        >
+          <Search className="h-5 w-5" />
+          <span>Search</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  {/* Desktop layout - Original single row (hidden on mobile) */}
+  <div className="hidden md:flex flex-row gap-4 items-end">
+    {/* Vehicle Type */}
+    <div className="flex-1 min-w-[180px] w-full">
+      <label htmlFor="vehicleType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        Vehicle Type
+      </label>
+      <div className="relative">
+        <select
+          id="vehicleType"
+          name="vehicleType"
+          value={filters.vehicleType}
+          onChange={handleChange}
+          className="w-full h-12 pl-4 pr-10 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none hover:border-gray-400 dark:hover:border-gray-500"
+        >
+          {vehicleOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+      </div>
+    </div>
+
+    {/* Make */}
+    <div className="flex-1 min-w-[180px] w-full">
+      <label htmlFor="make" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        Make
+      </label>
+      <div className="relative">
+        <select
+          id="make"
+          name="make"
+          value={filters.make}
+          onChange={handleChange}
+          className="w-full h-12 pl-4 pr-10 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none hover:border-gray-400 dark:hover:border-gray-500"
+        >
+          {makeOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+      </div>
+    </div>
+
+    {/* Price Range */}
+    <div className="flex-1 min-w-[180px] w-full">
+      <label htmlFor="priceRange" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        Price Range
+      </label>
+      <div className="relative">
+        <select
+          id="priceRange"
+          name="priceRange"
+          value={filters.priceRange}
+          onChange={handleChange}
+          className="w-full h-12 pl-4 pr-10 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none hover:border-gray-400 dark:hover:border-gray-500"
+        >
+          {priceRangeOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+      </div>
+    </div>
+
+    {/* Year */}
+    <div className="flex-1 min-w-[180px] w-full">
+      <label htmlFor="year" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        Year
+      </label>
+      <div className="relative">
+        <select
+          id="year"
+          name="year"
+          value={filters.year}
+          onChange={handleChange}
+          className="w-full h-12 pl-4 pr-10 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none hover:border-gray-400 dark:hover:border-gray-500"
+        >
+          {yearOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+      </div>
+    </div>
+
+    {/* Body Type */}
+    <div className="flex-1 min-w-[180px] w-full">
+      <label htmlFor="bodyType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        Body Type
+      </label>
+      <div className="relative">
+        <select
+          id="bodyType"
+          name="bodyType"
+          value={filters.bodyType}
+          onChange={handleChange}
+          className="w-full h-12 pl-4 pr-10 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none hover:border-gray-400 dark:hover:border-gray-500"
+        >
+          {bodyTypeOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+      </div>
+    </div>
+
+    {/* Search Button */}
+    <div className="flex-1 min-w-[180px] w-full">
+      <button
+        type="submit"
+        className="w-full h-12 px-6 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 flex items-center justify-center space-x-2"
+      >
+        <Search className="h-5 w-5" />
+        <span>Search</span>
+      </button>
+    </div>
+  </div>
+</form>
       </div>
     );
   }

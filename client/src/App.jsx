@@ -28,6 +28,7 @@ import Blog from './components/Landing/Blog';
 import Blacklist from './pages/Blacklist';
 import CompareCars from './pages/CompareCars';
 import AllCarParts from './components/Landing/CarParts';
+import Contact from './pages/Contact';
 
 // import Blog from './pages/Blog';
 const App = () => {
@@ -38,6 +39,7 @@ const App = () => {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/cars" element={<Listings/>} />
           <Route path="/auctions" element={<div>Auctions</div>} />
             <Route path="/login" element={<Login />} />
