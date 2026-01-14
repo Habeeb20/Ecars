@@ -113,6 +113,7 @@ export const forgotPassword = async (req, res) => {
       message: 'Reset link sent to email!',
     });
   } catch (err) {
+    console.log(err)
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save({ validateBeforeSave: false });
@@ -273,6 +274,7 @@ export const updateMe = async (req, res) => {
 
 // CHANGE PASSWORD (separate route)
 export const updatePassword = async (req, res) => {
+
   try {
     const { currentPassword, newPassword } = req.body;
 
@@ -283,7 +285,7 @@ export const updatePassword = async (req, res) => {
       });
     }
 
-    const user = await User.findById(req.user.id).select('+password');
+    const user = await User.findById(req.user.id || req.user._id).select('+password');
 
     if (!(await user.comparePassword(currentPassword))) {
       return res.status(401).json({
@@ -300,6 +302,7 @@ export const updatePassword = async (req, res) => {
       message: 'Password changed successfully',
     });
   } catch (err) {
+    console.log(err)
     res.status(400).json({
       status: 'fail',
       message: 'Password update failed',

@@ -20,6 +20,7 @@ router.patch('/resetpassword/:token', resetPassword);
 router.get("/me", protect, getMe)
 router.get("/featured-dealers", getFeaturedDealers)
 router.get("/dealers/search", searchDealers)
+router.get('/service-providers', getAllServiceProviders);
 router.get("/featured-serviceprovider", getFeaturedServiceProvider)
 router.get("/serviceprovider/search", searchServiceProviders)
 router.get("/:id", getDealerById)
@@ -28,15 +29,15 @@ router.get('/service-providers/search', searchServiceProviders);
 
 router.put('/upgrade-to-dealer', protect, upgradeToDealer);
 
-router.put('/update-me', updateMe);
-router.put('/update-password', updatePassword);
+router.put('/update-me', protect, updateMe);
+router.put('/update-password', protect, updatePassword);
 
 
 
 
 router.put('/upgrade-service-provider', protect, upgradeToServiceProvider);
 
-router.get('/service-providers', getAllServiceProviders);
+
 
 router.get("/blacklistedusers", getBlacklistedUsers)
 router.post('/send-verification-email', protect, sendVerificationEmail);
