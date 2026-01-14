@@ -600,7 +600,7 @@ const Overview = () => {
         </div>
 
         {/* Monthly Trend */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
+        {/* <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
           <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
             Your Monthly Car Listings Trend
           </h2>
@@ -613,7 +613,7 @@ const Overview = () => {
               <Line type="monotone" dataKey="cars" stroke="#8b5cf6" strokeWidth={4} dot={{ fill: '#8b5cf6', r: 6 }} />
             </LineChart>
           </ResponsiveContainer>
-        </div>
+        </div> */}
 
         {/* NEW: Monthly Car Part Trend (if car part seller) */}
         {user?.role === 'carPart-seller' && (

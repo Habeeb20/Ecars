@@ -12,6 +12,7 @@ import CarPartSellerList from './CarpartSellerList';
 import AdminMessages from './AdminAccessMessage';
 import ReportsPage from './AllReports';
 import AdminContacts from './ContactDetails';
+import AdminSightings from './AdminReportSighting';
 // import UsersList from './UsersList';
 // import DealersList from './DealersList';
 // import ServiceProvidersList from './ServiceProvidersList';
@@ -26,12 +27,14 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     { name: 'All Reports', icon: Car, component: <ReportsPage /> },
     { name: 'Contacts', icon: Car, component: <AdminContacts /> },
     { name: 'Blog', icon: Car, component: <BlogManagement /> },
+      { name: 'stolen Cars Reports', icon: MessagesSquare, component: <AdminSightings /> },
     { name: 'ValuedAssets', icon: Car, component: <AdminValuedCars /> },
     { name: 'car parts sellers', icon: Car, component: <CarPartSellerList /> },
     { name: 'Service Providers', icon: Wrench, component: <ServiceProviderList /> },
     { name: 'subscription', icon: DollarSign, component: <SuperadminSubscriptions /> },
     { name: 'Blacklist', icon: SettingsIcon, component: <AdminBlacklist /> },
     { name: 'View Messages', icon: MessagesSquare, component: <AdminMessages /> },
+  
   ];
 
   const handleLogout = () => {

@@ -1,12 +1,11 @@
 
 
 
-
 // /* eslint-disable no-unused-vars */
 // import React, { useState, useEffect } from 'react';
 // import { 
-//   Search, 
 //   Loader2, 
+//   Search, 
 //   ChevronDown, 
 //   Car, 
 //   DollarSign, 
@@ -18,29 +17,58 @@
 //   Battery, 
 //   Star, 
 //   Plus, 
-//   X 
+//   X, 
+//   Calendar, 
+//   AlertCircle, 
+//   Send 
 // } from 'lucide-react';
 // import { toast } from 'sonner';
+// import { useAuth } from '../contexts/AuthContext'; // Assuming you have auth context for login check
+// import { MapPin, User } from 'lucide-react';
+
+
+
 
 // const CompareCars = () => {
+//   const { user } = useAuth(); // Get logged-in user
 //   const [allCars, setAllCars] = useState([]);
 //   const [searchQuery, setSearchQuery] = useState('');
 //   const [selectedCars, setSelectedCars] = useState([]);
 //   const [comparisonData, setComparisonData] = useState(null);
 //   const [loading, setLoading] = useState(true);
+//   const [comparisonMode, setComparisonMode] = useState('different'); // 'same' or 'different'
+//   const [selectedModel, setSelectedModel] = useState('');
+//   const [selectedBrand, setSelectedBrand] = useState('');
+//   const [yearFrom, setYearFrom] = useState('');
+//   const [yearTo, setYearTo] = useState('');
+//   const [offerPrice, setOfferPrice] = useState('');
+//   const [sendingOffer, setSendingOffer] = useState(false);
 
 //   useEffect(() => {
 //     fetchCars();
-//   }, []);
+//   }, [comparisonMode, selectedModel, selectedBrand, yearFrom, yearTo, searchQuery]);
 
 //   const fetchCars = async () => {
 //     try {
 //       setLoading(true);
-//       const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/cars/allcars`); 
+//       const token = localStorage.getItem('token');
+//       const queryParams = new URLSearchParams({
+//         search: searchQuery,
+//         mode: comparisonMode,
+//         ...(selectedModel && { model: selectedModel }),
+//         ...(selectedBrand && { brand: selectedBrand }),
+//         ...(yearFrom && { yearFrom }),
+//         ...(yearTo && { yearTo }),
+//       });
+
+//       const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/cars/allcars?${queryParams.toString()}`, {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
 //       const data = await res.json();
 
 //       if (data.status === 'success') {
 //         setAllCars(data.data.cars || []);
+//         console.log(data?.data?.cars)
 //       } else {
 //         toast.error('Failed to load cars');
 //       }
@@ -73,7 +101,6 @@
 //       return;
 //     }
 
-//     // Prepare comparison data (you can expand with more fields)
 //     const comparison = {
 //       cars: selectedCars,
 //       makes: selectedCars.map(c => c.make),
@@ -90,18 +117,71 @@
 //       safetyRatings: selectedCars.map(c => c.safetyRating || 'N/A'),
 //       features: selectedCars.map(c => c.features || []),
 //       images: selectedCars.map(c => c.images?.[0] || '/placeholder-car.jpg'),
+//       dealers: selectedCars.map(c => c.dealer || c.seller), // Assuming dealer/seller field
 //     };
 
 //     setComparisonData(comparison);
 //   };
+// const handleSendOffer = async () => {
+//   if (!user) {
+//     toast.error('You must be logged in to send an offer');
+//     return;
+//   }
+//   if (!offerPrice || parseFloat(offerPrice) <= 0) {
+//     toast.error('Enter a valid offer price');
+//     return;
+//   }
+//   if (sendingOffer) return;
 
+//   setSendingOffer(true);
+//   try {
+//     const token = localStorage.getItem('token');
+
+//     // Get unique dealer IDs from the selected cars
+//     const dealerIds = [...new Set(
+//       selectedCars.map(car => car.postedBy?._id || car.seller?._id).filter(Boolean)
+//     )];
+
+//     if (dealerIds.length === 0) {
+//       toast.error('No dealer found for selected cars');
+//       setSendingOffer(false);
+//       return;
+//     }
+
+//     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/offers`, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         Authorization: `Bearer ${token}`,
+//       },
+//       body: JSON.stringify({
+//         carIds: selectedCars.map(c => c._id),
+//         dealerIds, // ← Now guaranteed to have valid IDs
+//         offerPrice: parseFloat(offerPrice),
+//         userId: user._id,
+//       }),
+//     });
+
+//     const data = await res.json();
+//     if (data.status === 'success') {
+//       toast.success('Offer sent to dealers! They can now chat with you.');
+//       setOfferPrice('');
+//     } else {
+//       toast.error(data.message || 'Failed to send offer');
+//     }
+//   } catch (err) {
+//     toast.error('Network error');
+//   } finally {
+//     setSendingOffer(false);
+//   }
+// };
 //   const filteredCars = allCars.filter(car =>
 //     `${car.make} ${car.model}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
 //     car.year?.toString().includes(searchQuery)
 //   );
 
 //   return (
-//     <div className="min-h-screen mt-10 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12 px-4">
+//     <div className="min-h-screen mt-20 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12 px-4">
 //       <div className="max-w-7xl mx-auto">
 //         {/* Header */}
 //         <div className="flex flex-col md:flex-row justify-between items-center mb-10">
@@ -118,6 +198,81 @@
 //               Compare {selectedCars.length} Cars
 //             </button>
 //           )}
+//         </div>
+
+//         {/* Comparison Mode Selection */}
+//         <div className="mb-8 bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-6">
+//           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+//             Select Comparison Mode
+//           </h2>
+//           <div className="flex gap-4 mb-6">
+//             <button
+//               onClick={() => setComparisonMode('different')}
+//               className={`flex-1 py-3 rounded-xl font-semibold ${
+//                 comparisonMode === 'different'
+//                   ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white'
+//                   : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white'
+//               }`}
+//             >
+//               Different Models/Brands
+//             </button>
+//             <button
+//               onClick={() => setComparisonMode('same')}
+//               className={`flex-1 py-3 rounded-xl font-semibold ${
+//                 comparisonMode === 'same'
+//                   ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white'
+//                   : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white'
+//               }`}
+//             >
+//               Same Model/Brand
+//             </button>
+//           </div>
+
+//           {/* Filters */}
+//           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+//             {comparisonMode === 'same' && (
+//               <>
+//                 <div className="relative">
+//                   <input
+//                     type="text"
+//                     value={selectedBrand}
+//                     onChange={(e) => setSelectedBrand(e.target.value)}
+//                     placeholder="Brand (e.g. Toyota)"
+//                     className="w-full h-12 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500"
+//                   />
+//                 </div>
+//                 <div className="relative">
+//                   <input
+//                     type="text"
+//                     value={selectedModel}
+//                     onChange={(e) => setSelectedModel(e.target.value)}
+//                     placeholder="Model (e.g. Camry)"
+//                     className="w-full h-12 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500"
+//                   />
+//                 </div>
+//               </>
+//             )}
+//             <div className="relative flex items-center gap-2">
+//               <Calendar className="h-5 w-5 text-gray-400" />
+//               <input
+//                 type="number"
+//                 value={yearFrom}
+//                 onChange={(e) => setYearFrom(e.target.value)}
+//                 placeholder="From Year (e.g. 2018)"
+//                 className="w-full h-12 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500"
+//               />
+//             </div>
+//             <div className="relative flex items-center gap-2">
+//               <Calendar className="h-5 w-5 text-gray-400" />
+//               <input
+//                 type="number"
+//                 value={yearTo}
+//                 onChange={(e) => setYearTo(e.target.value)}
+//                 placeholder="To Year (e.g. 2023)"
+//                 className="w-full h-12 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-indigo-500"
+//               />
+//             </div>
+//           </div>
 //         </div>
 
 //         {/* Search */}
@@ -138,7 +293,7 @@
 //             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
 //               Selected Cars ({selectedCars.length}/4)
 //             </h2>
-//             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+//             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
 //               {selectedCars.map(car => (
 //                 <div key={car._id} className="bg-gray-50 dark:bg-gray-700 rounded-2xl p-4 relative">
 //                   <button
@@ -171,7 +326,7 @@
 //               No cars found
 //             </h3>
 //             <p className="text-gray-600 dark:text-gray-400">
-//               Try different search terms
+//               Try different search terms or adjust filters
 //             </p>
 //           </div>
 //         ) : (
@@ -193,10 +348,21 @@
 //                   <p className="text-gray-600 dark:text-gray-400 mb-4">
 //                     {car.year} • ₦{car.price?.toLocaleString() || 'N/A'}
 //                   </p>
+//                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 flex items-center gap-2">
+//   <MapPin className="h-4 w-4" />
+//   {car.location && typeof car.location === 'object'
+//     ? `${car.location.state || ''}${car.location.lga ? ', ' + car.location.lga : ''}`.trim() || 'Location not specified'
+//     : car.location || 'Location not specified'}
+// </p>
+//                   <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 flex items-center gap-2">
+//                     <User className="h-4 w-4" />
+//                     Dealer: {car.dealer?.businessName || 'N/A'}
+//                     {car.dealer?.verified && <ShieldCheck className="h-4 w-4 text-green-500 ml-1" />}
+//                   </p>
 //                   <button
 //                     onClick={() => handleSelectCar(car)}
 //                     disabled={selectedCars.some(c => c._id === car._id)}
-//                     className="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl disabled:opacity-50"
+//                     className="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl disabled:opacity-50 hover:shadow-lg transform hover:scale-105 transition-all disabled:cursor-not-allowed"
 //                   >
 //                     {selectedCars.some(c => c._id === car._id) ? 'Selected' : 'Add to Compare'}
 //                   </button>
@@ -208,106 +374,143 @@
 
 //         {/* Comparison Table */}
 //         {comparisonData && (
-//           <div className="mt-12 bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 overflow-x-auto">
-//             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-//               Comparison Results
-//             </h2>
-//             <table className="w-full min-w-max table-auto">
-//               <thead>
-//                 <tr className="bg-gray-50 dark:bg-gray-700 text-left text-sm font-medium text-gray-500 dark:text-gray-400">
-//                   <th className="px-6 py-4">Feature</th>
-//                   {comparisonData.cars.map((car, i) => (
-//                     <th key={i} className="px-6 py-4">
-//                       {car.make} {car.model}
-//                     </th>
-//                   ))}
-//                 </tr>
-//               </thead>
-              // <tbody className="divide-y divide-gray-200 dark:divide-gray-700 text-sm text-gray-600 dark:text-gray-400">
-              //   <tr>
-              //     <td className="px-6 py-4 font-medium flex items-center gap-2">
-              //       <DollarSign className="h-4 w-4" /> Price
-              //     </td>
-              //     {comparisonData.prices.map((price, i) => (
-              //       <td key={i} className="px-6 py-4 font-bold text-green-600 dark:text-green-400">
-              //         ₦{price?.toLocaleString() || 'N/A'}
-              //       </td>
-              //     ))}
-              //   </tr>
-              //   <tr>
-              //     <td className="px-6 py-4 font-medium flex items-center gap-2">
-              //       <Car className="h-4 w-4" /> Year
-              //     </td>
-              //     {comparisonData.years.map((year, i) => (
-              //       <td key={i} className="px-6 py-4">{year}</td>
-              //     ))}
-              //   </tr>
-              //   <tr>
-              //     <td className="px-6 py-4 font-medium flex items-center gap-2">
-              //       <Gauge className="h-4 w-4" /> Mileage
-              //     </td>
-              //     {comparisonData.mileages.map((mileage, i) => (
-              //       <td key={i} className="px-6 py-4">{mileage?.toLocaleString()} km</td>
-              //     ))}
-              //   </tr>
-              //   <tr>
-              //     <td className="px-6 py-4 font-medium flex items-center gap-2">
-              //       <Fuel className="h-4 w-4" /> Fuel Type
-              //     </td>
-              //     {comparisonData.fuelTypes.map((type, i) => (
-              //       <td key={i} className="px-6 py-4 capitalize">{type}</td>
-              //     ))}
-              //   </tr>
-              //   <tr>
-              //     <td className="px-6 py-4 font-medium flex items-center gap-2">
-              //       <Settings className="h-4 w-4" /> Transmission
-              //     </td>
-              //     {comparisonData.transmissions.map((trans, i) => (
-              //       <td key={i} className="px-6 py-4 capitalize">{trans}</td>
-              //     ))}
-              //   </tr>
-              //   <tr>
-              //     <td className="px-6 py-4 font-medium flex items-center gap-2">
-              //       <Zap className="h-4 w-4" /> Horsepower
-              //     </td>
-              //     {comparisonData.horsepowers.map((hp, i) => (
-              //       <td key={i} className="px-6 py-4">{hp} hp</td>
-              //     ))}
-              //   </tr>
-              //   <tr>
-              //     <td className="px-6 py-4 font-medium flex items-center gap-2">
-              //       <Wind className="h-4 w-4" /> Torque
-              //     </td>
-              //     {comparisonData.torques.map((tq, i) => (
-              //       <td key={i} className="px-6 py-4">{tq} Nm</td>
-              //     ))}
-              //   </tr>
-              //   <tr>
-              //     <td className="px-6 py-4 font-medium flex items-center gap-2">
-              //       <Battery className="h-4 w-4" /> Engine Size
-              //     </td>
-              //     {comparisonData.engineSizes.map((size, i) => (
-              //       <td key={i} className="px-6 py-4">{size} L</td>
-              //     ))}
-              //   </tr>
-              //   <tr>
-              //     <td className="px-6 py-4 font-medium flex items-center gap-2">
-              //       <Star className="h-4 w-4" /> Safety Rating
-              //     </td>
-              //     {comparisonData.safetyRatings.map((rating, i) => (
-              //       <td key={i} className="px-6 py-4">{rating}/5</td>
-              //     ))}
-              //   </tr>
-              //   <tr>
-              //     <td className="px-6 py-4 font-medium flex items-center gap-2">
-              //       <Plus className="h-4 w-4" /> Features
-              //     </td>
-              //     {comparisonData.features.map((feats, i) => (
-              //       <td key={i} className="px-6 py-4">{feats.length} features</td>
-              //     ))}
-              //   </tr>
-              // </tbody>
-//             </table>
+//           <div className="mt-12 bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-x-auto">
+//             <div className="p-8">
+//               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+//                 Comparison Results
+//               </h2>
+//               <table className="w-full min-w-max table-auto text-sm text-left text-gray-500 dark:text-gray-400">
+//                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+//                   <tr>
+//                     <th scope="col" className="px-6 py-3">Feature</th>
+//                     {comparisonData.cars.map((car, i) => (
+//                       <th key={i} scope="col" className="px-6 py-3">
+//                         <div className="flex flex-col items-center">
+//                           <img src={comparisonData.images[i]} alt={car.model} className="w-32 h-20 object-cover rounded-md mb-2" />
+//                           {car.make} {car.model} ({car.year})
+//                         </div>
+//                       </th>
+//                     ))}
+//                   </tr>
+//                 </thead>
+//                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700 text-sm text-gray-600 dark:text-gray-400">
+//                                <tr>
+//                                  <td className="px-6 py-4 font-medium flex items-center gap-2">
+//                                    <DollarSign className="h-4 w-4" /> Price
+//                                  </td>
+//                                  {comparisonData.prices.map((price, i) => (
+//                                    <td key={i} className="px-6 py-4 font-bold text-green-600 dark:text-green-400">
+//                                      ₦{price?.toLocaleString() || 'N/A'}
+//                                    </td>
+//                                  ))}
+//                                </tr>
+//                                <tr>
+//                                  <td className="px-6 py-4 font-medium flex items-center gap-2">
+//                                    <Car className="h-4 w-4" /> Year
+//                                  </td>
+//                                  {comparisonData.years.map((year, i) => (
+//                                    <td key={i} className="px-6 py-4">{year}</td>
+//                                  ))}
+//                                </tr>
+//                                <tr>
+//                                  <td className="px-6 py-4 font-medium flex items-center gap-2">
+//                                    <Gauge className="h-4 w-4" /> Mileage
+//                                  </td>
+//                                  {comparisonData.mileages.map((mileage, i) => (
+//                                    <td key={i} className="px-6 py-4">{mileage?.toLocaleString()} km</td>
+//                                  ))}
+//                                </tr>
+//                                <tr>
+//                                  <td className="px-6 py-4 font-medium flex items-center gap-2">
+//                                    <Fuel className="h-4 w-4" /> Fuel Type
+//                                  </td>
+//                                  {comparisonData.fuelTypes.map((type, i) => (
+//                                    <td key={i} className="px-6 py-4 capitalize">{type}</td>
+//                                  ))}
+//                                </tr>
+//                                <tr>
+//                                  <td className="px-6 py-4 font-medium flex items-center gap-2">
+//                                    <Settings className="h-4 w-4" /> Transmission
+//                                  </td>
+//                                  {comparisonData.transmissions.map((trans, i) => (
+//                                    <td key={i} className="px-6 py-4 capitalize">{trans}</td>
+//                                  ))}
+//                                </tr>
+//                                <tr>
+//                                  <td className="px-6 py-4 font-medium flex items-center gap-2">
+//                                    <Zap className="h-4 w-4" /> Horsepower
+//                                  </td>
+//                                  {comparisonData.horsepowers.map((hp, i) => (
+//                                    <td key={i} className="px-6 py-4">{hp} hp</td>
+//                                  ))}
+//                                </tr>
+//                                <tr>
+//                                  <td className="px-6 py-4 font-medium flex items-center gap-2">
+//                                    <Wind className="h-4 w-4" /> Torque
+//                                  </td>
+//                                  {comparisonData.torques.map((tq, i) => (
+//                                    <td key={i} className="px-6 py-4">{tq} Nm</td>
+//                                  ))}
+//                                </tr>
+//                                <tr>
+//                                  <td className="px-6 py-4 font-medium flex items-center gap-2">
+//                                    <Battery className="h-4 w-4" /> Engine Size
+//                                  </td>
+//                                  {comparisonData.engineSizes.map((size, i) => (
+//                                    <td key={i} className="px-6 py-4">{size} L</td>
+//                                  ))}
+//                                </tr>
+//                                <tr>
+//                                  <td className="px-6 py-4 font-medium flex items-center gap-2">
+//                                    <Star className="h-4 w-4" /> Safety Rating
+//                                  </td>
+//                                  {comparisonData.safetyRatings.map((rating, i) => (
+//                                    <td key={i} className="px-6 py-4">{rating}/5</td>
+//                                  ))}
+//                                </tr>
+//                                <tr>
+//                                  <td className="px-6 py-4 font-medium flex items-center gap-2">
+//                                    <Plus className="h-4 w-4" /> Features
+//                                  </td>
+//                                  {comparisonData.features.map((feats, i) => (
+//                                    <td key={i} className="px-6 py-4">{feats.length} features</td>
+//                                  ))}
+//                                </tr>
+//                              </tbody>
+//               </table>
+
+//               {/* Offer Price Section (only if logged in) */}
+//               <div className="mt-8 p-6 bg-gray-50 dark:bg-gray-700 rounded-2xl">
+//                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+//                   <DollarSign className="h-5 w-5 text-[#09a353]" />
+//                   Make an Offer to All Dealers
+//                 </h3>
+//                 {user ? (
+//                   <div className="flex gap-4">
+//                     <input
+//                       type="number"
+//                       value={offerPrice}
+//                       onChange={(e) => setOfferPrice(e.target.value)}
+//                       placeholder="Enter your offer price (₦)"
+//                       className="flex-1 h-12 px-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-[#09a353]"
+//                     />
+//                     <button
+//                       onClick={handleSendOffer}
+//                       disabled={sendingOffer || !offerPrice}
+//                       className="px-6 py-3 bg-[#09a353] text-white font-bold rounded-xl flex items-center gap-2 disabled:opacity-50"
+//                     >
+//                       {sendingOffer ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
+//                       Send Offer
+//                     </button>
+//                   </div>
+//                 ) : (
+//                   <div className="text-center py-4 bg-red-50 dark:bg-red-900/30 rounded-xl">
+//                     <AlertCircle className="h-6 w-6 text-red-600 mx-auto mb-2" />
+//                     <p className="text-red-600">Please log in to make an offer</p>
+//                   </div>
+//                 )}
+//               </div>
+//             </div>
 //           </div>
 //         )}
 //       </div>
@@ -316,9 +519,6 @@
 // };
 
 // export default CompareCars;
-
-
-
 
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
@@ -342,20 +542,17 @@ import {
   Send 
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useAuth } from '../contexts/AuthContext'; // Assuming you have auth context for login check
+import { useAuth } from '../contexts/AuthContext';
 import { MapPin, User } from 'lucide-react';
 
-
-
-
 const CompareCars = () => {
-  const { user } = useAuth(); // Get logged-in user
+  const { user } = useAuth();
   const [allCars, setAllCars] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCars, setSelectedCars] = useState([]);
   const [comparisonData, setComparisonData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [comparisonMode, setComparisonMode] = useState('different'); // 'same' or 'different'
+  const [comparisonMode, setComparisonMode] = useState('different');
   const [selectedModel, setSelectedModel] = useState('');
   const [selectedBrand, setSelectedBrand] = useState('');
   const [yearFrom, setYearFrom] = useState('');
@@ -376,8 +573,8 @@ const CompareCars = () => {
         mode: comparisonMode,
         ...(selectedModel && { model: selectedModel }),
         ...(selectedBrand && { brand: selectedBrand }),
-        ...(yearFrom && { yearFrom }),
-        ...(yearTo && { yearTo }),
+        ...(yearFrom && { yearFrom: yearFrom.trim() }),
+        ...(yearTo && { yearTo: yearTo.trim() }),
       });
 
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/cars/allcars?${queryParams.toString()}`, {
@@ -386,12 +583,14 @@ const CompareCars = () => {
       const data = await res.json();
 
       if (data.status === 'success') {
-        setAllCars(data.data.cars || []);
-        console.log(data?.data?.cars)
+        const fetchedCars = data.data.cars || [];
+        setAllCars(fetchedCars);
+        console.log('Fetched cars:', fetchedCars);
       } else {
-        toast.error('Failed to load cars');
+        toast.error(data.message || 'Failed to load cars');
       }
     } catch (err) {
+      console.error('Fetch error:', err);
       toast.error('Network error');
     } finally {
       setLoading(false);
@@ -436,68 +635,83 @@ const CompareCars = () => {
       safetyRatings: selectedCars.map(c => c.safetyRating || 'N/A'),
       features: selectedCars.map(c => c.features || []),
       images: selectedCars.map(c => c.images?.[0] || '/placeholder-car.jpg'),
-      dealers: selectedCars.map(c => c.dealer || c.seller), // Assuming dealer/seller field
+      dealers: selectedCars.map(c => c.dealer || c.seller),
     };
 
     setComparisonData(comparison);
   };
-const handleSendOffer = async () => {
-  if (!user) {
-    toast.error('You must be logged in to send an offer');
-    return;
-  }
-  if (!offerPrice || parseFloat(offerPrice) <= 0) {
-    toast.error('Enter a valid offer price');
-    return;
-  }
-  if (sendingOffer) return;
 
-  setSendingOffer(true);
-  try {
-    const token = localStorage.getItem('token');
-
-    // Get unique dealer IDs from the selected cars
-    const dealerIds = [...new Set(
-      selectedCars.map(car => car.postedBy?._id || car.seller?._id).filter(Boolean)
-    )];
-
-    if (dealerIds.length === 0) {
-      toast.error('No dealer found for selected cars');
-      setSendingOffer(false);
+  const handleSendOffer = async () => {
+    if (!user) {
+      toast.error('You must be logged in to send an offer');
       return;
     }
-
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/offers`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        carIds: selectedCars.map(c => c._id),
-        dealerIds, // ← Now guaranteed to have valid IDs
-        offerPrice: parseFloat(offerPrice),
-        userId: user._id,
-      }),
-    });
-
-    const data = await res.json();
-    if (data.status === 'success') {
-      toast.success('Offer sent to dealers! They can now chat with you.');
-      setOfferPrice('');
-    } else {
-      toast.error(data.message || 'Failed to send offer');
+    if (!offerPrice || parseFloat(offerPrice) <= 0) {
+      toast.error('Enter a valid offer price');
+      return;
     }
-  } catch (err) {
-    toast.error('Network error');
-  } finally {
-    setSendingOffer(false);
-  }
-};
-  const filteredCars = allCars.filter(car =>
-    `${car.make} ${car.model}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    car.year?.toString().includes(searchQuery)
-  );
+    if (sendingOffer) return;
+
+    setSendingOffer(true);
+    try {
+      const token = localStorage.getItem('token');
+
+      const dealerIds = [...new Set(
+        selectedCars.map(car => car.postedBy?._id || car.seller?._id).filter(Boolean)
+      )];
+
+      if (dealerIds.length === 0) {
+        toast.error('No dealer found for selected cars');
+        setSendingOffer(false);
+        return;
+      }
+
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/offers`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          carIds: selectedCars.map(c => c._id),
+          dealerIds,
+          offerPrice: parseFloat(offerPrice),
+          userId: user._id,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.status === 'success') {
+        toast.success('Offer sent to dealers! They can now chat with you.');
+        setOfferPrice('');
+      } else {
+        toast.error(data.message || 'Failed to send offer');
+      }
+    } catch (err) {
+      toast.error('Network error');
+    } finally {
+      setSendingOffer(false);
+    }
+  };
+
+  // Client-side year range filtering (as fallback / extra safety)
+  const filteredCars = allCars.filter(car => {
+    const matchesSearch = 
+      `${car.make} ${car.model}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      car.year?.toString().includes(searchQuery);
+
+    let matchesYear = true;
+    const carYear = Number(car.year);
+
+    if (yearFrom && !isNaN(carYear)) {
+      matchesYear = matchesYear && carYear >= Number(yearFrom);
+    }
+    if (yearTo && !isNaN(carYear)) {
+      matchesYear = matchesYear && carYear <= Number(yearTo);
+    }
+
+    return matchesSearch && matchesYear;
+  });
 
   return (
     <div className="min-h-screen mt-20 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12 px-4">
@@ -667,12 +881,12 @@ const handleSendOffer = async () => {
                   <p className="text-gray-600 dark:text-gray-400 mb-4">
                     {car.year} • ₦{car.price?.toLocaleString() || 'N/A'}
                   </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 flex items-center gap-2">
-  <MapPin className="h-4 w-4" />
-  {car.location && typeof car.location === 'object'
-    ? `${car.location.state || ''}${car.location.lga ? ', ' + car.location.lga : ''}`.trim() || 'Location not specified'
-    : car.location || 'Location not specified'}
-</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 flex items-center gap-2">
+                    <MapPin className="h-4 w-4" />
+                    {car.location && typeof car.location === 'object'
+                      ? `${car.location.state || ''}${car.location.lga ? ', ' + car.location.lga : ''}`.trim() || 'Location not specified'
+                      : car.location || 'Location not specified'}
+                  </p>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 flex items-center gap-2">
                     <User className="h-4 w-4" />
                     Dealer: {car.dealer?.businessName || 'N/A'}
@@ -712,90 +926,90 @@ const handleSendOffer = async () => {
                     ))}
                   </tr>
                 </thead>
-                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700 text-sm text-gray-600 dark:text-gray-400">
-                               <tr>
-                                 <td className="px-6 py-4 font-medium flex items-center gap-2">
-                                   <DollarSign className="h-4 w-4" /> Price
-                                 </td>
-                                 {comparisonData.prices.map((price, i) => (
-                                   <td key={i} className="px-6 py-4 font-bold text-green-600 dark:text-green-400">
-                                     ₦{price?.toLocaleString() || 'N/A'}
-                                   </td>
-                                 ))}
-                               </tr>
-                               <tr>
-                                 <td className="px-6 py-4 font-medium flex items-center gap-2">
-                                   <Car className="h-4 w-4" /> Year
-                                 </td>
-                                 {comparisonData.years.map((year, i) => (
-                                   <td key={i} className="px-6 py-4">{year}</td>
-                                 ))}
-                               </tr>
-                               <tr>
-                                 <td className="px-6 py-4 font-medium flex items-center gap-2">
-                                   <Gauge className="h-4 w-4" /> Mileage
-                                 </td>
-                                 {comparisonData.mileages.map((mileage, i) => (
-                                   <td key={i} className="px-6 py-4">{mileage?.toLocaleString()} km</td>
-                                 ))}
-                               </tr>
-                               <tr>
-                                 <td className="px-6 py-4 font-medium flex items-center gap-2">
-                                   <Fuel className="h-4 w-4" /> Fuel Type
-                                 </td>
-                                 {comparisonData.fuelTypes.map((type, i) => (
-                                   <td key={i} className="px-6 py-4 capitalize">{type}</td>
-                                 ))}
-                               </tr>
-                               <tr>
-                                 <td className="px-6 py-4 font-medium flex items-center gap-2">
-                                   <Settings className="h-4 w-4" /> Transmission
-                                 </td>
-                                 {comparisonData.transmissions.map((trans, i) => (
-                                   <td key={i} className="px-6 py-4 capitalize">{trans}</td>
-                                 ))}
-                               </tr>
-                               <tr>
-                                 <td className="px-6 py-4 font-medium flex items-center gap-2">
-                                   <Zap className="h-4 w-4" /> Horsepower
-                                 </td>
-                                 {comparisonData.horsepowers.map((hp, i) => (
-                                   <td key={i} className="px-6 py-4">{hp} hp</td>
-                                 ))}
-                               </tr>
-                               <tr>
-                                 <td className="px-6 py-4 font-medium flex items-center gap-2">
-                                   <Wind className="h-4 w-4" /> Torque
-                                 </td>
-                                 {comparisonData.torques.map((tq, i) => (
-                                   <td key={i} className="px-6 py-4">{tq} Nm</td>
-                                 ))}
-                               </tr>
-                               <tr>
-                                 <td className="px-6 py-4 font-medium flex items-center gap-2">
-                                   <Battery className="h-4 w-4" /> Engine Size
-                                 </td>
-                                 {comparisonData.engineSizes.map((size, i) => (
-                                   <td key={i} className="px-6 py-4">{size} L</td>
-                                 ))}
-                               </tr>
-                               <tr>
-                                 <td className="px-6 py-4 font-medium flex items-center gap-2">
-                                   <Star className="h-4 w-4" /> Safety Rating
-                                 </td>
-                                 {comparisonData.safetyRatings.map((rating, i) => (
-                                   <td key={i} className="px-6 py-4">{rating}/5</td>
-                                 ))}
-                               </tr>
-                               <tr>
-                                 <td className="px-6 py-4 font-medium flex items-center gap-2">
-                                   <Plus className="h-4 w-4" /> Features
-                                 </td>
-                                 {comparisonData.features.map((feats, i) => (
-                                   <td key={i} className="px-6 py-4">{feats.length} features</td>
-                                 ))}
-                               </tr>
-                             </tbody>
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-700 text-sm text-gray-600 dark:text-gray-400">
+                  <tr>
+                    <td className="px-6 py-4 font-medium flex items-center gap-2">
+                      <DollarSign className="h-4 w-4" /> Price
+                    </td>
+                    {comparisonData.prices.map((price, i) => (
+                      <td key={i} className="px-6 py-4 font-bold text-green-600 dark:text-green-400">
+                        ₦{price?.toLocaleString() || 'N/A'}
+                      </td>
+                    ))}
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-4 font-medium flex items-center gap-2">
+                      <Car className="h-4 w-4" /> Year
+                    </td>
+                    {comparisonData.years.map((year, i) => (
+                      <td key={i} className="px-6 py-4">{year}</td>
+                    ))}
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-4 font-medium flex items-center gap-2">
+                      <Gauge className="h-4 w-4" /> Mileage
+                    </td>
+                    {comparisonData.mileages.map((mileage, i) => (
+                      <td key={i} className="px-6 py-4">{mileage?.toLocaleString()} km</td>
+                    ))}
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-4 font-medium flex items-center gap-2">
+                      <Fuel className="h-4 w-4" /> Fuel Type
+                    </td>
+                    {comparisonData.fuelTypes.map((type, i) => (
+                      <td key={i} className="px-6 py-4 capitalize">{type}</td>
+                    ))}
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-4 font-medium flex items-center gap-2">
+                      <Settings className="h-4 w-4" /> Transmission
+                    </td>
+                    {comparisonData.transmissions.map((trans, i) => (
+                      <td key={i} className="px-6 py-4 capitalize">{trans}</td>
+                    ))}
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-4 font-medium flex items-center gap-2">
+                      <Zap className="h-4 w-4" /> Horsepower
+                    </td>
+                    {comparisonData.horsepowers.map((hp, i) => (
+                      <td key={i} className="px-6 py-4">{hp} hp</td>
+                    ))}
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-4 font-medium flex items-center gap-2">
+                      <Wind className="h-4 w-4" /> Torque
+                    </td>
+                    {comparisonData.torques.map((tq, i) => (
+                      <td key={i} className="px-6 py-4">{tq} Nm</td>
+                    ))}
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-4 font-medium flex items-center gap-2">
+                      <Battery className="h-4 w-4" /> Engine Size
+                    </td>
+                    {comparisonData.engineSizes.map((size, i) => (
+                      <td key={i} className="px-6 py-4">{size} L</td>
+                    ))}
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-4 font-medium flex items-center gap-2">
+                      <Star className="h-4 w-4" /> Safety Rating
+                    </td>
+                    {comparisonData.safetyRatings.map((rating, i) => (
+                      <td key={i} className="px-6 py-4">{rating}/5</td>
+                    ))}
+                  </tr>
+                  <tr>
+                    <td className="px-6 py-4 font-medium flex items-center gap-2">
+                      <Plus className="h-4 w-4" /> Features
+                    </td>
+                    {comparisonData.features.map((feats, i) => (
+                      <td key={i} className="px-6 py-4">{feats.length} features</td>
+                    ))}
+                  </tr>
+                </tbody>
               </table>
 
               {/* Offer Price Section (only if logged in) */}

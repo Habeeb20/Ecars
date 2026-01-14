@@ -79,7 +79,7 @@ const About = () => {
         </div>
 
         {/* Team Section */}
-        <div className="mb-12">
+        {/* <div className="mb-12">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white text-center mb-8">
             Meet Our Team
           </h2>
@@ -122,7 +122,7 @@ const About = () => {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Stats Section */}
         <div className="bg-indigo-600 dark:bg-indigo-800 rounded-2xl shadow-xl p-8 text-white text-center">

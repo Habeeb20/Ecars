@@ -85,7 +85,7 @@ const Footer = () => {
                   Contact Us
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link to="#" className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">
                   FAQs
                 </Link>
@@ -104,7 +104,7 @@ const Footer = () => {
                 <Link to="#" className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">
                   Cookie Policy
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -115,19 +115,19 @@ const Footer = () => {
               <li className="flex items-start space-x-3">
                 <MapPin className="h-5 w-5 text-primary-600 dark:text-primary-500 mt-0.5" />
                 <span className="text-gray-600 dark:text-gray-400">
-                  123 Car Street, Auto City, AC 12345
+                  iyalla street, Alausa, ikeja, Lagos
                 </span>
               </li>
               <li className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 text-primary-600 dark:text-primary-500" />
                 <span className="text-gray-600 dark:text-gray-400">
-                  +1 (555) 123-4567
+                  +234 8155446666
                 </span>
               </li>
               <li className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-primary-600 dark:text-primary-500" />
                 <span className="text-gray-600 dark:text-gray-400">
-                  info@ecars.example.com
+                essentila01@gmail.com
                 </span>
               </li>
             </ul>
