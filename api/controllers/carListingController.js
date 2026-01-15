@@ -1,6 +1,7 @@
 // controllers/carController.js
 
 import CarListing from '../models/carListing.js';
+import Car from '../models/carListing.js';
 import User from '../models/user.js';
 import Subscription from '../models/subscriptionSchema.js';
 
@@ -362,6 +363,7 @@ export const searchCars = async (req, res) => {
       data: cars,
     });
   } catch (err) {
+    console.log(err)
     res.status(500).json({ success: false, error: err.message });
   }
 };

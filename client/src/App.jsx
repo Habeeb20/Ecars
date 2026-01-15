@@ -29,14 +29,28 @@ import Blacklist from './pages/Blacklist';
 import CompareCars from './pages/CompareCars';
 import AllCarParts from './components/Landing/CarParts';
 import Contact from './pages/Contact';
-
+import { Toaster } from 'sonner'; 
 // import Blog from './pages/Blog';
 const App = () => {
   return (
     <Router>
+       <Toaster
+  position="top-center"
+  richColors
+  closeButton
+  toastOptions={{
+    className: 'pointer-events-auto',      // make sure clickable
+    style: {
+      zIndex: 10000,                       // above your modals
+      minWidth: '320px'
+    }
+  }}
+/>
       <Routes>
+      
         {/* Pages WITH Navbar + Footer */}
         <Route element={<MainLayout />}>
+       
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />

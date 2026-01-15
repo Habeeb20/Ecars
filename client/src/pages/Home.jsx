@@ -204,34 +204,7 @@ const Home = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 to-gray-900/30"></div>
         </div>
 
-        {/* <div className="container relative z-10 ">
-          <div className="max-w-lg  md:max-w-2xl">
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="text-white text-4xl md:text-5xl font-bold mb-4"
-            >
-              Find Your Perfect Car Today
-            </motion.h1>
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-gray-200 text-lg mb-8"
-            >
-              Browse thousands of listings, compare vehicles, and find the perfect match for your lifestyle and budget.
-            </motion.p>
-            
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              <SearchFilters onSearch={handleSearch} />
-            </motion.div>
-          </div>
-        </div> */}
+      
         <div className="container relative z-10 pt-8 sm:pt-10 md:pt-0"> {/* Mobile padding added */}
   <div className="max-w-lg md:max-w-2xl px-4 sm:px-8"> {/* Added horizontal padding on mobile */}
     <motion.h1 
@@ -261,44 +234,6 @@ const Home = () => {
   </div>
 </div>
       </section>
-
-      {/* Statistics Section */}
-      {/* <section className="py-12 bg-white dark:bg-gray-800">
-        <div className="container">
-          <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
-            eCars in Numbers
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="text-4xl font-bold text-primary-600 dark:text-primary-400 mb-2">
-                1,234
-              </div>
-              <div className="text-gray-600 dark:text-gray-300 flex items-center justify-center gap-2">
-                <Car className="h-5 w-5" />
-                <span>Available Cars</span>
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-primary-600 dark:text-primary-400 mb-2">
-                56
-              </div>
-              <div className="text-gray-600 dark:text-gray-300 flex items-center justify-center gap-2">
-                <Clock className="h-5 w-5" />
-                <span>Ongoing Auctions</span>
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-primary-600 dark:text-primary-400 mb-2">
-                789
-              </div>
-              <div className="text-gray-600 dark:text-gray-300 flex items-center justify-center gap-2">
-                <Shield className="h-5 w-5" />
-                <span>Registered Dealers</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section> */}
 
       <StatsSection/>
 

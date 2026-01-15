@@ -141,8 +141,8 @@ console.log(data)
 
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white">Featured Service Provider</h2>
-            <Link to="/dealerships" className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 flex items-center group">
-              <span>View all dealers</span>
+            <Link to="/service-providers" className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 flex items-center group">
+              <span>View all service providers</span>
               <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>

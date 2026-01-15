@@ -136,7 +136,7 @@ const Listings = () => {
 
   return (
     <div className="pt-16 min-h-screen">
-      <div className="bg-primary-600 dark:bg-primary-800 py-12">
+      <div className="bg-primary-600 :bg-primary-800 py-12">
         <div className="container mx-auto px-4">
           <h1 className="text-3xl font-bold text-white mb-4">Browse Cars</h1>
           <p className="text-primary-100 max-w-3xl">
@@ -154,7 +154,7 @@ const Listings = () => {
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 selectedCondition === option.value
                   ? 'bg-primary-600 text-white'
-                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
+                  : 'bg-gray-200 :bg-gray-700 text-gray-800 :text-gray-200 hover:bg-gray-300 :hover:bg-gray-600'
               }`}
             >
               {option.label}
@@ -165,7 +165,7 @@ const Listings = () => {
         <div className="lg:flex">
           <div className="hidden lg:block w-64 flex-shrink-0 mr-8">
             <div className="sticky top-24">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Filters</h2>
+              <h2 className="text-xl font-semibold text-gray-900 :text-white mb-4">Filters</h2>
               <SearchFilters 
                 variant="sidebar" 
                 onSearch={handleSearch} 
@@ -209,12 +209,12 @@ const Listings = () => {
 
           <div className="flex-1">
             <div className="hidden lg:flex items-center justify-between mb-6">
-              <h2 className="text-gray-700 dark:text-gray-300">
+              <h2 className="text-gray-700 :text-gray-300">
                 <span className="font-semibold">{filteredCars.length}</span> cars found
               </h2>
               
               <div className="relative">
-                <label htmlFor="sort" className="text-sm mr-2 text-gray-600 dark:text-gray-400">
+                <label htmlFor="sort" className="text-sm mr-2 text-gray-600 :text-gray-400">
                   Sort by:
                 </label>
                 <select
@@ -238,10 +238,10 @@ const Listings = () => {
                 <Loader2 className="h-12 w-12 text-primary-600 animate-spin mx-auto" />
               </div>
             ) : filteredCars.length === 0 ? (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center">
+              <div className="bg-white :bg-gray-800 rounded-lg shadow-md p-8 text-center">
                 <Search className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No cars found</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                <h3 className="text-xl font-semibold text-gray-900 :text-white mb-2">No cars found</h3>
+                <p className="text-gray-600 :text-gray-400 mb-4">
                   Please try adjusting your filters to find what you're looking for.
                 </p>
                 <button
@@ -286,19 +286,19 @@ const Listings = () => {
             {cars.length > 0 && (
               <div className="mt-8 flex justify-center">
                 <nav className="inline-flex rounded-md shadow">
-                  <button className="px-3 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <button className="px-3 py-2 rounded-l-md border border-gray-300 :border-gray-600 bg-white :bg-gray-800 text-gray-700 :text-gray-300 hover:bg-gray-50 :hover:bg-gray-700">
                     Previous
                   </button>
-                  <button className="px-3 py-2 border-t border-b border-gray-300 dark:border-gray-600 bg-primary-50 dark:bg-primary-900 text-primary-600 dark:text-primary-400">
+                  <button className="px-3 py-2 border-t border-b border-gray-300 :border-gray-600 bg-primary-50 :bg-primary-900 text-primary-600 :text-primary-400">
                     1
                   </button>
-                  <button className="px-3 py-2 border-t border-b border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <button className="px-3 py-2 border-t border-b border-gray-300 :border-gray-600 bg-white :bg-gray-800 text-gray-700 :text-gray-300 hover:bg-gray-50 :hover:bg-gray-700">
                     2
                   </button>
-                  <button className="px-3 py-2 border-t border-b border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <button className="px-3 py-2 border-t border-b border-gray-300 :border-gray-600 bg-white :bg-gray-800 text-gray-800 text-gray-700 :text-gray-300 hover:bg-gray-50 :hover:bg-gray-700">
                     3
                   </button>
-                  <button className="px-3 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <button className="px-3 py-2 rounded-r-md border border-gray-300 :border-gray-600 bg-white :bg-gray-800 text-gray-700 :text-gray-300 hover:bg-gray-50 :hover:bg-gray-700">
                     Next
                   </button>
                 </nav>
