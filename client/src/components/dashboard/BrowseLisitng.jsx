@@ -364,7 +364,7 @@ const BrowseListings = () => {
         if (!res.ok) throw new Error('Network response was not ok');
 
         const data = await res.json();
-
+console.log(data)
         if (data.status === 'success') {
           const items = data.data.cars || data.data.parts || data.data.providers || [];
           setAllListings(items);
@@ -583,14 +583,14 @@ const BrowseListings = () => {
                 className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300"
               >
                 <img 
-                  src={item.images?.[0] || '/placeholder-car.jpg'} 
-                  alt={item.title || item.businessName || 'Listing'}
+                  src={item.images?.[0] || item.serviceProviderInfo?.workshopPhotos || item?.avatar || '/placeholder-car.jpg'} 
+                  alt={item.title || item.businessName || item.serviceProviderInfo?.businessName || 'Listing'}
                   className="w-full h-48 object-cover"
                   onError={(e) => { e.target.src = '/placeholder-car.jpg'; }}
                 />
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">
-                    {item.title || item.businessName || 'Untitled Listing'}
+                    {item.title || item.businessName ||  item.serviceProviderInfo?.businessName ||'Untitled Listing'}
                   </h3>
 
                   {item.price && (
@@ -604,12 +604,12 @@ const BrowseListings = () => {
                       <MapPin className="h-4 w-4 flex-shrink-0" />
                       {typeof item.location === 'object' && item.location
                         ? `${item.location.state || ''}${item.location.lga ? ', ' + item.location.lga : ''}`
-                        : item.location || `${item.state || ''}${item.lga ? ', ' + item.lga : ''}` || 'Location not specified'}
+                        : item.location || `${item.state || ''}${item.lga ? ', ' + item.serviceProviderInfo.lga : ''} ` || `${item.serviceProviderInfo?.lga}` || 'Location not specified'}
                     </p>
 
                     <p className="text-gray-600 dark:text-gray-400 flex items-center gap-2">
                       <Phone className="h-4 w-4 flex-shrink-0" />
-                      {item.postedBy?.phoneNumber || 'Contact via chat'}
+                      {item.postedBy?.phoneNumber || item.serviceProviderInfo?.phoneNumber || 'Contact via chat'}
                     </p>
 
                     {(item.postedBy?.dealerInfo?.verified || 

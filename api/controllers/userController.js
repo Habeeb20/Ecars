@@ -73,7 +73,7 @@ export const login = async (req, res) => {
     } catch (error) {
            res.status(400).json({
       status: 'fail',
-      message: err.message,
+      message: error.message,
     });
    } 
 };
@@ -103,7 +103,7 @@ export const forgotPassword = async (req, res) => {
   await user.save({ validateBeforeSave: false });
 
   try {
-    const resetURL = `${req.protocol}://${req.get('host')}/reset-password/${resetToken}`;
+    const resetURL = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
     // or for frontend: `https://yourapp.com/reset-password/${resetToken}`
 
     await sendPasswordResetEmail(user.email, resetURL);
@@ -509,7 +509,7 @@ export const getAllServiceProviders = async (req, res) => {
       role: 'service-provider',
       'serviceProviderInfo.verified': true
     })
-    .select('firstName serviceProviderInfo.businessName serviceProviderInfo.type serviceProviderInfo.state serviceProviderInfo.lga serviceProviderInfo.workshopPhotos serviceProviderInfo.rating phoneNumber')
+    .select('firstName avatar serviceProviderInfo.businessName serviceProviderInfo.type serviceProviderInfo.state serviceProviderInfo.lga serviceProviderInfo.workshopPhotos serviceProviderInfo.rating phoneNumber')
     .sort('-serviceProviderInfo.verifiedAt');
 
     console.log(providers)

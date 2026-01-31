@@ -1,7 +1,8 @@
 // App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import MainLayout from './components/layout/MainLayout';
 import Home from './pages/Home';
 import About from './pages/About';
@@ -31,6 +32,17 @@ import AllCarParts from './components/Landing/CarParts';
 import Contact from './pages/Contact';
 import { Toaster } from 'sonner'; 
 // import Blog from './pages/Blog';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    // Scroll to top on every route change
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
 const App = () => {
   return (
     <Router>
@@ -46,6 +58,7 @@ const App = () => {
     }
   }}
 />
+<ScrollToTop />
       <Routes>
       
         {/* Pages WITH Navbar + Footer */}
@@ -59,7 +72,7 @@ const App = () => {
             <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register/>} />
         <Route path="/forgot-password" element={<ForgotPassword/>} />
-        <Route path="/resetpassword" element={<ResetPassword/>} />
+        <Route path="/reset-password/:token" element={<ResetPassword/>} />
         <Route path="/payment/success" element={<PaymentSuccess/>} />
         <Route path="/stolen-cars" element={<StolenCars/>} />
         <Route path="/vehicles" element={<Vehicles/>} />
