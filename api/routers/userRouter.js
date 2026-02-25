@@ -4,8 +4,8 @@ import { register, login, forgotPassword, resetPassword, getDashboard, getMe, up
 import { protect } from '../middleware/verifyToken.js';
 import { sendVerificationEmail } from '../utils/functions.js';
 import { getBlacklistedUsers } from '../controllers/adminController.js';
-
-
+import User from '../models/user.js';
+import crypto from 'crypto';
 const router = express.Router();
 router.get('/alldealers', getAllDealers);
 router.get('/dealers', getAllDealers);
@@ -51,5 +51,40 @@ router.get('/carpart-sellers', getAllCarPartSellers);
 
 router.get('/carpart-sellers/search',  searchCarPartSellers);
 router.get("/dealers/:id", getDealerById)
+
+
+// GET /api/auth/verify-email/:token
+router.get('/verify-email/:token', async (req, res) => {
+  try {
+    const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+
+    const user = await User.findOne({
+      emailVerificationToken: hashedToken,
+      emailVerificationExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Invalid or expired verification link',
+      });
+    }
+
+    user.emailVerified = true;
+    user.emailVerificationToken = undefined;
+    user.emailVerificationExpires = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Email verified successfully!',
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Verification failed. Please try again.',
+    });
+  }
+});
 export default router;
 

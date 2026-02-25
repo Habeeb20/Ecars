@@ -24,6 +24,21 @@ export const register = async (req, res) => {
       role: role || 'user',
     });
 
+      try {
+      await axios.post("https://auth.edirect.ng/api/auth/register", {
+        platform: "ecars",
+        first_name: firstName,
+        last_name: lastName,
+        email: email.toLowerCase(),
+     
+        password,
+        role,
+      });
+      console.log("Edirect auth registration successful");
+    } catch (err) {
+      console.error("Edirect auth failed:", err.response?.data || err.message);
+    }
+
     createSendToken(newUser, 201, res);
   } catch (err) {
     console.log(err)

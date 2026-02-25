@@ -297,8 +297,9 @@ export const sendPasswordResetEmail = async (email, resetURL) => {
 
 // Send Verification Email (FIXED & CLEAN)
 export const sendVerificationEmail = async (req, res) => {
+     const user = req.user;
   try {
-    const user = req.user;
+ 
 
     if (user.emailVerified) {
       return res.status(400).json({

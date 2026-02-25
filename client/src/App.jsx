@@ -31,6 +31,7 @@ import CompareCars from './pages/CompareCars';
 import AllCarParts from './components/Landing/CarParts';
 import Contact from './pages/Contact';
 import { Toaster } from 'sonner'; 
+import VerifyEmail from './pages/auth/VerifyYourEmail';
 // import Blog from './pages/Blog';
 
 function ScrollToTop() {
@@ -75,6 +76,7 @@ const App = () => {
         <Route path="/reset-password/:token" element={<ResetPassword/>} />
         <Route path="/payment/success" element={<PaymentSuccess/>} />
         <Route path="/stolen-cars" element={<StolenCars/>} />
+        <Route path="/verify-email" element={<VerifyEmail/>} />
         <Route path="/vehicles" element={<Vehicles/>} />
         <Route path="/blog/:id" element={<Article/>} />
         <Route path="/cars/:id" element={<CarDetails />} />
