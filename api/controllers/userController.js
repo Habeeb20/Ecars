@@ -8,6 +8,7 @@ import 'colors';
 import { protect } from '../middleware/verifyToken.js';
 import CarListing from '../models/carListing.js';
 import { sendPasswordResetEmail } from '../utils/functions.js';
+import bcrypt from 'bcryptjs';
 // REGISTER → returns token so user logs in immediately
 // controllers/authController.js
 
@@ -92,6 +93,32 @@ export const login = async (req, res) => {
     });
    } 
 };
+export const authLogin = async (req, res) => {
+    try {
+         const { email } = req.body;
+
+    if (!email ) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Please provide your email ',
+      });
+    }
+     const user = await User.findOne({ email }).select('+password');
+
+    if (!user) {
+      return res.status(401).json({
+        status: 'fail',
+        message: 'Incorrect email or password',
+      });
+  } 
+    createSendToken(user, 200, res);
+    } catch (error) {
+           res.status(400).json({
+      status: 'fail',
+      message: error.message,
+    });
+   } 
+};
 
 
 
@@ -141,40 +168,100 @@ export const forgotPassword = async (req, res) => {
 };
 
 // RESET PASSWORD
+// export const resetPassword = async (req, res) => {
+//   const { password } = req.body;
+//    if (!password || password.length < 6) {
+//     return res.status(400).json({ status: false, message: "Password must be at least 6 characters" });
+//   }
+
+//         const saltRounds = 12;
+//       const hashedPassword = await bcrypt.hash(password, saltRounds);
+//   const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+
+//   const user = await User.findOne({
+//     passwordResetToken: hashedToken,
+//     passwordResetExpires: { $gt: Date.now() },
+//   });
+// console.log(user)
+//   if (!user) {
+//     return res.status(400).json({
+//       status: 'fail',
+//       message: 'Token is invalid or has expired',
+//     });
+//   }
+
+//   user.password = hashedPassword;
+//   user.passwordResetToken = undefined;
+//   user.passwordResetExpires = undefined;
+//   await user.save();
+
+//   // Log user in after reset
+//   const token = signToken(user._id);
+
+//   res.status(200).json({
+//     status: 'success',
+//     token,
+//     message: 'Password reset successful',
+//   });
+// };
+
+
+
 export const resetPassword = async (req, res) => {
-  const { password } = req.body;
-  const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+  try {
+    const { password } = req.body;
+    const { token } = req.params;
 
-  const user = await User.findOne({
-    passwordResetToken: hashedToken,
-    passwordResetExpires: { $gt: Date.now() },
-  });
+    if (!password || password.length < 6) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Password must be at least 6 characters',
+      });
+    }
 
-  if (!user) {
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Token is invalid or has expired',
+    // Hash token the same way as in forgot-password
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(token)
+      .digest('hex');
+
+    const user = await User.findOne({
+      passwordResetToken: hashedToken,         
+      passwordResetExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Token is invalid or has expired',
+      });
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    user.password = password;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+
+    await user.save();
+
+    // Optional: auto-login (many teams remove this)
+    const jwtToken = signToken(user._id);
+
+    return res.status(200).json({
+      status: 'success',
+      token: jwtToken,
+      message: 'Password reset successful',
+    });
+  } catch (err) {
+    console.error('Reset password error:', err);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Something went wrong. Please try again later.',
     });
   }
-
-  user.password = password;
-  user.passwordResetToken = undefined;
-  user.passwordResetExpires = undefined;
-  await user.save();
-
-  // Log user in after reset
-  const token = signToken(user._id);
-
-  res.status(200).json({
-    status: 'success',
-    token,
-    message: 'Password reset successful',
-  });
 };
-
-
-
-
 
 
 export const getDashboard = async (req, res) => {

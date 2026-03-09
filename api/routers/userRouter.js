@@ -1,6 +1,6 @@
 // routes/authRoutes.js
 import express from 'express';
-import { register, login, forgotPassword, resetPassword, getDashboard, getMe, updateMe, updatePassword, upgradeToDealer, upgradeToServiceProvider, getAllDealers, getAllServiceProviders, searchServiceAndDealers, getFeaturedDealers, searchDealers, getFeaturedServiceProvider, searchServiceProviders, getDealerById, searchBlacklistedUsers, upgradeToCarPartSeller, getAllCarPartSellers, verifyCarPartSeller, searchCarPartSellers } from '../controllers/userController.js';
+import { register, login, forgotPassword, resetPassword, getDashboard, getMe, updateMe, updatePassword, upgradeToDealer, upgradeToServiceProvider, getAllDealers, getAllServiceProviders, searchServiceAndDealers, getFeaturedDealers, searchDealers, getFeaturedServiceProvider, searchServiceProviders, getDealerById, searchBlacklistedUsers, upgradeToCarPartSeller, getAllCarPartSellers, verifyCarPartSeller, searchCarPartSellers, authLogin } from '../controllers/userController.js';
 import { protect } from '../middleware/verifyToken.js';
 import { sendVerificationEmail } from '../utils/functions.js';
 import { getBlacklistedUsers } from '../controllers/adminController.js';
@@ -13,9 +13,10 @@ router.get('/all-service-providers', getAllServiceProviders);
 
 router.post('/register', register);
 router.post('/login', login);
+router.post('/auth-login', authLogin);
 router.post('/forgotpassword', forgotPassword);
 
-router.patch('/resetpassword/:token', resetPassword);
+router.put('/resetpassword/:token', resetPassword);
 // router.get("/me", protect, getDashboard)
 router.get("/me", protect, getMe)
 router.get("/featured-dealers", getFeaturedDealers)

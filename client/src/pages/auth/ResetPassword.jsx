@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Lock, ArrowLeft, Eye, EyeOff } from 'lucide-react';
-
+import { Link } from 'react-router-dom';
 const ResetPassword = () => {
   const { token } = useParams(); // from URL: /reset-password/:token
   const [password, setPassword] = useState('');
@@ -21,7 +21,7 @@ const ResetPassword = () => {
 
     try {
       const res = await fetch(`${backendUrl}/users/resetpassword/${token}`, {
-        method: 'PATCH',
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password }),
       });
