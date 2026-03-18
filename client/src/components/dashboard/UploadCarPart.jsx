@@ -360,7 +360,7 @@ const UploadCarPart = () => {
               <button
                 type="submit"
                 disabled={!isFormValid || isSubmitting}
-                className={`w-full py-6 rounded-2xl font-black text-2xl transition-all transform hover:scale-105 shadow-2xl flex items-center justify-center gap-4 ${
+                className={`w-full py-6 rounded-2xl font-black text-1xl transition-all transform hover:scale-105 shadow-2xl flex items-center justify-center gap-4 ${
                   isFormValid && !isSubmitting
                     ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 hover:from-indigo-700 hover:to-purple-700 hover:to-blue-700 text-white'
                     : 'bg-gray-400 dark:bg-gray-600 cursor-not-allowed'
@@ -373,7 +373,7 @@ const UploadCarPart = () => {
                   </>
                 ) : (
                   <>
-                    <Package className="w-10 h-10" />
+                    <Package className="w-5 h-5" />
                     Upload Car Part
                   </>
                 )}

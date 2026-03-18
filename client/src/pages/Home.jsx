@@ -29,6 +29,8 @@ import FeaturedDealers from '../components/Landing/FeaturedDealers';
 import { FeaturedServiceProvider } from '../components/Landing/FeaturedServiceProvider';
 import Blog from '../components/Landing/Blog';
 import FeaturedCarPartSellers from '../components/Landing/FeaturedCarPartSeller';
+import Banner from '../components/Landing/Banner';
+import CarPartsCategories from '../components/Landing/CarPartCategories';
 
 // Mock data (kept exactly as in your original code)
 const mockServiceProviders = [
@@ -237,6 +239,8 @@ const Home = () => {
 
       <StatsSection/>
 
+      <CarPartsCategories/>
+
       {/* Featured Cars Section */}
     <FeaturedCar/>
 
@@ -310,6 +314,8 @@ const Home = () => {
       <FeaturedDealers/>
 
       <FeaturedServiceProvider/>
+
+      <Banner/>
 
       
       {/* Safety & Support Section */}

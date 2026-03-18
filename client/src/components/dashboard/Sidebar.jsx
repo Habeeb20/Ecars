@@ -217,7 +217,8 @@ import {
   Package,
   MessageCircle,
   LucideSettings2,
-  DollarSign
+  DollarSign,
+  Image
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import UploadCars from './UploadCars';
@@ -234,6 +235,7 @@ import MyMessages from './MyMessage';
 import BrowseListings from './BrowseLisitng';
 import CompareCars from './CompareAllCars';
 import DealerOffers from './DealerOffer';
+import GalleryFeed from './Gallery';
 const Sidebar = ({ onClose, setCurrentView }) => {
   const { user, logout } = useAuth();
   const [activeView, setActiveView] = useState('overview');
@@ -254,6 +256,7 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     message: <MyMessages/>,
    compareCars: <CompareCars/>,
   dealeroffers: <DealerOffers/>,
+  gallery: <GalleryFeed />
   
   };
 
@@ -267,14 +270,16 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     { icon: Grid, label: 'Dashboard', view: 'overview' },
     { icon: Upload, view: 'uploadCars' },       // Dynamic label + view
     { icon: ListChecks, view: 'listings' },     // Dynamic label + view
-       { icon: LucideSettings2, label: 'Manage Listings', view: 'browseCarListing' },
+    { icon: LucideSettings2, label: 'Manage Listings', view: 'browseCarListing' },
     { icon: Mail, label: 'Verify Your Email', view: 'verifyEmail' },
+   
     { icon: Car, label: 'compare cars', view: 'compareCars' },
     { icon: DollarSign, label: 'Offers', view: 'dealeroffers' },
     { icon: Package, label: 'My Plans', view: 'myplans' },
     { icon: SubscriptIcon, label: 'Subscribe To Plans', view: 'subscription' },
     { icon: User, label: 'Profile', view: 'profile' },
     { icon: MessageCircle, label: 'Messages', view: 'message' },
+     { icon: Image, label: 'Gallery', view: 'gallery' },,
  
   ];
 

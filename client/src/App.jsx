@@ -32,6 +32,7 @@ import AllCarParts from './components/Landing/CarParts';
 import Contact from './pages/Contact';
 import { Toaster } from 'sonner'; 
 import VerifyEmail from './pages/auth/VerifyYourEmail';
+import AllCarPartsCategories from './components/Landing/AllCarPartCategories';
 // import Blog from './pages/Blog';
 
 function ScrollToTop() {
@@ -87,6 +88,7 @@ const App = () => {
         <Route path="/blog" element={<Blog />} />
         <Route path="/compare" element={<CompareCars />} />
         <Route path="/car-parts" element={<AllCarParts />} />
+        <Route path="/car-parts/all-categories" element={<AllCarPartsCategories />} />
         
         <Route path="/blacklist" element={<Blacklist />} />
         
