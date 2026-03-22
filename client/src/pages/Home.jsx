@@ -31,6 +31,9 @@ import Blog from '../components/Landing/Blog';
 import FeaturedCarPartSellers from '../components/Landing/FeaturedCarPartSeller';
 import Banner from '../components/Landing/Banner';
 import CarPartsCategories from '../components/Landing/CarPartCategories';
+import CarBodyTypesToParts from '../components/Landing/CarBodyTypeToPart';
+import BodyTypeSelector from '../components/Landing/BodyTypeSelector';
+import PublicDealsPage from '../components/Landing/Deals';
 
 // Mock data (kept exactly as in your original code)
 const mockServiceProviders = [
@@ -236,10 +239,13 @@ const Home = () => {
   </div>
 </div>
       </section>
+      <BodyTypeSelector />
 
       <StatsSection/>
 
       <CarPartsCategories/>
+
+      <PublicDealsPage />
 
       {/* Featured Cars Section */}
     <FeaturedCar/>
@@ -313,6 +319,7 @@ const Home = () => {
 
       <FeaturedDealers/>
 
+<CarBodyTypesToParts />
       <FeaturedServiceProvider/>
 
       <Banner/>

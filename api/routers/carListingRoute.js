@@ -3,6 +3,7 @@ import { createCarListing, getMyCars, updateCarListing, deleteCarListing, getAll
 import express from "express"
 import { getNewestListings } from '../controllers/plansController.js';
 import Car from "../models/carListing.js"
+import { getCarsByBodyType } from '../controllers/CarPartListingController.js';
 const router =express.Router()
 
 router.post('/create', protect, createCarListing);
@@ -14,6 +15,7 @@ router.patch('/:id', protect, updateCarListing);
 router.delete('/:id', protect, deleteCarListing);
 router.get("/newest", getNewestListings)    
 
+router.get('/by-body-type/:bodyType', getCarsByBodyType)
 
 // GET /api/cars/compare - Public or protected (your choice)
 router.get('/compare', async (req, res) => {

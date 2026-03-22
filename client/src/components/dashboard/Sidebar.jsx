@@ -218,7 +218,8 @@ import {
   MessageCircle,
   LucideSettings2,
   DollarSign,
-  Image
+  Image,
+  LucideGamepadDirectional
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import UploadCars from './UploadCars';
@@ -236,6 +237,7 @@ import BrowseListings from './BrowseLisitng';
 import CompareCars from './CompareAllCars';
 import DealerOffers from './DealerOffer';
 import GalleryFeed from './Gallery';
+import PostDealForm from './PostDeal';
 const Sidebar = ({ onClose, setCurrentView }) => {
   const { user, logout } = useAuth();
   const [activeView, setActiveView] = useState('overview');
@@ -248,6 +250,7 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     uploadCarParts: <UploadCarPart />,
     browseCarListing: < BrowseListings/>,
     listings: <MyListings />,
+    deals: <PostDealForm />,
     carPartListings: <MyCarPartListings />,
     verifyEmail: <SomePage />,
     subscription: <SubscriptionPlans />,
@@ -275,6 +278,7 @@ const Sidebar = ({ onClose, setCurrentView }) => {
    
     { icon: Car, label: 'compare cars', view: 'compareCars' },
     { icon: DollarSign, label: 'Offers', view: 'dealeroffers' },
+    { icon: LucideGamepadDirectional, label: 'Deals', view: 'deals' },
     { icon: Package, label: 'My Plans', view: 'myplans' },
     { icon: SubscriptIcon, label: 'Subscribe To Plans', view: 'subscription' },
     { icon: User, label: 'Profile', view: 'profile' },

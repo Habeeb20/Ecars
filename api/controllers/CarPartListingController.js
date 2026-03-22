@@ -377,3 +377,29 @@ export const getMyGalleryImages = async (req, res) => {
     });
   }
 };
+
+
+
+export const getCarsByBodyType = async (req, res) => {
+  try {
+    const { bodyType } = req.params;
+
+    const cars = await CarListing.find({
+      bodyType: bodyType.toLowerCase(),
+      status: 'active',
+    })
+      .populate({
+        path: 'postedBy',
+        select: 'firstName lastName email phoneNumber avatar dealerInfo',
+      })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    res.status(200).json({
+      status: 'success',
+      data: cars,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: err.message });
+  }
+};

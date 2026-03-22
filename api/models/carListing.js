@@ -42,7 +42,7 @@ const carListingSchema = new mongoose.Schema({
   },
   bodyType: {
     type: String,
-    enum: ['sedan', 'suv', 'hatchback', 'truck', 'van', 'coupe', 'convertible'],
+    // enum: ['sedan', 'suv', 'hatchback', 'truck', 'van', 'coupe', 'convertible'],
     required: true,
   },
   condition: {

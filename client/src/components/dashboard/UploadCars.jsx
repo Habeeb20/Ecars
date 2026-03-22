@@ -219,6 +219,8 @@ const ListCar = () => {
                 <option value="suv">SUV</option>
                 <option value="hatchback">Hatchback</option>
                 <option value="truck">Truck</option>
+                <option value="bus">Bus</option>
+                <option value="bikes">Bikes</option>
               </select>
               <select value={form.condition} onChange={(e) => setForm({ ...form, condition: e.target.value })} class="input">
                 <option value="brand new">Brand New</option>

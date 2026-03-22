@@ -1,6 +1,6 @@
 import express from 'express';
 import { protect } from '../middleware/verifyToken.js';
-import { createCarPartListing, deleteCarPartListing, editCarPartListing, getAllCarParts,  getCarPartsByTitle,  getCarPartsCategories,  getMyCarPartListings, getMyGalleryImages, searchCarParts } from '../controllers/CarPartListingController.js';
+import { createCarPartListing, deleteCarPartListing, editCarPartListing, getAllCarParts,  getCarPartsByTitle,  getCarPartsCategories,  getCarsByBodyType,  getMyCarPartListings, getMyGalleryImages, searchCarParts } from '../controllers/CarPartListingController.js';
 
 const router = express.Router();
 
@@ -16,4 +16,6 @@ router.get('/categories', getCarPartsCategories);
 router.get('/by-title/:title', getCarPartsByTitle);
 // router.get('/gallery/images', getGalleryImages);
 router.get('/mygallery/images', protect, getMyGalleryImages)
+
+
 export default router;
