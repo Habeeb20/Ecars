@@ -85,6 +85,13 @@ const userSchema = new mongoose.Schema({
     maxlength: 200,
   },
 
+     views: { type: Number, default: 0 },
+    shares: { type: Number, default: 0 },
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    // reviews: [reviewSubSchema],
+    averageRating: { type: Number, default: 0, min: 0, max: 5 },
+
+
     blacklisted: {
     type: Boolean,
     default: false,

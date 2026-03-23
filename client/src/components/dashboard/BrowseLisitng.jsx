@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '../../contexts/AuthContext';
+import DistanceInfo from './DistanceMap';
 
 const BrowseListings = () => {
   const { user } = useAuth();
@@ -319,6 +320,15 @@ console.log(data)
                     <MessageCircle className="h-5 w-5" />
                     Message Seller
                   </button>
+
+                       <DistanceInfo
+                    
+                      providerAddressParts={{
+                        address: item.location.lga ,
+                        lga:item.location.lga ,
+                        state: item.location.state
+                      }}
+                    />
                 </div>
               </div>
             ))}

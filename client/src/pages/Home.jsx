@@ -34,6 +34,7 @@ import CarPartsCategories from '../components/Landing/CarPartCategories';
 import CarBodyTypesToParts from '../components/Landing/CarBodyTypeToPart';
 import BodyTypeSelector from '../components/Landing/BodyTypeSelector';
 import PublicDealsPage from '../components/Landing/Deals';
+import ServiceCategoriesGrid from '../components/Landing/ServiceCategoryGrid';
 
 // Mock data (kept exactly as in your original code)
 const mockServiceProviders = [
@@ -246,6 +247,8 @@ const Home = () => {
       <CarPartsCategories/>
 
       <PublicDealsPage />
+
+      <ServiceCategoriesGrid/>
 
       {/* Featured Cars Section */}
     <FeaturedCar/>

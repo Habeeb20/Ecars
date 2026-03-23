@@ -254,7 +254,7 @@ export const searchCars = async (req, res) => {
   try {
     const {
       make, model, minPrice, maxPrice, minYear, maxYear, keywords, location,
-      fuelType, minMileage, maxMileage, vehicleType
+      fuelType, minMileage, maxMileage, vehicleType, condition
     } = req.query;
 
     const query = {};
@@ -279,6 +279,7 @@ export const searchCars = async (req, res) => {
       ];
     }
     if (location) query.location = { $regex: new RegExp(location, 'i') };
+    if (condition) query.condition = { $regex: new RegExp(condition, 'i') };
     if (fuelType) query.fuelType = { $regex: new RegExp(fuelType, 'i') }; // Add fuelType to schema if needed
     if (minMileage || maxMileage) {
       query.mileage = {};
@@ -378,3 +379,128 @@ export const createListingForOthers = async (req, res) => {
     res.status(500).json({ status: 'error', message: 'Failed to create listing' });
   }
 };
+
+
+
+
+
+// 1. Record a view (called when someone opens the car detail page)
+export const recordCarView = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const car = await CarListing.findByIdAndUpdate(
+      id,
+      { $inc: { views: 1 } }, // increment views by 1
+      { new: true }
+    );
+
+    if (!car) {
+      return res.status(404).json({ status: false, message: 'Car not found' });
+    }
+
+    res.status(200).json({ status: true, views: car.views });
+  } catch (error) {
+    res.status(500).json({ status: false, message: 'Server error' });
+  }
+};
+
+// 2. Like / Unlike a car
+export const toggleLikeCar = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+
+    const car = await CarListing.findById(id);
+    if (!car) {
+      return res.status(404).json({ status: false, message: 'Car not found' });
+    }
+
+    const alreadyLiked = car.likes.some(like => like.user.toString() === userId.toString());
+
+    if (alreadyLiked) {
+      // Unlike
+      car.likes = car.likes.filter(like => like.user.toString() !== userId.toString());
+      car.likeCount = car.likes.length;
+    } else {
+      // Like
+      car.likes.push({ user: userId });
+      car.likeCount = car.likes.length;
+    }
+
+    await car.save();
+
+    res.status(200).json({
+      status: true,
+      liked: !alreadyLiked,
+      likeCount: car.likeCount,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: false, message: 'Server error' });
+  }
+};
+
+// 3. Get like status & count (for frontend to show if current user liked it)
+export const getCarLikeStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user?._id; // optional — if logged in
+
+    const car = await CarListing.findById(id).select('likeCount likes');
+    if (!car) {
+      return res.status(404).json({ status: false, message: 'Car not found' });
+    }
+
+    const isLiked = userId && car.likes.some(like => like.user.toString() === userId.toString());
+
+    res.status(200).json({
+      status: true,
+      likeCount: car.likeCount,
+      isLiked: !!isLiked,
+    });
+  } catch (error) {
+    res.status(500).json({ status: false, message: 'Server error' });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

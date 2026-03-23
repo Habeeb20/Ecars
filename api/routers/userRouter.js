@@ -1,6 +1,6 @@
 // routes/authRoutes.js
 import express from 'express';
-import { register, login, forgotPassword, resetPassword, getDashboard, getMe, updateMe, updatePassword, upgradeToDealer, upgradeToServiceProvider, getAllDealers, getAllServiceProviders, searchServiceAndDealers, getFeaturedDealers, searchDealers, getFeaturedServiceProvider, searchServiceProviders, getDealerById, searchBlacklistedUsers, upgradeToCarPartSeller, getAllCarPartSellers, verifyCarPartSeller, searchCarPartSellers, authLogin } from '../controllers/userController.js';
+import { register, login, forgotPassword, resetPassword, getDashboard, getMe, updateMe, updatePassword, upgradeToDealer, upgradeToServiceProvider, getAllDealers, getAllServiceProviders, searchServiceAndDealers, getFeaturedDealers, searchDealers, getFeaturedServiceProvider, searchServiceProviders, getDealerById, searchBlacklistedUsers, upgradeToCarPartSeller, getAllCarPartSellers, verifyCarPartSeller, searchCarPartSellers, authLogin, toggleLike, shareProvider, incrementProviderView } from '../controllers/userController.js';
 import { protect } from '../middleware/verifyToken.js';
 import { sendVerificationEmail } from '../utils/functions.js';
 import { getBlacklistedUsers } from '../controllers/adminController.js';
@@ -52,6 +52,12 @@ router.get('/carpart-sellers', getAllCarPartSellers);
 
 router.get('/carpart-sellers/search',  searchCarPartSellers);
 router.get("/dealers/:id", getDealerById)
+
+
+router.post('/dealers/:id/like', toggleLike);
+router.post('/dealers/:id/share', shareProvider);
+
+router.post('/dealers/:id/view', incrementProviderView);
 
 
 // GET /api/auth/verify-email/:token

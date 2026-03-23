@@ -189,9 +189,9 @@ const FeaturedCarPartSellers = () => {
                   </div>
 
                   {/* Action Button */}
-                  <button className="mt-6 w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl hover:shadow-lg transform hover:scale-105 transition-all">
+                  {/* <button className="mt-6 w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl hover:shadow-lg transform hover:scale-105 transition-all">
                     View Parts
-                  </button>
+                  </button> */}
                 </div>
               </div>
             ))}

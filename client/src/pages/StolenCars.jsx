@@ -411,8 +411,9 @@ const StolenCars = () => {
   return (
     <div className="container mx-auto px-4 py-8 bg-white dark:bg-gray-800">
       <div className="flex items-center gap-3 mb-8">
-        <AlertTriangle className="h-8 w-8 text-red-500" />
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+       
+        <h1 className="text-3xl mt-20 text-center font-bold text-gray-900 dark:text-white">
+           <AlertTriangle className="h-8 w-8 text-red-500" />
           Stolen Cars Registry
         </h1>
       </div>

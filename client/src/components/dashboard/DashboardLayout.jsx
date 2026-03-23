@@ -57,7 +57,7 @@ import { Menu } from 'lucide-react';
 import Overview from './Overview';
 
 
-const DashboardLayout = () => {
+const sDashboardLayout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [currentView, setCurrentView] = useState(<Overview />);
 

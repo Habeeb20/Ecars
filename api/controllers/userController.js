@@ -1075,3 +1075,88 @@ export const getDealerById = async (req, res) => {
   }
 };
 
+
+export const toggleLike = async (req, res) => {
+  try {
+    const {id} = req.params;
+    const userId = req.user.id || req.user._id;
+
+    const seller = await User.findById(id)
+    if(!seller ){
+      return res.status(404).json({message: "car seller is not found"})
+    }
+
+    const alreadyLiked = seller.likes.includes(userId);
+
+    if(alreadyLiked) {
+      seller.likes = seller.likes.filter((uid) => uid.toString !== userId)
+    } else {
+      seller.likes.push(userId)
+    }
+
+    await seller.save()
+    res.status(200).json({
+           success: true,
+      message: alreadyLiked ? 'Unliked' : 'Liked',
+      likesCount: seller.likes.length,
+      isLiked: !alreadyLiked,
+    })
+  } catch (error) {
+        console.error('Toggle like error:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+}
+
+
+
+export const shareProvider = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const provider = await User.findByIdAndUpdate(
+      id,
+      { $inc: { shares: 1 } },
+      { new: true }
+    ).select('shares');
+
+    if (!provider) {
+      return res.status(404).json({ success: false, message: 'Provider not found' });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Shared successfully',
+      shares: provider.shares,
+    });
+  } catch (error) {
+    console.error('Share error:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+
+export const incrementProviderView = async (req, res) => {
+  try {
+    const { id } = req.params; // provider ID
+
+    const provider = await User.findById(id);
+    if (!provider || provider.role !== 'provider') {
+      return res.status(404).json({ success: false, message: 'Provider not found' });
+    }
+
+
+
+    provider.views = (provider.views || 0) + 1;
+    await provider.save({ validateBeforeSave: false }); // skip full validation for speed
+
+    res.status(200).json({
+      success: true,
+      message: 'View counted',
+      views: provider.views,
+    });
+  } catch (error) {
+    console.error('Increment view error:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+

@@ -1,5 +1,5 @@
 import { protect } from '../middleware/verifyToken.js';
-import { createCarListing, getMyCars, updateCarListing, deleteCarListing, getAllCars, searchCars, getCarById, createListingForOthers } from '../controllers/carListingController.js';
+import { createCarListing, getMyCars, updateCarListing, deleteCarListing, getAllCars, searchCars, getCarById, createListingForOthers, recordCarView, toggleLikeCar, getCarLikeStatus } from '../controllers/carListingController.js';
 import express from "express"
 import { getNewestListings } from '../controllers/plansController.js';
 import Car from "../models/carListing.js"
@@ -16,6 +16,11 @@ router.delete('/:id', protect, deleteCarListing);
 router.get("/newest", getNewestListings)    
 
 router.get('/by-body-type/:bodyType', getCarsByBodyType)
+
+// routes/carRoutes.js
+router.put('/:id/view', recordCarView);                    // record view (can be called on page load)
+router.put('/:id/like', protect, toggleLikeCar);    // like/unlike
+router.get('/:id/like-status', protect, getCarLikeStatus); // check if liked + count
 
 // GET /api/cars/compare - Public or protected (your choice)
 router.get('/compare', async (req, res) => {

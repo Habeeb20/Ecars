@@ -21,6 +21,7 @@ import offerRouter from "./routers/offerRouter.js";
 import contactRouter from "./routers/contactRoute.js"
 import sightingRoutes from "./routers/SightingReport.js"
 import dealsRoutes from "./routers/dealsRouter.js"
+import distanceRouter from "./routers/distanceRoute.js"
 dotenv.config();
 connectDb()
 
@@ -69,6 +70,7 @@ app.use("/api/offers", offerRouter)
 app.use("/api/contact", contactRouter)
 app.use('/api/sighting', sightingRoutes);
 app.use('/api/deals', dealsRoutes)
+app.use('/api', distanceRouter);
 // await User.create({
 //   firstName: 'Admin',
 //   lastName: 'Boss',

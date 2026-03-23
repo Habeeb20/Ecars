@@ -47,7 +47,7 @@ const carListingSchema = new mongoose.Schema({
   },
   condition: {
     type: String,
-    enum: ['brand new', 'foreign used', 'nigerian used'],
+    enum: ['brand new', 'foreign used', 'nigerian used', 'foreignUsed','nigerianUsed', 'brandNew' ],
     required: true,
   },
   color: {
@@ -91,13 +91,71 @@ const carListingSchema = new mongoose.Schema({
   isFeatured: { type: Boolean, default: false },
   views: { type: Number, default: 0 },
 
+
+    views: {
+    type: Number,
+    default: 0,
+  },
+
+  likes: [{
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    likedAt: {
+      type: Date,
+      default: Date.now,
+    },
+  }],
+
+  likeCount: {
+    type: Number,
+    default: 0,
+  },
+
+  // Optional: track shares (if you want analytics)
+  shareCount: {
+    type: Number,
+    default: 0,
+  },
+
 featuredUntil: Date,
 }, { timestamps: true });
-
+carListingSchema.index({ 'likes.user': 1 });
 // Index for search
 carListingSchema.index({ make: 'text', model: 'text', title: 'text' });
 
 export default mongoose.model('CarListing', carListingSchema);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
