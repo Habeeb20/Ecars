@@ -23,7 +23,7 @@ import DistanceInfo from './DistanceMap';
 
 const BrowseListings = () => {
   const { user } = useAuth();
-  
+  console.log(user)
   const [activeTab, setActiveTab] = useState('cars'); // 'cars' | 'parts' | 'services'
   const [allListings, setAllListings] = useState([]);        // Full unfiltered data
   const [displayedListings, setDisplayedListings] = useState([]); // Filtered data for UI
@@ -35,7 +35,7 @@ const BrowseListings = () => {
   const [newMessage, setNewMessage] = useState('');
   const [sending, setSending] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
-
+   const token = localStorage.getItem('token');
   // Fetch listings when tab changes (no search param here)
   useEffect(() => {
     const fetchListings = async () => {
@@ -322,11 +322,17 @@ console.log(data)
                   </button>
 
                        <DistanceInfo
+
+                            clientAddressParts={{
+                        address: user?.address || user?.dealerInfo?.businessAddress || user?.dealerInfo?.lga ,
+                        lga:user?.lga || user?.dealerInfo?.lga ,
+                        state: user?.state || user?.dealerInfo?.state
+                      }}
                     
                       providerAddressParts={{
-                        address: item.location.lga ,
-                        lga:item.location.lga ,
-                        state: item.location.state
+                        address: item.location?.lga ,
+                        lga:item.location?.lga ,
+                        state: item.location?.state
                       }}
                     />
                 </div>

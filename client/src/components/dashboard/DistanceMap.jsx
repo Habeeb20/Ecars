@@ -34,14 +34,11 @@ const DistanceInfo = ({ clientAddressParts, providerAddressParts }) => {
         const res = await axios.get(`${import.meta.env.VITE_API_URL}/distance`, {
           params: { origin, destination }
         });
-
-        if (res.data.success) {
-          setDistance(res.data.distance);
+  setDistance(res.data.distance);
           setDuration(res.data.duration);
-        } else {
-          setError(res.data.error || 'Route calculation failed');
-        }
+   
       } catch (err) {
+        console.log(err)
         setError('Unable to calculate distance');
       } finally {
         setLoading(false);
@@ -89,7 +86,7 @@ const DistanceInfo = ({ clientAddressParts, providerAddressParts }) => {
 )}
 
       {/* Text distance & time */}
-      <div className="flex flex-col sm:flex-row gap-6 bg-gradient-to-r from-blue-50 to-indigo-50 p-5 rounded-xl border border-blue-100">
+      {/* <div className="flex flex-col sm:flex-row gap-6 bg-gradient-to-r from-blue-50 to-indigo-50 p-5 rounded-xl border border-blue-100">
         <div className="flex items-center gap-3">
           <MapPin className="text-blue-600" size={24} />
           <div>
@@ -104,9 +101,57 @@ const DistanceInfo = ({ clientAddressParts, providerAddressParts }) => {
             <p className="text-xl font-bold text-green-900">{duration}</p>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
 
 export default DistanceInfo;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
