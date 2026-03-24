@@ -13,6 +13,7 @@ import AdminMessages from './AdminAccessMessage';
 import ReportsPage from './AllReports';
 import AdminContacts from './ContactDetails';
 import AdminSightings from './AdminReportSighting';
+import MyReceivedOffers from '../../components/dashboard/MyRecievedOffer';
 // import UsersList from './UsersList';
 // import DealersList from './DealersList';
 // import ServiceProvidersList from './ServiceProvidersList';
@@ -34,6 +35,7 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     { name: 'subscription', icon: DollarSign, component: <SuperadminSubscriptions /> },
     { name: 'Blacklist', icon: SettingsIcon, component: <AdminBlacklist /> },
     { name: 'View Messages', icon: MessagesSquare, component: <AdminMessages /> },
+  
   
   ];
 

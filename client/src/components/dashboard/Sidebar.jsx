@@ -238,6 +238,7 @@ import CompareCars from './CompareAllCars';
 import DealerOffers from './DealerOffer';
 import GalleryFeed from './Gallery';
 import PostDealForm from './PostDeal';
+import MyReceivedOffers from './MyRecievedOffer';
 const Sidebar = ({ onClose, setCurrentView }) => {
   const { user, logout } = useAuth();
   const [activeView, setActiveView] = useState('overview');
@@ -259,7 +260,8 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     message: <MyMessages/>,
    compareCars: <CompareCars/>,
   dealeroffers: <DealerOffers/>,
-  gallery: <GalleryFeed />
+  gallery: <GalleryFeed />,
+  recievedOffer: <MyReceivedOffers />
   
   };
 
@@ -283,6 +285,7 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     { icon: SubscriptIcon, label: 'Subscribe To Plans', view: 'subscription' },
     { icon: User, label: 'Profile', view: 'profile' },
     { icon: MessageCircle, label: 'Messages', view: 'message' },
+    { icon: MessageCircle, label: 'My recieved offers', view: 'recievedOffer' },
      { icon: Image, label: 'Gallery', view: 'gallery' },,
  
   ];

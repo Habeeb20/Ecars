@@ -34,6 +34,7 @@ import { Toaster } from 'sonner';
 import VerifyEmail from './pages/auth/VerifyYourEmail';
 import AllCarPartsCategories from './components/Landing/AllCarPartCategories';
 import VehiclesByBodyType from './components/Landing/VehicleBodyType';
+import CarSearchPage from './pages/Search';
 // import Blog from './pages/Blog';
 
 function ScrollToTop() {
@@ -71,6 +72,7 @@ const App = () => {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/cars" element={<Listings/>} />
+          <Route path="/search" element={<CarSearchPage/>} />
           <Route path="/auctions" element={<div>Auctions</div>} />
             <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register/>} />

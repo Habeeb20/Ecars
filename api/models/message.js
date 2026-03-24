@@ -11,9 +11,22 @@ const messageSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  carId: { type: mongoose.Schema.Types.ObjectId, ref: 'CarListing' },
   content: {
     type: String,
     required: true,
+  },
+  type: { 
+    type: String, 
+    enum: ['message', 'offer', 'inquiry'], 
+    default: 'message' 
+  },
+  offerAmount: { type: Number },
+  preferredColor: { type: String },
+  status: { 
+    type: String, 
+    enum: ['pending', 'accepted', 'rejected', 'countered'], 
+    default: 'pending' 
   },
   read: { type: Boolean, default: false },
 }, { timestamps: true });

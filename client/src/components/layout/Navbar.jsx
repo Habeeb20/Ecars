@@ -132,6 +132,7 @@ export const Navbar = () => {
                     </motion.div>
                   )}
                 </AnimatePresence>
+              
               </div>
             ))}
           </nav>
@@ -173,8 +174,8 @@ export const Navbar = () => {
                       <Link to="/dashboard" className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setActiveDropdown(null)}>
                         Dashboard
                       </Link>
-                      <Link to="/dashboard/listings" className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setActiveDropdown(null)}>
-                        My Listings
+                      <Link to="/search" className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setActiveDropdown(null)}>
+                        Search
                       </Link>
                       <Link to="/dashboard/messages" className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setActiveDropdown(null)}>
                         Messages
