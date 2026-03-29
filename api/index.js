@@ -22,6 +22,7 @@ import contactRouter from "./routers/contactRoute.js"
 import sightingRoutes from "./routers/SightingReport.js"
 import dealsRoutes from "./routers/dealsRouter.js"
 import distanceRouter from "./routers/distanceRoute.js"
+import viewRouter from "./routers/carViewingRoute.js"
 dotenv.config();
 connectDb()
 
@@ -54,7 +55,7 @@ app.get("/", (req, res) => {
 
 
 app.use("/api/users", router)
-
+app.use("/api/car-viewings", viewRouter)
 app.use("/api/auth", router)
 app.use("/api/admin", adminRouter)
 app.use("/api/cars", carListingRouter)

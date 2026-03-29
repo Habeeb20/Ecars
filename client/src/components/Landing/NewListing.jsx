@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 
 import { useAuth } from '../../contexts/AuthContext';
 import { CarCard } from '../car/CarCard';
+import BookViewingModal from '../car/BookViewModal';
 const NewListing = () => {
   const [newestListings, setNewestListings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,7 +15,15 @@ const NewListing = () => {
   const [chatMessage, setChatMessage] = useState('');
   const [chatLoading, setChatLoading] = useState(false);
 
+const [showViewingModal, setShowViewingModal] = useState(false);
+
+
   const { isLoggedIn } = useAuth();
+
+  const handleBookViewing = (car) => {
+  setSelectedCar(car);
+  setShowViewingModal(true);
+};
 
   useEffect(() => {
     fetchNewestListings();
@@ -114,7 +123,8 @@ const NewListing = () => {
                   onClick={() => openCarDetails(car)}
                   className="cursor-pointer hover:scale-105 transition-transform"
                 >
-                  <CarCard car={car} />
+                  <CarCard car={car}
+                    onBookViewing={handleBookViewing}  />
                 </div>
               ))}
             </div>
@@ -211,8 +221,35 @@ const NewListing = () => {
           </div>
         </div>
       )}
+
+      <BookViewingModal
+  car={selectedCar}
+  isOpen={showViewingModal}
+  onClose={() => setShowViewingModal(false)}
+  token={localStorage.getItem('token')}
+/>
     </>
   );
 };
 
 export default NewListing;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

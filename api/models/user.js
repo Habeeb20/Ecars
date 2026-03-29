@@ -85,6 +85,29 @@ const userSchema = new mongoose.Schema({
     maxlength: 200,
   },
 
+    isAvailable: {
+  type: Boolean,
+  default: false,
+  // Only providers can toggle this → you can enforce in controller/middleware
+},
+
+isOnline: {
+  type: Boolean,
+  default: false
+},
+
+lastSeen: {
+  type: Date,
+  default: null
+},
+
+createdAt:{
+  type:Date,
+  default:Date.now
+},
+
+
+
      views: { type: Number, default: 0 },
     shares: { type: Number, default: 0 },
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],

@@ -85,6 +85,14 @@ export const login = async (req, res) => {
         message: 'Incorrect email or password',
       });
   } 
+    // === ONLINE TRACKING LOGIC ===
+    user.isOnline = true;
+    user.lastSeen = new Date();
+    user.lastActivity = new Date();
+
+    // Save the updates (we modify the existing user document)
+    await user.save({ validateBeforeSave: false });
+
     createSendToken(user, 200, res);
     } catch (error) {
            res.status(400).json({
@@ -111,6 +119,14 @@ export const authLogin = async (req, res) => {
         message: 'Incorrect email or password',
       });
   } 
+    // === ONLINE TRACKING LOGIC ===
+    user.isOnline = true;
+    user.lastSeen = new Date();
+    user.lastActivity = new Date();
+
+    // Save the updates (we modify the existing user document)
+    await user.save({ validateBeforeSave: false });
+
     createSendToken(user, 200, res);
     } catch (error) {
            res.status(400).json({
@@ -775,7 +791,7 @@ export const searchDealers = async (req, res) => {
 export const getAllDealers = async (req, res) => {
 
   try {
-    const dealers = await User.find({ role: 'dealer' }).select('firstName lastName email phoneNumber state lga address avatar bio dealerInfo');
+    const dealers = await User.find({ role: 'dealer' }).select('firstName lastName email phoneNumber state lga address avatar bio lastSeen createdAt isOnline dealerInfo');
     
     res.status(200).json({
       status: 'success',

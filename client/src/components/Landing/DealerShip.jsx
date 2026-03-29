@@ -457,7 +457,8 @@ import {
   ExternalLink, 
   X, 
   Loader2, 
-  MessageCircle 
+  MessageCircle, 
+  Timer
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '../../contexts/AuthContext';
@@ -783,6 +784,28 @@ const Dealership = () => {
                     <Phone className="h-4 w-4 mr-2" />
                     <span>{dealer.phoneNumber || 'N/A'}</span>
                   </div>
+                  <div className="flex items-center">
+                    <Timer className="h-4 w-4 mr-2" />
+                    <span className='text-white rounded-md p-2 dark:text-white bg-green-800'>Last Seen:{new Date(dealer.lastSeen).toLocaleString()}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Timer className="h-4 w-4 mr-2" />
+                    <span className='text-white rounded-md p-2 dark:text-white bg-green-800'>Joined:{new Date(dealer.createdAt).toLocaleString()}</span>
+                  </div>
+
+                  {dealer.isOnline ? (
+                        <div className="flex items-center font-bold text-green-800">
+                    <Timer className="h-4 w-4 mr-2" />
+                    <span>Online</span>
+                  </div>
+                  ): (
+                    <>
+                          <div className="flex items-center font-bold text-red-800">
+                    <Timer className="h-4 w-4 mr-2" />
+                    <span>Offline</span>
+                  </div>
+                    </>
+                  )}
                   <div className="flex items-center">
                     <MapPin className="h-4 w-4 mr-2" />
                     <span>
