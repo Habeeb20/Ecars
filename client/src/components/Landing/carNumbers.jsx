@@ -78,7 +78,7 @@ const StatsSection = () => {
         <h2 className="text-2xl  md:text-2xl font-bold text-center mb-16 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
           eCars in Numbers
         </h2>
-<div className="grid grid-cols-2 sm:grid-cols-2 p-6  lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+<div className="grid grid-cols-2 sm:grid-cols-4 p-6  lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
           {statsArray.map((stat, index) => (
             <div
               key={index}

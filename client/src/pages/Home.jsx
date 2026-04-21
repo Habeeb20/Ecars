@@ -244,6 +244,10 @@ const Home = () => {
 
       <StatsSection/>
 
+        <FeaturedCar/>
+
+           <NewListing/>
+
       <CarPartsCategories/>
 
       <PublicDealsPage />
@@ -251,7 +255,7 @@ const Home = () => {
       <ServiceCategoriesGrid/>
 
       {/* Featured Cars Section */}
-    <FeaturedCar/>
+  
 
 
     <FeaturedCarPartSellers/>
@@ -318,7 +322,7 @@ const Home = () => {
      
 
       {/* Recent Listings */}
-      <NewListing/>
+   
 
       <FeaturedDealers/>
 
