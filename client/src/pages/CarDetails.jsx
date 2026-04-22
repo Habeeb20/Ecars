@@ -46,6 +46,7 @@ const CarDetails = () => {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const [selectedImage, setSelectedImage] = useState(null);
   const { isLoggedIn } = useAuth();
 const  user = localStorage.getItem("token")
   const [car, setCar] = useState(null);
@@ -356,6 +357,7 @@ const  user = localStorage.getItem("token")
                     {car.images.map((img, i) => (
                       <div 
                         key={i} 
+                          onClick={() => setSelectedImage(img)}
                         className="aspect-square bg-gray-200 dark:bg-gray-700 rounded-xl overflow-hidden border-2 border-transparent hover:border-indigo-500 transition-all cursor-pointer group flex-shrink-0"
                       >
                         <img 
@@ -681,6 +683,32 @@ const  user = localStorage.getItem("token")
           </div>
         </div>
       )}
+
+
+      {selectedImage && (
+  <div 
+    className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-6"
+    onClick={() => setSelectedImage(null)} // click outside closes
+  >
+    <div className="relative max-w-5xl w-full">
+      
+      {/* Close button */}
+      <button
+        onClick={() => setSelectedImage(null)}
+        className="absolute top-4 right-4 bg-white/20 hover:bg-white/40 text-white p-2 rounded-full"
+      >
+        <X className="h-6 w-6" />
+      </button>
+
+      {/* Image */}
+      <img
+        src={selectedImage}
+        alt="Preview"
+        className="w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl"
+      />
+    </div>
+  </div>
+)}
     </div>
   );
 };
