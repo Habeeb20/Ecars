@@ -224,20 +224,20 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Mail, Lock, ArrowLeft, Eye, EyeOff, X } from 'lucide-react';
 import { motion } from 'framer-motion';
-
+import { useLocation } from 'react-router-dom';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const location = useLocation()
   // New states for E-Auth modal
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authEmail, setAuthEmail] = useState('');
 
   const navigate = useNavigate();
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
+ const from = location.state?.from?.pathname || "/dashboard";
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -261,7 +261,8 @@ const Login = () => {
         toast.success('Welcome back! Login successful');
 
         setTimeout(() => {
-          navigate('/dashboard');
+          navigate(from, { replace: true }); 
+          // navigate('/dashboard');
         }, 800);
       } else {
         toast.error(data.message || 'Invalid email or password');
@@ -298,7 +299,8 @@ const Login = () => {
         toast.success('Welcome back! E-Auth login successful');
 
         setTimeout(() => {
-          navigate('/dashboard');
+             navigate(from, { replace: true }); 
+          // navigate('/dashboard');
           setShowAuthModal(false);
           setAuthEmail('');
         }, 800);
@@ -538,3 +540,9 @@ const Login = () => {
 };
 
 export default Login;
+
+
+
+
+
+
