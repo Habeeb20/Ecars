@@ -362,13 +362,13 @@
 
 // src/components/CarPartsCategories.jsx
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { 
   Loader2, X, Phone, MapPin, Building, MessageCircle, Send 
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '../../contexts/AuthContext';
-
+import { ShieldCheck } from 'lucide-react';
 const COMMON_MAKES = [
   'Toyota', 'Honda', 'Lexus', 'Mercedes-Benz', 'Nissan',
   'Hyundai', 'Kia', 'Ford', 'Volkswagen', 'Mazda',
@@ -376,7 +376,8 @@ const COMMON_MAKES = [
 ];
 
 const CarPartsCategories = () => {
-    const { user } = useAuth();
+const  user = localStorage.getItem("token")
+  const location = useLocation();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -466,6 +467,7 @@ const CarPartsCategories = () => {
   const openChat = async (seller) => {
     if (!seller?._id) {
       toast.error("Cannot open chat - seller information missing");
+    
       return;
     }
 
@@ -473,6 +475,9 @@ const CarPartsCategories = () => {
       const token = localStorage.getItem('token');
       if (!token) {
         toast.error("You must be logged in to message sellers");
+              navigate('/login', {
+              state: { from: location },
+      });
         return;
       }
 

@@ -165,7 +165,7 @@ dealerInfo: {
     validate: { validator: function (v) { return this.role !== 'dealer' || !!v; }, message: 'LGA required' }
   },
   // ... rest optional
-  verified: { type: Boolean, default: false },
+  verified: { type: Boolean, default: true },
    isFeatured: { type: Boolean, default: false },
   featuredUntil: Date,
 },

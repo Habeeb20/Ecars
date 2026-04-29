@@ -27,7 +27,7 @@ import { Search, ChevronDown, X, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 const makeOptions = [
-  { value: '', label: 'All Makes' },
+  { value: '', label: ' Makes' },
   { value: 'toyota', label: 'Toyota' },
   { value: 'honda', label: 'Honda' },
   { value: 'ford', label: 'Ford' },
@@ -144,6 +144,13 @@ const vehicleOptions = [
   { value: 'truck', label: 'Truck' },
   { value: 'bus', label: 'Bus' },
 ];
+const conditionType= [
+  { value: '', label: 'condition' },
+  { value: 'brand new', label: 'brand new' },
+  { value: 'foreign used', label: 'foreign used' },
+  { value: 'nigerian used', label: 'nigerian used' },
+
+];
 
 
 const bodyTypeOptions = [
@@ -182,6 +189,7 @@ function SearchFilters({ variant = 'hero', className = '' }) {
     priceRange: '',
     year: '',
     bodyType: '',
+    condition:'',
     // you can add more fields here later
   });
 
@@ -216,6 +224,7 @@ function SearchFilters({ variant = 'hero', className = '' }) {
       if (filters.priceRange) params.append('priceRange', filters.priceRange);
       if (filters.year) params.append('yearRange', filters.year);
       if (filters.bodyType) params.append('bodyType', filters.bodyType);
+      if (filters.condition) params.append('condition', filters.condition);
 
       const queryString = params.toString();
       const url = `${import.meta.env.VITE_BACKEND_URL}/cars/allcars${
@@ -264,6 +273,7 @@ console.log(cars.cars)
       priceRange: '',
       year: '',
       bodyType: '',
+      condition:''
     });
   };
 
@@ -295,7 +305,7 @@ console.log(cars.cars)
 
         <form onSubmit={handleSubmit}>
           {/* Mobile layout */}
-          <div className="md:hidden grid grid-cols-3 gap-4 items-end">
+          <div className=" hidden  grid grid-cols-4 gap-4 items-end">
             {/* Vehicle Type */}
             <div className="flex-1 min-w-[100px] w-full">
               <label htmlFor="vehicleType" className="block text-sm font-medium text-black dark:text-white mb-1">
@@ -389,7 +399,7 @@ console.log(cars.cars)
             </div>
 
             {/* Body Type - centered */}
-            {/* <div className="col-span-2 flex justify-center">
+             {/* <div className="col-span-2 flex justify-center">
               <div className="w-full max-w-md">
                 <label htmlFor="bodyType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Body Type
@@ -411,7 +421,31 @@ console.log(cars.cars)
                   <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
                 </div>
               </div>
-            </div> */}
+            </div>  */}
+            {/* Condition- centered */}
+             <div className="col-span-2 flex justify-center">
+              <div className="w-full max-w-md">
+                <label htmlFor="condition" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Condition
+                </label>
+                <div className="relative">
+                  <select
+                    id="condition"
+                    name="condition"
+                    value={filters.condition}
+                    onChange={handleChange}
+                    className="w-full h-12 pl-4 pr-10 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white appearance-none"
+                  >
+                    {conditionType.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+                </div>
+              </div>
+            </div> 
 
             {/* Search Button - centered */}
             <div className="col-span-2 flex justify-center">
@@ -555,6 +589,31 @@ console.log(cars.cars)
                 <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
               </div>
             </div> */}
+
+                {/* Condition- centered */}
+             <div className=" flex justify-center">
+              <div className="w-full ">
+                <label htmlFor="condition" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Condition
+                </label>
+                <div className="relative">
+                  <select
+                    id="condition"
+                    name="condition"
+                    value={filters.condition}
+                    onChange={handleChange}
+                    className="w-full h-12 pl-4 pr-10 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white appearance-none"
+                  >
+                    {conditionType.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+                </div>
+              </div>
+            </div> 
 
             {/* Search Button */}
             <div className="flex-1 min-w-[180px] w-full">

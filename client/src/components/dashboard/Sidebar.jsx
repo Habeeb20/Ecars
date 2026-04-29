@@ -73,7 +73,7 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     { icon: Upload, view: 'uploadCars' },       // Dynamic label + view
     { icon: ListChecks, view: 'listings' },     // Dynamic label + view
     { icon: LucideSettings2, label: 'Manage Listings', view: 'browseCarListing' },
-    { icon: Mail, label: 'Verify Your Email', view: 'verifyEmail' },
+    // { icon: Mail, label: 'Verify Your Email', view: 'verifyEmail' },
    
     { icon: Car, label: 'compare cars', view: 'compareCars' },
     { icon: DollarSign, label: 'Offers', view: 'dealeroffers' },
