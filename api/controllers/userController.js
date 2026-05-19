@@ -39,6 +39,20 @@ export const register = async (req, res) => {
     } catch (err) {
       console.error("Edirect auth failed:", err.response?.data || err.message);
     }
+      try {
+      await axios.post("https://backend-efixit.ereligion.ng/api/auth/register", {
+     
+        first_name: firstName,
+        last_name: lastName,
+        email: email.toLowerCase(),
+        
+        password,
+        role: "client",
+      });
+      console.log("Efixit auth registration successful");
+    } catch (err) {
+      console.error("Efixit auth failed:", err.response?.data || err.message);
+    }
 
     createSendToken(newUser, 201, res);
   } catch (err) {
