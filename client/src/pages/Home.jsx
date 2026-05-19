@@ -35,6 +35,7 @@ import CarBodyTypesToParts from '../components/Landing/CarBodyTypeToPart';
 import BodyTypeSelector from '../components/Landing/BodyTypeSelector';
 import PublicDealsPage from '../components/Landing/Deals';
 import ServiceCategoriesGrid from '../components/Landing/ServiceCategoryGrid';
+import AuctionBanner from '../components/Landing/AuctionBanner';
 
 // Mock data (kept exactly as in your original code)
 const mockServiceProviders = [
@@ -235,7 +236,7 @@ const Home = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
     >
-      <SearchFilters onSearch={handleSearch} />
+      <SearchFilters />
     </motion.div>
   </div>
 </div>
@@ -251,6 +252,7 @@ const Home = () => {
       <CarPartsCategories/>
 
       <PublicDealsPage />
+      <AuctionBanner/>
 
       <ServiceCategoriesGrid/>
 

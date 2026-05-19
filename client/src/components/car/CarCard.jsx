@@ -265,6 +265,14 @@ export const CarCard = ({ car, showDealerInfo = false, onBookViewing }) => {
               <MapPin className="h-4 w-4" />
               <span className="truncate">{car.location?.state}, {car.location?.lga}</span>
             </div>
+            <div className="flex items-center gap-1.5">
+              <Fuel className="h-4 w-4" />
+              <span>{car.condition}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <MapPin className="h-4 w-4" />
+              <span className="truncate">{car.transmission}</span>
+            </div>
           </div>
 
           {/* Features */}

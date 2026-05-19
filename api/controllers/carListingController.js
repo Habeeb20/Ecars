@@ -475,7 +475,54 @@ export const getCarLikeStatus = async (req, res) => {
 
 
 
+// Get all cars with advanced filtering
+export const getAllCarsForSearch = async (req, res) => {
+  try {
+    const { 
+      make, model, yearRange, priceRange, bodyType, 
+      condition, fuelType, transmission, state 
+    } = req.query;
 
+    let query = { status: 'active' };
+
+    if (make) query.make = { $regex: make, $options: 'i' };
+    if (model) query.model = { $regex: model, $options: 'i' };
+    if (bodyType) query.bodyType = bodyType.toLowerCase();
+    if (condition) query.condition = condition.toLowerCase();
+    if (fuelType) query.fuelType = fuelType.toLowerCase();
+    if (transmission) query.transmission = transmission.toLowerCase();
+    if (state) query['location.state'] = { $regex: state, $options: 'i' };
+
+    // Year Range
+    if (yearRange) {
+      const [min, max] = yearRange.split('-').map(Number);
+      if (min && max) query.year = { $gte: min, $lte: max };
+      else if (min) query.year = { $gte: min };
+    }
+
+    // Price Range
+    if (priceRange) {
+      const [min, max] = priceRange.split('-').map(Number);
+      if (min && max) query.price = { $gte: min, $lte: max };
+      else if (min) query.price = { $gte: min };
+      else if (max) query.price = { $lte: max };
+    }
+
+    const cars = await CarListing.find(query)
+      .populate('postedBy', 'firstName lastName phoneNumber avatar state lga dealerInfo')
+      .sort({ createdAt: -1 })
+      .lean();
+
+    res.json({
+      status: 'success',
+      results: cars.length,
+      data: cars
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: 'error', message: 'Server error' });
+  }
+};
 
 
 

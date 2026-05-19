@@ -180,6 +180,21 @@ const PublicDealsPage = () => {
                   <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
                     {deal.make} {deal.model} • {deal.year} • {deal.mileage.toLocaleString()} km
                   </p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+                  Car condition: <span className='font-bold text-1xl'>
+                    {deal.condition} 
+                    </span>
+                  </p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+                   • Body Type:
+                   <span className='font-bold text-1xl'>{deal.bodyType} </span> 
+                  </p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+                 • Transmission: <span className='font-bold text-1xl'>{deal.transmission} </span>
+                  </p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+                 • Fuel Type: <span className='font-bold text-1xl'>{deal.fuelType}</span>
+                  </p>
 
                   <div className="flex gap-3">
                     <button

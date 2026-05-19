@@ -45,7 +45,8 @@ const ServiceCategoriesGrid = () => {
       return;
     }
 
-    window.location.href = `${externalBase}/providers/category/${slug}`;
+    window.location.href = `${externalBase}/service-providers`;
+    // window.location.href = `${externalBase}/providers/category/${slug}`;
     // Alternative: if you want to open in new tab:
     // window.open(`${externalBase}/providers/category/${slug}`, '_blank');
   };

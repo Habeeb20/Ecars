@@ -1,5 +1,5 @@
 import { protect } from '../middleware/verifyToken.js';
-import { createCarListing, getMyCars, updateCarListing, deleteCarListing, getAllCars, searchCars, getCarById, createListingForOthers, recordCarView, toggleLikeCar, getCarLikeStatus } from '../controllers/carListingController.js';
+import { createCarListing, getMyCars, updateCarListing, deleteCarListing, getAllCars, searchCars, getCarById, createListingForOthers, recordCarView, toggleLikeCar, getCarLikeStatus, getAllCarsForSearch } from '../controllers/carListingController.js';
 import express from "express"
 import { getNewestListings } from '../controllers/plansController.js';
 import Car from "../models/carListing.js"
@@ -13,7 +13,8 @@ router.post("/", createListingForOthers)
 router.get('/search', searchCars);
 router.patch('/:id', protect, updateCarListing);     
 router.delete('/:id', protect, deleteCarListing);
-router.get("/newest", getNewestListings)    
+router.get("/newest", getNewestListings)  
+router.get('/allcarsearch', getAllCarsForSearch);  
 
 router.get('/by-body-type/:bodyType', getCarsByBodyType)
 
