@@ -32,7 +32,7 @@ export const Navbar = () => {
         { path: '/service-providers', label: 'Services Providers' },
         { path: '/dealerships', label: 'Dealerships' },
         { path: '/value-asset', label: 'Value Asset' },
-        { path: '/auctions', label: 'Auctions' },
+        { path: 'https://eauction.ng/', label: 'Auctions' },
       ]
     },
     safety: {
