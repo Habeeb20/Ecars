@@ -838,6 +838,12 @@ const Dealership = () => {
                   >
                     View Inventory
                   </Link>
+                  <Link 
+                    to={`/dealers/${dealer.slug}`} 
+                    className="flex-1 btn btn-primary text-center"
+                  >
+                    Dealer website
+                  </Link>
                   <a 
                     href="#" 
                     className="btn btn-outline flex items-center justify-center"

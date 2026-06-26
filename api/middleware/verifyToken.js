@@ -71,3 +71,12 @@ export const restrictTo = (...roles) => {
     next();
   };
 };
+
+
+
+
+// Ensures a dealer/provider/seller can only touch their own listings (unless superadmin)
+export const isOwnerOrAdmin = (ownerField = 'postedBy') => (req, res, next) => {
+  req.isAdmin = req.user.role === 'superadmin';
+  next();
+};

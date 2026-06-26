@@ -1,6 +1,6 @@
 import express from "express"
-
-
+import inventoryRoutes from "./routers/inventoryRoutes.js"
+import dealerRoutes from "./routers/dealerRoutes.js"
 import cors from "cors";
 import dotenv from "dotenv";
 import morgan from "morgan";
@@ -72,6 +72,8 @@ app.use("/api/contact", contactRouter)
 app.use('/api/sighting', sightingRoutes);
 app.use('/api/deals', dealsRoutes)
 app.use('/api', distanceRouter);
+app.use('/api/inventory', inventoryRoutes);
+app.use('/api/dealers', dealerRoutes);
 // await User.create({
 //   firstName: 'Admin',
 //   lastName: 'Boss',
@@ -90,3 +92,32 @@ app.listen(port, async () => {
   console.log(`Server is running on port ${port}`);
 
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

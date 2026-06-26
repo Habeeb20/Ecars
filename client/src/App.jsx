@@ -35,6 +35,9 @@ import VerifyEmail from './pages/auth/VerifyYourEmail';
 import AllCarPartsCategories from './components/Landing/AllCarPartCategories';
 import VehiclesByBodyType from './components/Landing/VehicleBodyType';
 import CarSearchPage from './pages/Search';
+import InventoryDashboard from './pages/dealer/InventoryDashboard';
+import DealerStorefront from './pages/dealer/DealerStoreFront';
+import MyCarDetails from './pages/dealer/MyCarDetails';
 // import Blog from './pages/Blog';
 
 function ScrollToTop() {
@@ -110,6 +113,9 @@ const App = () => {
         <Route path="/admin/dashboard" element={<AdminDashboardLayout />} />
       
         <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/carss/:id" element={< MyCarDetails/>} />
+              <Route path="/:slug" element={<DealerStorefront />} />
+        <Route path="/dashboard/inventory" element={<InventoryDashboard />} />
 
 
         </Route>
@@ -123,3 +129,22 @@ const App = () => {
 };
 
 export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

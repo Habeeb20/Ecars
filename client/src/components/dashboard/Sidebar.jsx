@@ -36,6 +36,7 @@ import DealerOffers from './DealerOffer';
 import GalleryFeed from './Gallery';
 import PostDealForm from './PostDeal';
 import MyReceivedOffers from './MyRecievedOffer';
+import InventoryDashboard from '../../pages/dealer/InventoryDashboard';
 const Sidebar = ({ onClose, setCurrentView }) => {
   const { user, logout } = useAuth();
   const [activeView, setActiveView] = useState('overview');
@@ -58,7 +59,9 @@ const Sidebar = ({ onClose, setCurrentView }) => {
    compareCars: <CompareCars/>,
   dealeroffers: <DealerOffers/>,
   gallery: <GalleryFeed />,
-  recievedOffer: <MyReceivedOffers />
+  recievedOffer: <MyReceivedOffers />,
+  Inventory:<InventoryDashboard /> 
+
   
   };
 
@@ -73,6 +76,7 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     { icon: Upload, view: 'uploadCars' },       // Dynamic label + view
     { icon: ListChecks, view: 'listings' },     // Dynamic label + view
     { icon: LucideSettings2, label: 'Manage Listings', view: 'browseCarListing' },
+    { icon: LucideSettings2, label: 'Inventory ', view: 'Inventory' },
     // { icon: Mail, label: 'Verify Your Email', view: 'verifyEmail' },
    
     { icon: Car, label: 'compare cars', view: 'compareCars' },
