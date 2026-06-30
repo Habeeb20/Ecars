@@ -1,5 +1,6 @@
 // controllers/authController.js
 import User from '../models/user.js';
+import axios from  "axios"
 import crypto from "crypto"
 import jwt from 'jsonwebtoken';
 import { createSendToken,  } from '../utils/functions.js';
@@ -12,67 +13,202 @@ import bcrypt from 'bcryptjs';
 // REGISTER → returns token so user logs in immediately
 // controllers/authController.js
 
-export const register = async (req, res) => {
-  try {
-    const { firstName, lastName, email, password, role } = req.body;
+// export const register = async (req, res) => {
+//   try {
+//     const { firstName, lastName, email, password, role } = req.body;
 
   
-    const newUser = await User.create({
+//     const newUser = await User.create({
+//       firstName,
+//       lastName,
+//       email:email.toLowerCase(), 
+//       password,
+//       role: role || 'user',
+//     });
+
+//       try {
+//       await axios.post("https://auth.edirect.ng/api/auth/register", {
+//         platform: "ecars",
+//         first_name: firstName,
+//         last_name: lastName,
+//         email: email.toLowerCase(),
+     
+//         password,
+//         role,
+//       });
+//       console.log("Edirect auth registration successful");
+//     } catch (err) {
+//       console.error("Edirect auth failed:", err.response?.data || err.message);
+//     }
+//       try {
+//       await axios.post("https://backend-efixit.ereligion.ng/api/auth/register", {
+     
+//         first_name: firstName,
+//         last_name: lastName,
+//         email: email.toLowerCase(),
+        
+//         password,
+//         role: "client",
+//       });
+//       console.log("Efixit auth registration successful");
+//     } catch (err) {
+//       console.error("Efixit auth failed:", err.response?.data || err.message);
+//     }
+
+//     createSendToken(newUser, 201, res);
+//   } catch (err) {
+//     console.log(err)
+//     if (err.code === 11000 || err.message.includes('duplicate key')) {
+//       return res.status(409).json({
+//         status: 'fail',
+//         message: 'This email is already registered. Please login instead.',
+//       });
+//     }
+
+//     if (err.name === 'ValidationError') {
+//       const messages = Object.values(err.errors).map(el => el.message);
+//       return res.status(400).json({
+//         status: 'fail',
+//         message: messages.join(', '),
+//       });
+//     }
+
+//     // Any other error
+//     res.status(400).json({
+//       status: 'fail',
+//       message: 'Registration failed. Please try again.',
+//     });
+//   }
+// };
+
+
+export const register = async (req, res) => {
+  try {
+    const {
       firstName,
       lastName,
-      email:email.toLowerCase(), 
+      email,
+      password,
+      role,
+      phoneNumber,
+      state,
+      lga,
+      address,
+
+      // role-specific payloads sent from the frontend, only one will be populated
+      dealerInfo,
+      serviceProviderInfo,
+      carPartSellerInfo,
+    } = req.body;
+
+    const userPayload = {
+      firstName,
+      lastName,
+      email: email.toLowerCase(),
       password,
       role: role || 'user',
-    });
+      phoneNumber,
+      state,
+      lga,
+      address,
+    };
 
-      try {
-      await axios.post("https://auth.edirect.ng/api/auth/register", {
-        platform: "ecars",
+    // Attach the correct nested object based on selected role
+    if (role === 'dealer' && dealerInfo) {
+      userPayload.dealerInfo = {
+        businessName:               dealerInfo.businessName,
+        businessRegistrationNumber: dealerInfo.businessRegistrationNumber,
+        businessAddress:            dealerInfo.businessAddress,
+        state:                      dealerInfo.state,
+        lga:                        dealerInfo.lga,
+      };
+    }
+
+    if (role === 'service-provider' && serviceProviderInfo) {
+      userPayload.serviceProviderInfo = {
+        type:               serviceProviderInfo.type,
+        businessName:       serviceProviderInfo.businessName,
+        businessAddress:    serviceProviderInfo.businessAddress,
+        state:              serviceProviderInfo.state,
+        lga:                serviceProviderInfo.lga,
+        phoneNumber:        serviceProviderInfo.phoneNumber,
+        whatsappNumber:     serviceProviderInfo.whatsappNumber,
+        yearsOfExperience:  serviceProviderInfo.yearsOfExperience,
+        servicesOffered:    serviceProviderInfo.servicesOffered || [],
+      };
+    }
+
+    if (role === 'carPart-seller' && carPartSellerInfo) {
+      userPayload.carPartSellerInfo = {
+        type:               carPartSellerInfo.type,
+        businessName:       carPartSellerInfo.businessName,
+        businessAddress:    carPartSellerInfo.businessAddress,
+        state:              carPartSellerInfo.state,
+        lga:                carPartSellerInfo.lga,
+        phoneNumber:        carPartSellerInfo.phoneNumber,
+        whatsappNumber:     carPartSellerInfo.whatsappNumber,
+        website:            carPartSellerInfo.website,
+        yearsOfExperience:  carPartSellerInfo.yearsOfExperience,
+        specialties:        carPartSellerInfo.specialties || [],
+      };
+    }
+
+    const newUser = await User.create(userPayload);
+
+    // Cross-platform registration (kept exactly as before)
+    try {
+      await axios.post('https://auth.edirect.ng/api/auth/register', {
+        platform: 'ecars',
         first_name: firstName,
         last_name: lastName,
         email: email.toLowerCase(),
-     
         password,
         role,
       });
-      console.log("Edirect auth registration successful");
+      console.log('Edirect auth registration successful');
     } catch (err) {
-      console.error("Edirect auth failed:", err.response?.data || err.message);
+      console.error('Edirect auth failed:', err.response?.data || err.message);
     }
-      try {
-      await axios.post("https://backend-efixit.ereligion.ng/api/auth/register", {
-     
+
+    try {
+      await axios.post('https://backend-efixit.ereligion.ng/api/auth/register', {
         first_name: firstName,
         last_name: lastName,
         email: email.toLowerCase(),
-        
         password,
-        role: "client",
+        role: 'client',
       });
-      console.log("Efixit auth registration successful");
+      console.log('Efixit auth registration successful');
     } catch (err) {
-      console.error("Efixit auth failed:", err.response?.data || err.message);
+      console.error('Efixit auth failed:', err.response?.data || err.message);
     }
 
     createSendToken(newUser, 201, res);
   } catch (err) {
-    console.log(err)
+    console.log(err);
     if (err.code === 11000 || err.message.includes('duplicate key')) {
+      const field = Object.keys(err.keyPattern || {})[0];
+      const friendlyField = field === 'email'
+        ? 'email'
+        : field === 'dealerInfo.businessRegistrationNumber'
+        ? 'business registration number'
+        : field;
       return res.status(409).json({
         status: 'fail',
-        message: 'This email is already registered. Please login instead.',
+        message: field === 'email'
+          ? 'This email is already registered. Please login instead.'
+          : `This ${friendlyField} is already registered.`,
       });
     }
 
     if (err.name === 'ValidationError') {
-      const messages = Object.values(err.errors).map(el => el.message);
+      const messages = Object.values(err.errors).map((el) => el.message);
       return res.status(400).json({
         status: 'fail',
         message: messages.join(', '),
       });
     }
 
-    // Any other error
     res.status(400).json({
       status: 'fail',
       message: 'Registration failed. Please try again.',
@@ -143,6 +279,7 @@ export const authLogin = async (req, res) => {
 
     createSendToken(user, 200, res);
     } catch (error) {
+      console.log(error)
            res.status(400).json({
       status: 'fail',
       message: error.message,

@@ -11,12 +11,12 @@ export const createCarListing = async (req, res) => {
 
     // 1. User must have verified email
     const user = await User.findById(userId);
-    if (!user.emailVerified) {
-      return res.status(403).json({
-        status: 'fail',
-        message: 'Please verify your email first before posting a car',
-      });
-    }
+    // if (!user.emailVerified) {
+    //   return res.status(403).json({
+    //     status: 'fail',
+    //     message: 'Please verify your email first before posting a car',
+    //   });
+    // }
 
     // 2. Count current active listings by this user
     const userListingsCount = await CarListing.countDocuments({

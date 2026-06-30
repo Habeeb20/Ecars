@@ -521,7 +521,7 @@ const Overview = () => {
             </p>
           </div>
 
-          {user?.role === 'user' && (
+          {/* {user?.role === 'user' && (
             <button
               onClick={() => setShowUpgrade(true)}
               className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold rounded-2xl shadow-2xl transform hover:scale-105 transition-all flex items-center gap-3 whitespace-nowrap"
@@ -529,7 +529,7 @@ const Overview = () => {
               <TrendingUp className="h-5 w-5" />
               Become a Dealer / Service Provider
             </button>
-          )}
+          )} */}
         </div>
 
         {/* Your Stats Cards - Glassmorphism Style */}

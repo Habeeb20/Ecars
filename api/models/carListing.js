@@ -250,11 +250,11 @@ carListingSchema.set('toObject', { virtuals: true });
 
 // Auto-generate a stock number like DLR-2026-0001 (per dealer) the first time it's saved
 carListingSchema.pre('save', async function (next) {
-  if (!this.isNew || this.stockNumber) return next();
+  if (!this.isNew || this.stockNumber) ;
   const year = new Date().getFullYear();
   const count = await this.constructor.countDocuments({ postedBy: this.postedBy });
   this.stockNumber = `STK-${year}-${String(count + 1).padStart(4, '0')}`;
-  next();
+  
 });
 
 export default mongoose.model('CarListing', carListingSchema);

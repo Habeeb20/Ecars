@@ -500,14 +500,14 @@ const userSchema = new mongoose.Schema({
 
 // Hash password only when modified
 userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+  if (!this.isModified('password')) ;
   this.password = await bcrypt.hash(this.password, 12);
-  next();
+
 });
 
 // Generate unique 4-digit number
 userSchema.pre('save', async function (next) {
-  if (this.uniqueNumber) return next();
+  if (this.uniqueNumber) ;
 
   let isUnique = false;
   let attempts = 0;
@@ -523,7 +523,7 @@ userSchema.pre('save', async function (next) {
   }
 
   if (!isUnique) return next(new Error('Failed to generate unique number'));
-  next();
+
 });
 
 // Generate / refresh the public slug whenever the relevant business name changes.
@@ -537,7 +537,7 @@ userSchema.pre('save', async function (next) {
   };
 
   const businessName = businessNameByRole[this.role];
-  if (!businessName) return next();
+  if (!businessName) ;
 
   const nameChanged =
     this.isNew ||
@@ -548,7 +548,7 @@ userSchema.pre('save', async function (next) {
   if (!this.slug || nameChanged) {
     this.slug = await generateUniqueSlug(this.constructor, businessName, this._id);
   }
-  next();
+
 });
 
 // Password comparison

@@ -80,7 +80,7 @@ const ListCar = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!user.emailVerified) return toast.error('Verify your email first');
+    // if (!user.emailVerified) return toast.error('Verify your email first');
 
     if (form.images.length < 4) {
       return toast.error('Upload at least 4 clear photos');
@@ -123,7 +123,7 @@ const ListCar = () => {
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
           <h1 class="text-3xl font-bold text-center mb-8 text-indigo-600">List Your Car</h1>
 
-          {showVerifyModal && (
+          {/* {showVerifyModal && (
             <div class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
               <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full shadow-2xl">
                 <AlertCircle class="h-16 w-16 text-orange-500 mx-auto mb-4" />
@@ -152,7 +152,7 @@ const ListCar = () => {
                 </button>
               </div>
             </div>
-          )}
+          )} */}
 
           <form onSubmit={handleSubmit} class="space-y-6">
             {/* Images */}
