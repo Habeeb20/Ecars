@@ -416,6 +416,7 @@ const COLORS = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'
 
 const Overview = () => {
   const { user } = useAuth();
+  console.log(user)
   const [showUpgrade, setShowUpgrade] = useState(false);
   const [myCars, setMyCars] = useState([]);
   const [myCarParts, setMyCarParts] = useState([]);

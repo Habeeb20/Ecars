@@ -31,3 +31,4 @@ export const dealerApi = {
     api.get(`/dealers/${slug}`, { params }).then((r) => r.data.data),
   checkSlug: (slug) => api.get(`/dealers/check-slug/${slug}`).then((r) => r.data.exists),
 };
+

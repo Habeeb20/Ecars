@@ -39,19 +39,47 @@ const DealerStorefront = () => {
   const [notFound, setNotFound] = useState(false);
   const [makeFilter, setMakeFilter] = useState('');
 
-  const load = (page = 1) => {
-    if (!slug) return;
-    setLoading(true);
-    dealerApi.getBySlug(slug, { page, limit: 12, make: makeFilter || undefined })
-      .then((data) => {
-        setDealer(data.dealer);
-        setInventory(data.inventory);
-        setPagination(data.pagination);
-      })
-      .catch(() => setNotFound(true))
-      .finally(() => setLoading(false));
-  };
+  // const load = (page = 1) => {
+  //   if (!slug) return;
+  //   setLoading(true);
+  //   dealerApi.getBySlug(slug, { page, limit: 12, make: makeFilter || undefined })
+  //     .then((data) => {
+  //       setDealer(data.dealer);
+  //       setInventory(data.inventory);
+  //       setPagination(data.pagination);
+  //     })
+  //     .catch(() => setNotFound(true))
+  //     .finally(() => setLoading(false));
+  // };
 
+
+  const load = (page = 1) => {
+  if (!slug) return;
+
+  // ← CLEAN THE SLUG BEFORE SENDING
+  const cleanSlug = slug.replace(/^:/, '').trim();
+
+  console.log('Frontend sending slug:', cleanSlug); // ← Add this for debugging
+
+  setLoading(true);
+
+  dealerApi.getBySlug(cleanSlug, { 
+    page, 
+    limit: 12, 
+    make: makeFilter || undefined 
+  })
+    .then((data) => {
+      setDealer(data.dealer);
+      setInventory(data.inventory);
+      setPagination(data.pagination);
+      setNotFound(false);
+    })
+    .catch((err) => {
+      console.error("Dealer fetch error:", err);
+      setNotFound(true);
+    })
+    .finally(() => setLoading(false));
+};
   useEffect(() => { 
     load(1); 
   }, [slug, makeFilter]);
