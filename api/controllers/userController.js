@@ -1188,7 +1188,17 @@ export const unverifyCarPartSeller = async (req, res) => {
 // Search Car Part Sellers
 export const searchCarPartSellers = async (req, res) => {
   try {
-    const { search, page = 1, limit = 20 } = req.query;
+    const {
+      search,
+      state,
+      lga,
+      location,
+      verified,
+      isFeatured,
+      page = 1,
+      limit = 20,
+    } = req.query;
+
     const query = { role: 'carPart-seller' };
 
     if (search) {
@@ -1199,6 +1209,26 @@ export const searchCarPartSellers = async (req, res) => {
         { 'carPartSellerInfo.businessName': { $regex: search, $options: 'i' } },
       ];
     }
+
+    // These were being sent by the frontend but never read here, so
+    // typing into State/LGA/Location had no effect on the results.
+    if (state) {
+      query['carPartSellerInfo.state'] = { $regex: `^${escapeRegex(state)}$`, $options: 'i' };
+    }
+    if (lga) {
+      query['carPartSellerInfo.lga'] = { $regex: `^${escapeRegex(lga)}$`, $options: 'i' };
+    }
+    if (location) {
+      // Free-text location field — partial match rather than exact,
+      // since it's a looser "e.g. Iyana Ipaja, Lagos" style input.
+      query['carPartSellerInfo.location'] = { $regex: escapeRegex(location), $options: 'i' };
+    }
+
+    // Booleans arrive over the wire as the strings "true"/"false".
+    if (verified === 'true') query['carPartSellerInfo.verified'] = true;
+    if (verified === 'false') query['carPartSellerInfo.verified'] = false;
+    if (isFeatured === 'true') query['carPartSellerInfo.isFeatured'] = true;
+    if (isFeatured === 'false') query['carPartSellerInfo.isFeatured'] = false;
 
     const skip = (Number(page) - 1) * Number(limit);
 
@@ -1223,8 +1253,11 @@ export const searchCarPartSellers = async (req, res) => {
   }
 };
 
-
-
+// Escapes regex special characters in user input so search terms like
+// "A.C." or "Parts (Used)" don't break the regex or match unintended text.
+function escapeRegex(str) {
+  return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
 export const getDealerById = async (req, res) => {
   try {

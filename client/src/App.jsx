@@ -38,6 +38,7 @@ import CarSearchPage from './pages/Search';
 import InventoryDashboard from './pages/dealer/InventoryDashboard';
 import DealerStorefront from './pages/dealer/DealerStoreFront';
 import MyCarDetails from './pages/dealer/MyCarDetails';
+import CarDetailPage from './pages/CarDetailsPageBySlug';
 // import Blog from './pages/Blog';
 
 function ScrollToTop() {
@@ -87,6 +88,7 @@ const App = () => {
         <Route path="/vehicles" element={<Vehicles/>} />
         <Route path="/blog/:id" element={<Article/>} />
         <Route path="/cars/:id" element={<CarDetails />} />
+        <Route path="/vehicles/:id" element={<CarDetails />} />
         <Route path="/dealerships" element={<Dealership />} />
         <Route path='/dealers/:id' element={<DealerDetails />} />
         <Route path="/sell-car" element={<SellCar />} />
@@ -116,6 +118,7 @@ const App = () => {
         <Route path="/carss/:id" element={< MyCarDetails/>} />
               <Route path="/:slug" element={<DealerStorefront />} />
         <Route path="/dashboard/inventory" element={<InventoryDashboard />} />
+        <Route path="/cars/:slug" element={<CarDetailPage/>} />
 
 
         </Route>

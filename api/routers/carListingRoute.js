@@ -1,9 +1,10 @@
 import { protect } from '../middleware/verifyToken.js';
-import { createCarListing, getMyCars, updateCarListing, deleteCarListing, getAllCars, searchCars, getCarById, createListingForOthers, recordCarView, toggleLikeCar, getCarLikeStatus, getAllCarsForSearch } from '../controllers/carListingController.js';
+import { createCarListing, getMyCars, updateCarListing, deleteCarListing, getAllCars, searchCars, getCarById, createListingForOthers, recordCarView, toggleLikeCar, getCarLikeStatus, getAllCarsForSearch, getCarFilterOptions } from '../controllers/carListingController.js';
 import express from "express"
 import { getNewestListings } from '../controllers/plansController.js';
 import Car from "../models/carListing.js"
 import { getCarsByBodyType } from '../controllers/CarPartListingController.js';
+import { getCarById1, getSimilarCars, toggleLikeCar1, incrementShareCount } from '../controllers/carListingController.js';
 const router =express.Router()
 
 router.post('/create', protect, createCarListing);
@@ -15,12 +16,18 @@ router.patch('/:id', protect, updateCarListing);
 router.delete('/:id', protect, deleteCarListing);
 router.get("/newest", getNewestListings)  
 router.get('/allcarsearch', getAllCarsForSearch);  
-
+// routes/carRoutes.js
+router.get('/cars/filter-options', getCarFilterOptions);
 router.get('/by-body-type/:bodyType', getCarsByBodyType)
+
+router.get('/:id', getCarById1);
+router.get('/:id/similar', getSimilarCars);
+router.put('/:id/like', protect, toggleLikeCar1);
+router.put('/:id/share', incrementShareCount);
 
 // routes/carRoutes.js
 router.put('/:id/view', recordCarView);                    // record view (can be called on page load)
-router.put('/:id/like', protect, toggleLikeCar);    // like/unlike
+router.put('/:id/like', protect, toggleLikeCar1);    // like/unlike
 router.get('/:id/like-status', protect, getCarLikeStatus); // check if liked + count
 
 // GET /api/cars/compare - Public or protected (your choice)

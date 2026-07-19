@@ -120,7 +120,7 @@ console.log(data)
         </Link>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden mb-8">
+      <div className="bg-white mt-5 dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden mb-8">
         <div className="md:flex">
           <div className="md:w-1/3">
             <img 
@@ -136,9 +136,9 @@ console.log(data)
               </h1>
               <div className="flex items-center bg-primary-100 dark:bg-primary-900 px-3 py-1 rounded-full">
                 <Star className="h-5 w-5 text-yellow-400 fill-current mr-1" />
-                <span className="font-medium">
+                {/* <span className="font-medium">
                   {dealer.dealerInfo?.rating?.toFixed(1) || 'N/A'}
-                </span>
+                </span> */}
               </div>
             </div>
 

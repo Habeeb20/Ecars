@@ -1,3 +1,12 @@
+
+
+
+
+
+
+
+
+
 /* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react';
@@ -73,9 +82,8 @@ export const Navbar = () => {
     setActiveDropdown(null);
   }, [location]);
 
-  const navbarBgClass = isScrolled || !isHomePage
-    ? 'bg-white dark:bg-gray-900 shadow-md'
-    : 'bg-transparent';
+  // Always solid — no more transparent-until-scrolled state on the homepage.
+  const navbarBgClass = 'bg-white dark:bg-gray-900 shadow-md';
 
   // Fixed: Accept the key as parameter
   const toggleDropdown = (key) => {
@@ -156,7 +164,7 @@ export const Navbar = () => {
                   className="flex items-center space-x-2"
                 >
                   <img
-                    src={user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}`}
+              src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent((user?.firstName || '') + ' ' + (user?.lastName || 'User'))}&background=6366f1&color=fff&bold=true`}
                     alt={user.name}
                     className="h-9 w-9 rounded-full border-2 border-primary-500 object-cover"
                   />
@@ -177,9 +185,7 @@ export const Navbar = () => {
                       <Link to="/search" className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setActiveDropdown(null)}>
                         Search
                       </Link>
-                      <Link to="/dashboard/messages" className="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setActiveDropdown(null)}>
-                        Messages
-                      </Link>
+          
                       <button
                         onClick={() => { logout(); setActiveDropdown(null); }}
                         className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -270,7 +276,7 @@ export const Navbar = () => {
                     <span className="font-medium">{user.name}</span>
                   </div>
                   <Link to="/dashboard" className="block py-2">Dashboard</Link>
-                  <Link to="/dashboard/messages" className="block py-2">Messages</Link>
+                  {/* <Link to="/dashboard/messages" className="block py-2">Messages</Link> */}
                   <button onClick={logout} className="flex items-center space-x-2 py-2 text-red-600">
                     <LogOut className="h-5 w-5" />
                     <span>Sign Out</span>

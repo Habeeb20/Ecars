@@ -69,33 +69,37 @@ const  user = localStorage.getItem("token")
     fetchCarDetails();
   }, [id]);
 
-  const fetchCarDetails = async () => {
-    setLoading(true);
-    setError(null);
+const fetchCarDetails = async () => {
+  setLoading(true);
+  setError(null);
 
-    try {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/cars/${id}`);
-      const data = await res.json();
+  try {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/cars/${id}`);
+    const data = await res.json();
 
-      if (data.status === 'success') {
-        setCar(data.data.car);
-        setViewCount(data.data.car.views || 0);
+    if (data.success) {
+      // data.data IS the car object directly — not data.data.car
+      setCar(data.data);
+      console.log(data.data)
+      setViewCount(data.data.views || 0);
 
-        // Record view (non-blocking)
-        fetch(`${import.meta.env.VITE_BACKEND_URL}/cars/${id}/view`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-        }).catch(() => console.log("View recorded"));
-      } else {
-        setError(data.message || 'Car not found');
-      }
-    } catch (err) {
-      setError('Network error');
-      console.error(err);
-    } finally {
-      setLoading(false);
+      // Only call this if you're using a SEPARATE view-tracking endpoint
+      // instead of incrementing views inside getCarById itself. Pick one —
+      // see note below.
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/cars/${id}/view`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+      }).catch(() => console.log('View recording failed silently'));
+    } else {
+      setError(data.message || 'Car not found');
     }
-  };
+  } catch (err) {
+    setError('Network error');
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   // Check like status for logged-in user
   useEffect(() => {

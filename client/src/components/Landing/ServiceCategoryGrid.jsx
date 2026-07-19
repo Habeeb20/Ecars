@@ -1,7 +1,7 @@
 // src/components/ServiceCategoriesGrid.jsx
-import React from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Wrench, Paintbrush, Hammer, ThermometerSun } from 'lucide-react';
+import { Wrench, Paintbrush, Hammer, ThermometerSun, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const SERVICE_CATEGORIES = [
   {
@@ -18,13 +18,13 @@ const SERVICE_CATEGORIES = [
     description: 'Full repaint, touch-ups, color change',
     gradient: 'from-red-500 to-rose-600',
   },
-  {
-    slug: 'panel-beater',
-    title: 'Panel Beater',
-    icon: Hammer,
-    description: 'Dent removal, body straightening, accident repair',
-    gradient: 'from-amber-500 to-orange-600',
-  },
+  // {
+  //   slug: 'panel-beater',
+  //   title: 'Panel Beater',
+  //   icon: Hammer,
+  //   description: 'Dent removal, body straightening, accident repair',
+  //   gradient: 'from-amber-500 to-orange-600',
+  // },
   {
     slug: 'ac-repair',
     title: 'AC Repair',
@@ -36,6 +36,36 @@ const SERVICE_CATEGORIES = [
 
 const ServiceCategoriesGrid = () => {
   const navigate = useNavigate();
+  const scrollerRef = useRef(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const updateScrollButtons = useCallback(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 8);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 8);
+  }, []);
+
+  useEffect(() => {
+    updateScrollButtons();
+    const el = scrollerRef.current;
+    if (!el) return;
+
+    el.addEventListener('scroll', updateScrollButtons, { passive: true });
+    window.addEventListener('resize', updateScrollButtons);
+    return () => {
+      el.removeEventListener('scroll', updateScrollButtons);
+      window.removeEventListener('resize', updateScrollButtons);
+    };
+  }, [updateScrollButtons]);
+
+  const scrollByAmount = (direction) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const cardWidth = el.querySelector('[data-card]')?.offsetWidth || 300;
+    el.scrollBy({ left: direction * (cardWidth + 20), behavior: 'smooth' });
+  };
 
   const handleCategoryClick = (slug) => {
     // Navigate to external site using the env variable
@@ -64,37 +94,64 @@ const ServiceCategoriesGrid = () => {
           </p>
         </div>
 
-        {/* Horizontal scrollable cards */}
-        <div className="flex overflow-x-auto gap-5 pb-6 snap-x snap-mandatory scrollbar-hide">
-          {SERVICE_CATEGORIES.map((service) => (
-            <div
-              key={service.slug}
-              onClick={() => handleCategoryClick(service.slug)}
-              className="min-w-[260px] sm:min-w-[300px] flex-shrink-0 snap-center bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden cursor-pointer border border-slate-200 dark:border-slate-700 hover:border-indigo-400 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
-            >
-              {/* Gradient top bar */}
-              <div className={`h-2 bg-gradient-to-r ${service.gradient}`}></div>
+        {/* Carousel wrapper */}
+        <div className="relative">
+          {/* Left arrow */}
+          <button
+            type="button"
+            onClick={() => scrollByAmount(-1)}
+            aria-label="Scroll categories left"
+            className="flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-10 items-center justify-center w-11 h-11 rounded-full bg-white dark:bg-slate-800 shadow-lg border border-slate-200 dark:border-slate-700 hover:scale-110 hover:border-indigo-400 text-slate-700 dark:text-slate-200 cursor-pointer transition-all duration-200"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
 
-              <div className="p-6 md:p-8 flex flex-col items-center text-center">
-                {/* Icon circle */}
-                <div className={`w-20 h-20 rounded-full bg-gradient-to-br ${service.gradient} flex items-center justify-center mb-5 shadow-lg`}>
-                  <service.icon className="w-10 h-10 text-white" />
-                </div>
+          {/* Right arrow */}
+          <button
+            type="button"
+            onClick={() => scrollByAmount(1)}
+            aria-label="Scroll categories right"
+            className="flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-10 items-center justify-center w-11 h-11 rounded-full bg-white dark:bg-slate-800 shadow-lg border border-slate-200 dark:border-slate-700 hover:scale-110 hover:border-indigo-400 text-slate-700 dark:text-slate-200 cursor-pointer transition-all duration-200"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
 
-                <h3 className="text-2xl font-bold mb-3 text-slate-900 dark:text-white group-hover:text-indigo-600 transition-colors">
-                  {service.title}
-                </h3>
+          {/* Horizontal scrollable cards */}
+          <div
+            ref={scrollerRef}
+            className="flex overflow-x-auto gap-5 pb-6 snap-x snap-mandatory scrollbar-hide"
+          >
+            {SERVICE_CATEGORIES.map((service) => (
+              <div
+                key={service.slug}
+                data-card
+                onClick={() => handleCategoryClick(service.slug)}
+                className="min-w-[260px] sm:min-w-[300px] flex-shrink-0 snap-center bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden cursor-pointer border border-slate-200 dark:border-slate-700 hover:border-indigo-400 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+              >
+                {/* Gradient top bar */}
+                <div className={`h-2 bg-gradient-to-r ${service.gradient}`}></div>
 
-                <p className="text-slate-600 dark:text-slate-400 text-base">
-                  {service.description}
-                </p>
+                <div className="p-6 md:p-8 flex flex-col items-center text-center">
+                  {/* Icon circle */}
+                  <div className={`w-20 h-20 rounded-full bg-gradient-to-br ${service.gradient} flex items-center justify-center mb-5 shadow-lg`}>
+                    <service.icon className="w-10 h-10 text-white" />
+                  </div>
 
-                <div className="mt-6 text-sm font-medium text-indigo-600 dark:text-indigo-400 group-hover:underline">
-                  View Providers →
+                  <h3 className="text-2xl font-bold mb-3 text-slate-900 dark:text-white group-hover:text-indigo-600 transition-colors">
+                    {service.title}
+                  </h3>
+
+                  <p className="text-slate-600 dark:text-slate-400 text-base">
+                    {service.description}
+                  </p>
+
+                  <div className="mt-6 text-sm font-medium text-indigo-600 dark:text-indigo-400 group-hover:underline">
+                    View Providers →
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* Hint for mobile */}

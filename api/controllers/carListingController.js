@@ -4,7 +4,7 @@ import CarListing from '../models/carListing.js';
 import Car from '../models/carListing.js';
 import User from '../models/user.js';
 import Subscription from '../models/subscriptionSchema.js';
-
+import mongoose from 'mongoose';
 export const createCarListing = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -376,6 +376,7 @@ export const createListingForOthers = async (req, res) => {
     await listing.save();
     res.status(201).json({ status: 'success', data: { listing } });
   } catch (err) {
+    console.log(err)
     res.status(500).json({ status: 'error', message: 'Failed to create listing' });
   }
 };
@@ -534,6 +535,77 @@ export const getAllCarsForSearch = async (req, res) => {
 
 
 
+// controllers/carController.js (add this alongside getAllCarsForSearch)
+
+// Returns which filter values actually exist in the DB, given the filters
+// currently selected — so the UI never offers a combination with zero results.
+// Each field's own current selection is excluded from its own match, so
+// switching that field is always possible (you're not locked into what you
+// already picked).
+export const getCarFilterOptions = async (req, res) => {
+  try {
+    const {
+      make, bodyType, condition, fuelType, transmission, state,
+      yearRange, priceRange,
+    } = req.query;
+
+    const buildMatch = (excludeField) => {
+      const match = { status: 'active' };
+
+      if (make && excludeField !== 'make') {
+        match.make = { $regex: `^${make}$`, $options: 'i' };
+      }
+      if (bodyType && excludeField !== 'bodyType') match.bodyType = bodyType.toLowerCase();
+      if (condition && excludeField !== 'condition') match.condition = condition.toLowerCase();
+      if (fuelType && excludeField !== 'fuelType') match.fuelType = fuelType.toLowerCase();
+      if (transmission && excludeField !== 'transmission') match.transmission = transmission.toLowerCase();
+      if (state && excludeField !== 'state') {
+        match['location.state'] = { $regex: state, $options: 'i' };
+      }
+
+      if (yearRange) {
+        const [min, max] = yearRange.split('-').map(Number);
+        if (min && max) match.year = { $gte: min, $lte: max };
+        else if (min) match.year = { $gte: min };
+      }
+
+      if (priceRange) {
+        const [min, max] = priceRange.split('-').map(Number);
+        if (min && max) match.price = { $gte: min, $lte: max };
+        else if (min) match.price = { $gte: min };
+        else if (max) match.price = { $lte: max };
+      }
+
+      return match;
+    };
+
+    const [makes, bodyTypes, conditions, fuelTypes, transmissions, states] = await Promise.all([
+      CarListing.distinct('make', buildMatch('make')),
+      CarListing.distinct('bodyType', buildMatch('bodyType')),
+      CarListing.distinct('condition', buildMatch('condition')),
+      CarListing.distinct('fuelType', buildMatch('fuelType')),
+      CarListing.distinct('transmission', buildMatch('transmission')),
+      CarListing.distinct('location.state', buildMatch('state')),
+    ]);
+
+    const clean = (arr) => arr.filter(Boolean).sort((a, b) => a.localeCompare(b));
+
+    res.json({
+      status: 'success',
+      data: {
+        makes: clean(makes),
+        bodyTypes: clean(bodyTypes),
+        conditions: clean(conditions),
+        fuelTypes: clean(fuelTypes),
+        transmissions: clean(transmissions),
+        states: clean(states),
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: 'error', message: 'Server error' });
+  }
+};
 
 
 
@@ -551,3 +623,91 @@ export const getAllCarsForSearch = async (req, res) => {
 
 
 
+// GET /api/cars/:id — public detail fetch, increments views
+export const getCarById1 = async (req, res) => {
+  try {
+    const { id } = req.params;
+ 
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ success: false, message: 'Invalid car ID' });
+    }
+ 
+    const car = await CarListing.findByIdAndUpdate(
+      id,
+      { $inc: { views: 1 } },
+      { new: true }
+    )
+      .populate('postedBy', 'name businessProfile.businessName phoneNumber profilePicture email')
+      .lean();
+ 
+    if (!car) {
+      return res.status(404).json({ success: false, message: 'Car listing not found' });
+    }
+ console.log(car)
+    res.status(200).json({ success: true, data: car });
+  } catch (err) {
+    console.error('getCarById error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch car listing' });
+  }
+};
+ 
+// GET /api/cars/:id/similar — a few other active listings from the same make, excluding this one
+export const getSimilarCars = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const car = await CarListing.findById(id).select('make').lean();
+    if (!car) return res.status(404).json({ success: false, message: 'Car not found' });
+ 
+    const similar = await CarListing.find({
+      _id: { $ne: id },
+      make: car.make,
+      status: 'active',
+    })
+      .select('make model year price images mileage condition')
+      .limit(4)
+      .lean();
+ 
+    res.status(200).json({ success: true, data: similar });
+  } catch (err) {
+    console.error('getSimilarCars error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch similar cars' });
+  }
+};
+ 
+// PATCH /api/cars/:id/like — toggle like for the logged-in user
+export const toggleLikeCar1 = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+ 
+    const car = await CarListing.findById(id);
+    if (!car) return res.status(404).json({ success: false, message: 'Car not found' });
+ 
+    const alreadyLiked = car.likes.some((l) => l.user.toString() === userId.toString());
+ 
+    if (alreadyLiked) {
+      car.likes = car.likes.filter((l) => l.user.toString() !== userId.toString());
+    } else {
+      car.likes.push({ user: userId });
+    }
+    car.likeCount = car.likes.length;
+    await car.save();
+ 
+    res.status(200).json({ success: true, liked: !alreadyLiked, likeCount: car.likeCount });
+  } catch (err) {
+    console.error('toggleLikeCar error:', err);
+    res.status(500).json({ success: false, message: 'Failed to update like' });
+  }
+};
+ 
+// PATCH /api/cars/:id/share — bump shareCount (fire-and-forget from the share button)
+export const incrementShareCount = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await CarListing.findByIdAndUpdate(id, { $inc: { shareCount: 1 } });
+    res.status(200).json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Failed to update share count' });
+  }
+};
+ 

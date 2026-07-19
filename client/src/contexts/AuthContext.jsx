@@ -1,138 +1,74 @@
-/* eslint-disable react-refresh/only-export-components */
-// /* eslint-disable no-unused-vars */
-// /* eslint-disable react-refresh/only-export-components */
+
+// // contexts/AuthContext.jsx
 // import { createContext, useContext, useState, useEffect } from 'react';
-// import axios from 'axios';
+// import { toast } from 'sonner';
 
-// // Create the Auth Context
-// const AuthContext = createContext(undefined);
+// const AuthContext = createContext();
 
-// // Auth Provider Component
 // export const AuthProvider = ({ children }) => {
 //   const [user, setUser] = useState(null);
-//   const [isLoading, setIsLoading] = useState(true);
+//   const [loading, setLoading] = useState(true);
 
-//   // On app load: check if user is already logged in (from localStorage)
-//   useEffect(() => {
-//     const loadUser = () => {
-//       try {
-//         const storedUser = localStorage.getItem('user');
-//         const token = localStorage.getItem('token');
+//   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-//         if (storedUser && token) {
-//           setUser(JSON.parse(storedUser));
-//         }
-//       } catch (err) {
-//         console.error('Failed to load user from storage', err);
-//       } finally {
-//         setIsLoading(false);
+//   // Fetch current user on app load
+//   const fetchUser = async () => {
+//     const token = localStorage.getItem('token');
+
+//     if (!token) {
+//       setLoading(false);
+//       return;
+//     }
+
+//     try {
+//       const res = await fetch(`${backendUrl}/users/me`, {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       });
+
+//       const data = await res.json();
+
+//       if (res.ok) {
+//         setUser(data.data.user);
+//       } else {
+//         // Token invalid/expired → logout
+//         localStorage.removeItem('token');
+//         toast.error('Session expired. Please log in again.');
 //       }
-//     };
+//     } catch (err) {
+//       console.error(err);
+//       toast.error('Failed to load user');
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
 
-//     loadUser();
+//   useEffect(() => {
+//     fetchUser();
 //   }, []);
 
-//   // Login function (demo version - replace with real API call later)
-//   const login = async (email, password) => {
-//     setIsLoading(true);
-//     try {
-//       // Basic validation
-//       if (!email || !password) {
-//         throw new Error('Email and password are required');
-//       }
-
-//       // Mock successful login
-//       const isAdmin = email.toLowerCase().includes('admin');
-//       const mockUser = {
-//         id: Date.now().toString(),
-//         name: email.split('@')[0],
-//         email,
-//         avatar: `https://i.pravatar.cc/150?u=${email}`,
-//         role: isAdmin ? 'admin' : 'user',
-//       };
-
-//       // Save to state and localStorage
-//       setUser(mockUser);
-//       localStorage.setItem('user', JSON.stringify(mockUser));
-//       localStorage.setItem('token', 'mock-jwt-token-' + Date.now());
-
-//       console.log('Logged in as:', mockUser);
-//     } catch (error) {
-//       console.error('Login failed:', error.message);
-//       throw error;
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-//   // Register function (demo version)
-//   const register = async (name, email, password) => {
-//     setIsLoading(true);
-//     try {
-//       if (!name || !email || !password) {
-//         throw new Error('All fields are required');
-//       }
-
-//       const mockUser = {
-//         id: Date.now().toString(),
-//         name,
-//         email,
-//         avatar: `https://i.pravatar.cc/150?u=${email}`,
-//         role: 'user',
-//       };
-
-//       setUser(mockUser);
-//       localStorage.setItem('user', JSON.stringify(mockUser));
-//       localStorage.setItem('token', 'mock-jwt-token-' + Date.now());
-
-//       console.log('Registered & logged in:', mockUser);
-//     } catch (error) {
-//       console.error('Registration failed:', error.message);
-//       throw error;
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-//   // Logout function
 //   const logout = () => {
-//     setUser(null);
-//     localStorage.removeItem('user');
 //     localStorage.removeItem('token');
-//     console.log('Logged out');
-//   };
-
-//   // Context value
-//   const value = {
-//     user,
-//     isAuthenticated: !!user,
-//     isLoading,
-//     login,
-//     register,
-//     logout,
+//     setUser(null);
+//     toast.success('Logged out successfully');
+//     window.location.href = '/login';
 //   };
 
 //   return (
-//     <AuthContext.Provider value={value}>
+//     <AuthContext.Provider value={{ user, setUser, logout, loading, refetch: fetchUser }}>
 //       {children}
 //     </AuthContext.Provider>
 //   );
 // };
 
-// // Custom hook to use auth anywhere
-// export const useAuth = () => {
-//   const context = useContext(AuthContext);
-//   if (!context) {
-//     throw new Error('useAuth must be used within an AuthProvider');
-//   }
-//   return context;
-// };
+// export const useAuth = () => useContext(AuthContext);
 
 
 
 
 // contexts/AuthContext.jsx
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { toast } from 'sonner';
 
 const AuthContext = createContext();
@@ -143,13 +79,17 @@ export const AuthProvider = ({ children }) => {
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-  // Fetch current user on app load
-  const fetchUser = async () => {
+  // Fetches the current user using whatever token is currently in
+  // localStorage. Returns the user object on success, or null on failure.
+  // Doesn't toast on missing token (that's just "not logged in"), but does
+  // toast on a genuinely bad/expired token or network failure.
+  const fetchUser = useCallback(async ({ silent = false } = {}) => {
     const token = localStorage.getItem('token');
 
     if (!token) {
+      setUser(null);
       setLoading(false);
-      return;
+      return null;
     }
 
     try {
@@ -163,22 +103,37 @@ export const AuthProvider = ({ children }) => {
 
       if (res.ok) {
         setUser(data.data.user);
+        return data.data.user;
       } else {
         // Token invalid/expired → logout
         localStorage.removeItem('token');
-        toast.error('Session expired. Please log in again.');
+        setUser(null);
+        if (!silent) toast.error('Session expired. Please log in again.');
+        return null;
       }
     } catch (err) {
       console.error(err);
-      toast.error('Failed to load user');
+      if (!silent) toast.error('Failed to load user');
+      return null;
     } finally {
       setLoading(false);
     }
-  };
+  }, [backendUrl]);
 
-  useEffect(() => {
-    fetchUser();
-  }, []);
+  // Call this right after a successful login/register/e-auth response.
+  // Stores the token AND immediately hydrates `user` in context, so
+  // components reading useAuth() see the logged-in state without needing
+  // a page refresh (which is what the old flow relied on via the mount
+  // effect below).
+  const login = useCallback(async (token) => {
+    if (!token) return null;
+    localStorage.setItem('token', token);
+    setLoading(true);
+    // silent: a fresh token from a login response should never show a
+    // "session expired" toast if something's off — that message only
+    // makes sense for an existing/stale token going bad.
+    return fetchUser({ silent: true });
+  }, [fetchUser]);
 
   const logout = () => {
     localStorage.removeItem('token');
@@ -187,8 +142,13 @@ export const AuthProvider = ({ children }) => {
     window.location.href = '/login';
   };
 
+  useEffect(() => {
+    fetchUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, setUser, logout, loading, refetch: fetchUser }}>
+    <AuthContext.Provider value={{ user, setUser, login, logout, loading, refetch: fetchUser }}>
       {children}
     </AuthContext.Provider>
   );

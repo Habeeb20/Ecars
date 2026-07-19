@@ -34,7 +34,7 @@ const Blog = () => {
 
   return (
     <div>
-      <section className="py-16 bg-gray-50 dark:bg-gray-900">
+      <section className="py-16 mt-10 bg-gray-50 dark:bg-gray-900">
         <div className="container">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Latest Automotive Insights</h2>
