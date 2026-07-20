@@ -280,9 +280,9 @@
 
 //             <button
 //               onClick={() => setStep('service')}
-//               className="p-8 bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl hover:scale-105 transition transform duration-200 border border-purple-200"
+//               className="p-8 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl hover:scale-105 transition transform duration-200 border border-blue-200"
 //             >
-//               <Wrench className="h-16 w-16 md:h-20 md:w-20 text-purple-600 mx-auto mb-4" />
+//               <Wrench className="h-16 w-16 md:h-20 md:w-20 text-blue-600 mx-auto mb-4" />
 //               <h3 className="text-xl md:text-2xl font-bold">Service Provider</h3>
 //               <p className="text-gray-600 mt-3 text-sm md:text-base">
 //                 Mechanic • Panel Beater • Rewire • Car Wash
@@ -385,7 +385,7 @@
 //                   : step === 'dealer'
 //                   ? 'bg-blue-600 hover:bg-blue-700'
 //                   : step === 'service'
-//                   ? 'bg-purple-600 hover:bg-purple-700'
+//                   ? 'bg-blue-600 hover:bg-blue-700'
 //                   : 'bg-green-600 hover:bg-green-700'
 //               }`}
 //             >
@@ -608,9 +608,9 @@ const UpgradeModal = ({ isOpen, onClose }) => {
 
             <button
               onClick={() => setStep('service')}
-              className="p-8 bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl hover:scale-105 transition transform duration-200 border border-purple-200"
+              className="p-8 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl hover:scale-105 transition transform duration-200 border border-blue-200"
             >
-              <Wrench className="h-16 w-16 md:h-20 md:w-20 text-purple-600 mx-auto mb-4" />
+              <Wrench className="h-16 w-16 md:h-20 md:w-20 text-blue-600 mx-auto mb-4" />
               <h3 className="text-xl md:text-2xl font-bold">Service Provider</h3>
               <p className="text-gray-600 mt-3 text-sm md:text-base">
                 Mechanic • Panel Beater • Rewire • Car Wash
@@ -950,7 +950,7 @@ const UpgradeModal = ({ isOpen, onClose }) => {
                   : step === 'dealer'
                   ? 'bg-blue-600 hover:bg-blue-700'
                   : step === 'service'
-                  ? 'bg-purple-600 hover:bg-purple-700'
+                  ? 'bg-blue-600 hover:bg-blue-700'
                   : 'bg-green-600 hover:bg-green-700'
               }`}
             >

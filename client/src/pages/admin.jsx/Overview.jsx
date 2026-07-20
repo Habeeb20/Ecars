@@ -88,7 +88,7 @@ const Overview = () => {
   const statCards = [
     { label: "Total Users", value: stats.totalUsers, color: "text-indigo-600" },
     { label: "Blacklisted Users", value: stats.blacklisted, color: "text-red-600" },
-    { label: "Car Part Sellers", value: stats.carPartSellers, color: "text-purple-600" },
+    { label: "Car Part Sellers", value: stats.carPartSellers, color: "text-blue-600" },
     { label: "Total Reports", value: stats.reports, color: "text-orange-600" },
     { label: "Dealers", value: stats.dealers, color: "text-blue-600" },
     { label: "Service Providers", value: stats.serviceProviders, color: "text-teal-600" },

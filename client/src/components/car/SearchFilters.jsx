@@ -14,8 +14,10 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { buildCarSlug, buildCarUrl } from '../../utils/carSlug';
 
-const navy = '#0B1B3E';
-const rust = '#C2532A';
+const navy = '#2563eb';
+const rust = '#2563eb';
+// const navy = '#0B1B3E';
+// const rust = '#C2532A';
 
 const makeOptions = [
   { value: '', label: 'All Makes' },

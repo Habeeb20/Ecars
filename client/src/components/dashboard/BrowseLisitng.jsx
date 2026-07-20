@@ -199,7 +199,7 @@
 //       <div className="max-w-7xl mx-auto">
 //         {/* Header */}
 //         <div className="flex flex-col md:flex-row justify-between items-center mb-10">
-//           <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+//           <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
 //             Browse Listings
 //           </h1>
 //           <div className="mt-4 md:mt-0 relative w-full md:w-80">
@@ -315,7 +315,7 @@
 
 //                   <button
 //                     onClick={() => openChat(item.postedBy)}
-//                     className="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl flex items-center justify-center gap-2 hover:shadow-lg hover:from-indigo-700 hover:to-purple-700 transform hover:scale-[1.02] transition-all duration-300"
+//                     className="w-full py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-bold rounded-xl flex items-center justify-center gap-2 hover:shadow-lg hover:from-indigo-700 hover:to-blue-700 transform hover:scale-[1.02] transition-all duration-300"
 //                   >
 //                     <MessageCircle className="h-5 w-5" />
 //                     Message Seller
@@ -416,7 +416,7 @@
 //               <button
 //                 onClick={sendMessage}
 //                 disabled={sending || !newMessage.trim()}
-//                 className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl flex items-center gap-2 disabled:opacity-50 hover:shadow-lg transition-shadow"
+//                 className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-xl flex items-center gap-2 disabled:opacity-50 hover:shadow-lg transition-shadow"
 //               >
 //                 {sending ? (
 //                   <Loader2 className="h-5 w-5 animate-spin" />

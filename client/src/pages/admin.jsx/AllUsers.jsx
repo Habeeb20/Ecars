@@ -67,7 +67,7 @@ const AllUsers = () => {
     const styles = {
       superadmin: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
       dealer: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
-      'service-provider': 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300',
+      'service-provider': 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
       user: 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300',
     };
     return (
@@ -109,7 +109,7 @@ const AllUsers = () => {
               className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow"
             >
               <div className="flex items-center gap-4 mb-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
                   {user.firstName[0]}{user.lastName[0]}
                 </div>
                 <div>

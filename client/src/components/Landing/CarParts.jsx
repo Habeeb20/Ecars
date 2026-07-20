@@ -52,7 +52,7 @@
 //       <div className="max-w-7xl mx-auto">
 //         {/* Header */}
 //         <div className="flex flex-col mt-10 md:flex-row justify-between items-center mb-10">
-//           <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+//           <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
 //             All Car Parts
 //           </h1>
 //           <div className="mt-4 md:mt-0 relative">
@@ -117,7 +117,7 @@
 //                   </div>
 //                   <button 
 //                     onClick={() => setSelectedPart(part)}
-//                     className="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl hover:shadow-lg transform hover:scale-105 transition-all flex items-center justify-center gap-2"
+//                     className="w-full py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-bold rounded-xl hover:shadow-lg transform hover:scale-105 transition-all flex items-center justify-center gap-2"
 //                   >
 //                     <Eye className="h-5 w-5" /> View Details
 //                   </button>
@@ -151,7 +151,7 @@
 //               <p>{selectedPart.seller.email}</p>
 //               <p>{selectedPart.seller.phoneNumber}</p>
 //             </div>
-//             <button onClick={() => setSelectedPart(null)} className="mt-4 w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl">
+//             <button onClick={() => setSelectedPart(null)} className="mt-4 w-full py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-xl">
 //               Close
 //             </button>
 //           </div>

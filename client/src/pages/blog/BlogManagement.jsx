@@ -185,7 +185,7 @@
 //       <div className="max-w-6xl mx-auto">
 //         {/* Header */}
 //         <div className="flex flex-col md:flex-row justify-between items-center mb-10">
-//           <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+//           <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
 //             Blog Management
 //           </h1>
 //           <button
@@ -193,7 +193,7 @@
 //               resetForm();
 //               setShowCreateModal(true);
 //             }}
-//             className="mt-4 md:mt-0 flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg transform hover:scale-105 transition-all"
+//             className="mt-4 md:mt-0 flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg transform hover:scale-105 transition-all"
 //           >
 //             <Plus className="h-5 w-5" />
 //             Create New Blog
@@ -397,7 +397,7 @@
 //                 <button
 //                   type="submit"
 //                   disabled={submitting}
-//                   className="w-full py-4 px-6 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold rounded-xl shadow-lg transform hover:scale-105 transition-all flex items-center justify-center gap-3"
+//                   className="w-full py-4 px-6 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold rounded-xl shadow-lg transform hover:scale-105 transition-all flex items-center justify-center gap-3"
 //                 >
 //                   {submitting ? (
 //                     <Loader2 className="h-5 w-5 animate-spin" />
@@ -637,7 +637,7 @@ const BlogManagement = () => {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-10">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
             Blog Management
           </h1>
           <button
@@ -645,7 +645,7 @@ const BlogManagement = () => {
               resetForm();
               setShowCreateModal(true);
             }}
-            className="mt-4 md:mt-0 flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg transform hover:scale-105 transition-all"
+            className="mt-4 md:mt-0 flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg transform hover:scale-105 transition-all"
           >
             <Plus className="h-5 w-5" />
             Create New Blog
@@ -849,7 +849,7 @@ const BlogManagement = () => {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full py-4 px-6 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold rounded-xl shadow-lg transform hover:scale-105 transition-all flex items-center justify-center gap-3"
+                  className="w-full py-4 px-6 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold rounded-xl shadow-lg transform hover:scale-105 transition-all flex items-center justify-center gap-3"
                 >
                   {submitting ? (
                     <Loader2 className="h-5 w-5 animate-spin" />

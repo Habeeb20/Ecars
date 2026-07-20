@@ -277,7 +277,7 @@ const AuctionDetails = () => {
 
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold text-xl py-5 rounded-2xl shadow-xl transform hover:scale-[1.02] transition-all duration-200 flex items-center justify-center gap-3"
+                  className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold text-xl py-5 rounded-2xl shadow-xl transform hover:scale-[1.02] transition-all duration-200 flex items-center justify-center gap-3"
                 >
                   <Gavel className="w-8 h-8" />
                   Place Your Bid
@@ -292,14 +292,14 @@ const AuctionDetails = () => {
 
             {/* Seller Card */}
             {seller && (
-              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-3xl shadow-2xl p-8 border border-indigo-200 dark:border-indigo-900">
+              <div className="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-gray-800 dark:to-gray-900 rounded-3xl shadow-2xl p-8 border border-indigo-200 dark:border-indigo-900">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Seller</h3>
                   {seller.verified && <Shield className="w-8 h-8 text-green-500" />}
                 </div>
 
                 <div className="text-center mb-6">
-                  <div className="w-24 h-24 mx-auto bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-xl">
+                  <div className="w-24 h-24 mx-auto bg-gradient-to-br from-indigo-500 to-blue-600 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-xl">
                     {seller.name.charAt(0)}
                   </div>
                   <h4 className="text-xl font-bold mt-4">{seller.name}</h4>

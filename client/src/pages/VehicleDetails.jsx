@@ -183,7 +183,7 @@ const VehicleDetails = () => {
               <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8">
                 <h3 className="text-2xl font-bold mb-6">Trusted Dealer</h3>
                 <div className="text-center">
-                  <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-3xl font-bold">
+                  <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-3xl font-bold">
                     {dealer.name[0]}
                   </div>
                   <h4 className="text-xl font-bold">{dealer.name}</h4>

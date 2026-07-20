@@ -452,7 +452,7 @@ const Listings = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 overflow-x-hidden">
       {/* Hero / Header Section */}
-      <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-600 mt-10 text-white py-16 shadow-xl">
+      <div className="bg-gradient-to-br from-indigo-600 via-blue-600 to-blue-600 mt-10 text-white py-16 shadow-xl">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
             Browse Cars

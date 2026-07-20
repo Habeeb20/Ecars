@@ -116,7 +116,7 @@ const [selectedDetailCar, setSelectedDetailCar] = useState(null);
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 py-10 px-4">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-10 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold text-center mb-10 bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
           Find Your Dream Car
         </h1>
 

@@ -127,7 +127,7 @@
 //         {/* Header */}
 //         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
 //           <div>
-//             <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+//             <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
 //               Welcome back, {user?.firstName || 'User'}!
 //             </h1>
 //             <p className="text-gray-600 dark:text-gray-400 mt-2">
@@ -139,7 +139,7 @@
 //           {user?.role === 'user' && (
 //             <button
 //               onClick={() => setShowUpgrade(true)}
-//               className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold rounded-2xl shadow-lg transform hover:scale-105 transition-all flex items-center gap-3"
+//               className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold rounded-2xl shadow-lg transform hover:scale-105 transition-all flex items-center gap-3"
 //             >
 //               <TrendingUp className="h-5 w-5" />
 //               Upgrade to Dealer / Service Provider / car-parts seller
@@ -187,12 +187,12 @@
 //             <div className="flex items-center justify-between">
 //               <div>
 //                 <p className="text-gray-500 dark:text-gray-400 text-sm">Account Type</p>
-//                 <p className="text-2xl font-bold text-purple-600 mt-2 capitalize">
+//                 <p className="text-2xl font-bold text-blue-600 mt-2 capitalize">
 //                   {user?.role || 'User'}
 //                 </p>
 //               </div>
-//               {user?.role === 'dealer' && <Building2 className="h-12 w-12 text-purple-600" />}
-//               {user?.role === 'service-provider' && <Wrench className="h-12 w-12 text-purple-600" />}
+//               {user?.role === 'dealer' && <Building2 className="h-12 w-12 text-blue-600" />}
+//               {user?.role === 'service-provider' && <Wrench className="h-12 w-12 text-blue-600" />}
 //               {user?.role === 'user' && <Users className="h-12 w-12 text-gray-600" />}
 //             </div>
 //           </div>
@@ -241,7 +241,7 @@
 //         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 //           {/* Your Car Listing Status */}
 //           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
-//             <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+//             <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
 //               Your Car Listing Status
 //             </h2>
 //             <ResponsiveContainer width="100%" height={300}>
@@ -267,7 +267,7 @@
 
 //           {/* Platform User Distribution */}
 //           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
-//             <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+//             <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
 //               Platform User Breakdown
 //             </h2>
 //             <ResponsiveContainer width="100%" height={300}>
@@ -289,8 +289,8 @@
 //                   <p className="text-3xl font-bold text-blue-600">{platformStats.totalDealers}</p>
 //                   <p className="text-sm text-gray-600 dark:text-gray-400">Dealers</p>
 //                 </div>
-//                 <div className="bg-purple-50 dark:bg-purple-900/30 rounded-xl p-4">
-//                   <p className="text-3xl font-bold text-purple-600">{platformStats.totalServiceProviders}</p>
+//                 <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-4">
+//                   <p className="text-3xl font-bold text-blue-600">{platformStats.totalServiceProviders}</p>
 //                   <p className="text-sm text-gray-600 dark:text-gray-400">Service Providers</p>
 //                 </div>
 //                 {/* NEW: Car Part Sellers */}
@@ -304,7 +304,7 @@
 
 //           {/* NEW: Platform Total Listings Breakdown */}
 //           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
-//             <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+//             <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
 //               Platform Listings Breakdown
 //             </h2>
 //             <ResponsiveContainer width="100%" height={300}>
@@ -326,7 +326,7 @@
 //           {/* Your Car Part Listing Status (if car part seller) */}
 //           {user?.role === 'carPart-seller' && (
 //             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
-//               <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+//               <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
 //                 Your Car Part Listing Status
 //               </h2>
 //               <ResponsiveContainer width="100%" height={300}>
@@ -354,7 +354,7 @@
 
 //         {/* Monthly Trend */}
 //         {/* <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
-//           <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+//           <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
 //             Your Monthly Car Listings Trend
 //           </h2>
 //           <ResponsiveContainer width="100%" height={350}>
@@ -371,7 +371,7 @@
 //         {/* NEW: Monthly Car Part Trend (if car part seller) */}
 //         {user?.role === 'carPart-seller' && (
 //           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700">
-//             <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+//             <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
 //               Your Monthly Car Part Listings Trend
 //             </h2>
 //             <ResponsiveContainer width="100%" height={350}>
@@ -514,7 +514,7 @@ const Overview = () => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
           <div>
-            <h1 className="text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-indigo-600 via-blue-600 to-pink-600 bg-clip-text text-transparent">
               Dashboard Overview
             </h1>
             <p className="mt-2 text-lg text-slate-600 dark:text-slate-400">
@@ -525,7 +525,7 @@ const Overview = () => {
           {/* {user?.role === 'user' && (
             <button
               onClick={() => setShowUpgrade(true)}
-              className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold rounded-2xl shadow-2xl transform hover:scale-105 transition-all flex items-center gap-3 whitespace-nowrap"
+              className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold rounded-2xl shadow-2xl transform hover:scale-105 transition-all flex items-center gap-3 whitespace-nowrap"
             >
               <TrendingUp className="h-5 w-5" />
               Become a Dealer / Service Provider
@@ -570,12 +570,12 @@ const Overview = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-slate-600 dark:text-slate-400">Total Value</p>
-                <p className="text-1xl font-bold text-purple-600 dark:text-purple-400 mt-2">
+                <p className="text-1xl font-bold text-blue-600 dark:text-blue-400 mt-2">
                   ₦{totalValue.toLocaleString()}
                 </p>
               </div>
-              <div className="p-4 bg-purple-100 dark:bg-purple-900/40 rounded-full">
-                <DollarSign className="h-10 w-10 text-purple-600 dark:text-purple-400" />
+              <div className="p-4 bg-blue-100 dark:bg-blue-900/40 rounded-full">
+                <DollarSign className="h-10 w-10 text-blue-600 dark:text-blue-400" />
               </div>
             </div>
           </div>
@@ -601,7 +601,7 @@ const Overview = () => {
           {/* Status Breakdown - Pie Chart */}
           <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-2xl shadow-xl p-8 border border-white/20 dark:border-slate-700/50">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
                 Listing Status
               </h2>
               <PieChartIcon className="h-8 w-8 text-indigo-600" />
@@ -641,10 +641,10 @@ const Overview = () => {
           {/* Top Makes - Bar Chart */}
           <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-2xl shadow-xl p-8 border border-white/20 dark:border-slate-700/50">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
                 Most Listed Makes
               </h2>
-              <BarChart3 className="h-8 w-8 text-purple-600" />
+              <BarChart3 className="h-8 w-8 text-blue-600" />
             </div>
 
             <ResponsiveContainer width="100%" height={320}>

@@ -154,7 +154,7 @@ const UploadCarPart = () => {
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-block p-6 bg-gradient-to-br from-indigo-600 to-purple-700 rounded-full mb-6 shadow-2xl">
+          <div className="inline-block p-6 bg-gradient-to-br from-indigo-600 to-blue-700 rounded-full mb-6 shadow-2xl">
             <Package className="w-20 h-20 text-white" />
           </div>
           <h1 className="text-3xl font-black text-gray-900 dark:text-white mb-4">
@@ -167,7 +167,7 @@ const UploadCarPart = () => {
 
         {/* Form Card */}
         <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700">
-          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-8 text-white text-center">
+          <div className="bg-gradient-to-r from-indigo-600 to-blue-600 p-8 text-white text-center">
             <h2 className="text-3xl font-bold">Add Your Car Part</h2>
             <p className="mt-2 opacity-90">Fill in the details below</p>
           </div>
@@ -362,7 +362,7 @@ const UploadCarPart = () => {
                 disabled={!isFormValid || isSubmitting}
                 className={`w-full py-6 rounded-2xl font-black text-1xl transition-all transform hover:scale-105 shadow-2xl flex items-center justify-center gap-4 ${
                   isFormValid && !isSubmitting
-                    ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 hover:from-indigo-700 hover:to-purple-700 hover:to-blue-700 text-white'
+                    ? 'bg-gradient-to-r from-indigo-600 via-blue-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 hover:to-blue-700 text-white'
                     : 'bg-gray-400 dark:bg-gray-600 cursor-not-allowed'
                 }`}
               >

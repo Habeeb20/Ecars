@@ -35,13 +35,13 @@ const AuctionBanner = () => {
           {/* Left Side - Text Content */}
           <div className="flex flex-col justify-center max-w-xl">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full w-fit mb-6">
-              <span className="text-yellow-400 text-sm font-semibold tracking-widest">🇳🇬 LIVE AUCTIONS</span>
+              <span className="text-blue-400 text-sm font-semibold tracking-widest">🇳🇬 LIVE AUCTIONS</span>
             </div>
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6">
               Bid Smart.<br />
               Win Big.<br />
-              <span className="text-yellow-400">Drive Home</span>
+              <span className="text-blue-400">Drive Home</span>
             </h1>
 
             <p className="text-xl text-gray-200 mb-8 max-w-md">
@@ -53,7 +53,7 @@ const AuctionBanner = () => {
               href="https://auction.ng"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center bg-yellow-400 hover:bg-yellow-300 active:scale-95 transition-all text-black font-semibold text-lg px-12 py-5 rounded-2xl shadow-xl w-fit"
+              className="inline-flex items-center justify-center bg-blue-400 hover:bg-blue-300 active:scale-95 transition-all text-black font-semibold text-lg px-12 py-5 rounded-2xl shadow-xl w-fit"
             >
               Start Bidding Now →
             </a>
@@ -96,7 +96,7 @@ const AuctionBanner = () => {
                     onClick={() => setCurrentSlide(index)}
                     className={`w-3 h-3 rounded-full transition-all ${
                       index === currentSlide 
-                        ? 'bg-yellow-400 w-8' 
+                        ? 'bg-blue-400 w-8' 
                         : 'bg-white/50 hover:bg-white/70'
                     }`}
                   />
@@ -111,11 +111,11 @@ const AuctionBanner = () => {
       <div className="absolute bottom-8 right-8 bg-white/10 backdrop-blur-xl rounded-2xl p-6 text-white border border-white/30 hidden xl:block">
         <div className="flex gap-8">
           <div>
-            <div className="text-4xl font-bold text-yellow-400">248</div>
+            <div className="text-4xl font-bold text-blue-400">248</div>
             <div className="text-xs tracking-widest uppercase">Cars Live</div>
           </div>
           <div>
-            <div className="text-4xl font-bold text-yellow-400">1.4k</div>
+            <div className="text-4xl font-bold text-blue-400">1.4k</div>
             <div className="text-xs tracking-widest uppercase">Active Bidders</div>
           </div>
         </div>

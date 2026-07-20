@@ -102,7 +102,7 @@ const MyReceivedOffers = () => {
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-10">
           <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
               Received Offers
             </h1>
             <p className="text-slate-600 dark:text-slate-400 mt-2">
@@ -148,7 +148,7 @@ const MyReceivedOffers = () => {
                 {/* Offer Details */}
                 <div className="p-6">
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-white text-2xl font-bold">
+                    <div className="w-14 h-14 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-2xl flex items-center justify-center text-white text-2xl font-bold">
                       {offer.sender.firstName?.[0]}{offer.sender.lastName?.[0]}
                     </div>
                     <div>

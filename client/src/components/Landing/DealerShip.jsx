@@ -514,7 +514,7 @@ const Dealership = () => {
             <div className="p-6 border-t flex-shrink-0">
               <button 
                 onClick={openChat}
-                className="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl flex items-center justify-center gap-3 hover:shadow-lg transition-shadow"
+                className="w-full py-4 bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-bold rounded-xl flex items-center justify-center gap-3 hover:shadow-lg transition-shadow"
               >
                 <MessageCircle className="h-6 w-6" />
                 Chat with Dealer
@@ -552,7 +552,7 @@ const Dealership = () => {
               <button 
                 onClick={sendMessage}
                 disabled={chatLoading}
-                className="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold rounded-xl flex items-center justify-center gap-3 disabled:opacity-50 transition"
+                className="w-full py-4 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold rounded-xl flex items-center justify-center gap-3 disabled:opacity-50 transition"
               >
                 {chatLoading ? (
                   <Loader2 className="h-6 w-6 animate-spin" />

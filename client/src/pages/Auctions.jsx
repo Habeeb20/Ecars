@@ -116,7 +116,7 @@ const Auctions = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600">
+      <div className="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-blue-600 to-pink-600">
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="relative container mx-auto px-4 py-20 text-center">
           <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-6">
@@ -194,7 +194,7 @@ const Auctions = () => {
                   onClick={() => setSelectedCategory(cat.value)}
                   className={`px-6 py-3 rounded-xl font-semibold transition-all ${
                     selectedCategory === cat.value
-                      ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
+                      ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-lg'
                       : 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600'
                   }`}
                 >
@@ -289,7 +289,7 @@ const Auctions = () => {
                     {seller && (
                       <div className="flex items-center justify-between pt-4 border-t dark:border-gray-700">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+                          <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold">
                             {seller.name[0]}
                           </div>
                           <div>
@@ -304,7 +304,7 @@ const Auctions = () => {
                       </div>
                     )}
 
-                    <button className="w-full mt-6 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold text-lg py-4 rounded-2xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3">
+                    <button className="w-full mt-6 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold text-lg py-4 rounded-2xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3">
                       <Gavel className="w-6 h-6" />
                       Place Bid Now
                     </button>

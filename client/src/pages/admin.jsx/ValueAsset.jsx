@@ -88,7 +88,7 @@ const AdminValuedCars = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-10">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
             Valued Cars Dashboard
           </h1>
           <div className="mt-4 md:mt-0 flex gap-4">
@@ -348,7 +348,7 @@ const AdminValuedCars = () => {
             <div className="p-6 border-t flex-shrink-0">
               <button
                 onClick={() => setSelectedCar(null)}
-                className="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl flex items-center justify-center gap-3"
+                className="w-full py-4 bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-bold rounded-xl flex items-center justify-center gap-3"
               >
                 Close
               </button>

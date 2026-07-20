@@ -71,10 +71,10 @@
 //           accent="bg-orange-50 dark:bg-orange-900/40"
 //         />
 //         <Card
-//           icon={<Wallet className="h-6 w-6 text-purple-600" />}
+//           icon={<Wallet className="h-6 w-6 text-blue-600" />}
 //           label="Inventory Value"
 //           value={formatNaira(stats.totalActiveValue)}
-//           accent="bg-purple-50 dark:bg-purple-900/40"
+//           accent="bg-blue-50 dark:bg-blue-900/40"
 //         />
 //         <Card
 //           icon={<TrendingUp className="h-6 w-6 text-pink-600" />}

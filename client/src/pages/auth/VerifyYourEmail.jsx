@@ -91,7 +91,7 @@ const VerifyEmail = () => {
       case 'expired':
         return 'from-red-500 to-rose-600';
       default:
-        return 'from-indigo-500 to-purple-600';
+        return 'from-indigo-500 to-blue-600';
     }
   };
 
@@ -146,7 +146,7 @@ const VerifyEmail = () => {
               <>
                 <button
                   onClick={() => navigate('/resend-verification')}
-                  className="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-2xl hover:from-indigo-700 hover:to-purple-700 transition transform hover:scale-[1.02] shadow-lg flex items-center justify-center gap-3"
+                  className="w-full py-4 bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-bold rounded-2xl hover:from-indigo-700 hover:to-blue-700 transition transform hover:scale-[1.02] shadow-lg flex items-center justify-center gap-3"
                 >
                   <MailCheck size={20} />
                   Request New Verification Link

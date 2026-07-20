@@ -287,7 +287,7 @@ const ListCar = () => {
             <button
               type="submit"
               disabled={loading || uploading || form.images.length < 4}
-              class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold rounded-xl disabled:opacity-50"
+              class="w-full py-4 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold rounded-xl disabled:opacity-50"
             >
               {loading ? 'Listing Car...' : 'List Car For Sale'}
             </button>

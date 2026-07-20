@@ -83,7 +83,7 @@ const GalleryFeed = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-1xl sm:text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent tracking-tight">
+          <h1 className="text-1xl sm:text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-indigo-600 via-blue-600 to-pink-600 bg-clip-text text-transparent tracking-tight">
           Gallery
           </h1>
           <p className="mt-4 text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">

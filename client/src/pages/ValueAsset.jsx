@@ -185,9 +185,9 @@ const ValueAsset = () => {
                      formData.displayImage && formData.agreeToTerms;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 mt-12">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 mt-12">
       {/* Hero Header */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 dark:from-indigo-800 dark:via-purple-800 dark:to-blue-800">
+      <div className="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-blue-600 to-blue-600 dark:from-indigo-800 dark:via-blue-800 dark:to-blue-800">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative container mx-auto px-4 py-16">
           <div className="flex items-center mb-8">
@@ -208,7 +208,7 @@ const ValueAsset = () => {
         
         {/* Decorative 3D Elements */}
         <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl"></div>
-        <div className="absolute top-32 right-20 w-32 h-32 bg-purple-400/20 rounded-full blur-2xl"></div>
+        <div className="absolute top-32 right-20 w-32 h-32 bg-blue-400/20 rounded-full blur-2xl"></div>
         <div className="absolute bottom-10 left-1/4 w-24 h-24 bg-blue-400/20 rounded-full blur-xl"></div>
       </div>
 
@@ -567,7 +567,7 @@ const ValueAsset = () => {
                 <div className="text-center mt-8">
                   <button
                     onClick={() => setShowResultModal(false)}
-                    className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
+                    className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
                   >
                     Close
                   </button>
@@ -790,9 +790,9 @@ export default ValueAsset;
 //                      formData.displayImage && formData.agreeToTerms;
 
 //   return (
-//     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 mt-12">
+//     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 mt-12">
 //       {/* Hero Header */}
-//       <div className="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 dark:from-indigo-800 dark:via-purple-800 dark:to-blue-800">
+//       <div className="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-blue-600 to-blue-600 dark:from-indigo-800 dark:via-blue-800 dark:to-blue-800">
 //         <div className="absolute inset-0 bg-black/20"></div>
 //         <div className="relative container mx-auto px-4 py-16">
 //           <div className="flex items-center mb-8">
@@ -813,7 +813,7 @@ export default ValueAsset;
         
 //         {/* Decorative 3D Elements */}
 //         <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl"></div>
-//         <div className="absolute top-32 right-20 w-32 h-32 bg-purple-400/20 rounded-full blur-2xl"></div>
+//         <div className="absolute top-32 right-20 w-32 h-32 bg-blue-400/20 rounded-full blur-2xl"></div>
 //         <div className="absolute bottom-10 left-1/4 w-24 h-24 bg-blue-400/20 rounded-full blur-xl"></div>
 //       </div>
 
@@ -1201,7 +1201,7 @@ export default ValueAsset;
 //                 <div className="text-center mt-8">
 //                   <button
 //                     onClick={() => setShowResultModal(false)}
-//                     className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
+//                     className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
 //                   >
 //                     Close
 //                   </button>

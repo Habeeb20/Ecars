@@ -178,7 +178,7 @@ const [showViewingModal, setShowViewingModal] = useState(false);
             <div className="p-6 border-t flex-shrink-0">
               <button
                 onClick={openChat}
-                className="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl flex items-center justify-center gap-3"
+                className="w-full py-4 bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-bold rounded-xl flex items-center justify-center gap-3"
               >
                 <MessageCircle className="h-6 w-6" />
                 Chat with Seller
@@ -212,7 +212,7 @@ const [showViewingModal, setShowViewingModal] = useState(false);
               <button
                 onClick={sendMessage}
                 disabled={chatLoading}
-                className="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold rounded-xl flex items-center justify-center gap-3"
+                className="w-full py-4 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold rounded-xl flex items-center justify-center gap-3"
               >
                 {chatLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : <MessageCircle className="h-6 w-6" />}
                 {chatLoading ? 'Sending...' : 'Send Message'}

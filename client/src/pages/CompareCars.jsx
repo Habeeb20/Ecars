@@ -213,14 +213,14 @@ const CompareCars = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-10">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
             Compare Cars
           </h1>
 
           {selectedCars.length >= 2 && (
             <button
               onClick={handleCompare}
-              className="mt-4 md:mt-0 flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg transform hover:scale-105 transition-all"
+              className="mt-4 md:mt-0 flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg transform hover:scale-105 transition-all"
             >
               <Car className="h-5 w-5" />
               Compare {selectedCars.length} Cars
@@ -238,7 +238,7 @@ const CompareCars = () => {
               onClick={() => setComparisonMode('different')}
               className={`flex-1 py-3 rounded-xl font-semibold ${
                 comparisonMode === 'different'
-                  ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white'
+                  ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white'
                   : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white'
               }`}
             >
@@ -248,7 +248,7 @@ const CompareCars = () => {
               onClick={() => setComparisonMode('same')}
               className={`flex-1 py-3 rounded-xl font-semibold ${
                 comparisonMode === 'same'
-                  ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white'
+                  ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white'
                   : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white'
               }`}
             >
@@ -405,7 +405,7 @@ const CompareCars = () => {
                   <button
                     onClick={() => handleSelectCar(car)}
                     disabled={selectedCars.some(c => c._id === car._id)}
-                    className="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl disabled:opacity-50 hover:shadow-lg transform hover:scale-105 transition-all disabled:cursor-not-allowed"
+                    className="w-full py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-bold rounded-xl disabled:opacity-50 hover:shadow-lg transform hover:scale-105 transition-all disabled:cursor-not-allowed"
                   >
                     {selectedCars.some(c => c._id === car._id) ? 'Selected' : 'Add to Compare'}
                   </button>

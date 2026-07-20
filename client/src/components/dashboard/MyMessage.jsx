@@ -100,7 +100,7 @@
 //   return (
 //     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12 px-4">
 //       <div className="max-w-7xl mx-auto">
-//         <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-8">
+//         <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent mb-8">
 //           My Messages
 //         </h1>
 
@@ -182,7 +182,7 @@
 //                       <div key={msg._id} className={`flex ${msg.sender._id === user._id ? 'justify-end' : 'justify-start'}`}>
 //                         <div className={`max-w-xs px-5 py-3 rounded-3xl ${
 //                           msg.sender._id === user._id 
-//                             ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white' 
+//                             ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white' 
 //                             : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white'
 //                         }`}>
 //                           <p>{msg.content}</p>
@@ -206,7 +206,7 @@
 //                     <button
 //                       onClick={sendMessage}
 //                       disabled={sending || !newMessage.trim()}
-//                       className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl flex items-center gap-2 disabled:opacity-50"
+//                       className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-xl flex items-center gap-2 disabled:opacity-50"
 //                     >
 //                       {sending ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
 //                     </button>
@@ -349,7 +349,7 @@ const MyMessages = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12 px-4">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-8">
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent mb-8">
           My Messages
         </h1>
 
@@ -445,7 +445,7 @@ const MyMessages = () => {
                           <div
                             className={`max-w-xs px-5 py-3 rounded-3xl ${
                               msg.sender._id === user._id
-                                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white'
+                                ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white'
                                 : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white'
                             }`}
                           >
@@ -474,7 +474,7 @@ const MyMessages = () => {
                     <button
                       onClick={sendMessage}
                       disabled={sending || !newMessage.trim()}
-                      className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl flex items-center gap-2 disabled:opacity-50"
+                      className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-xl flex items-center gap-2 disabled:opacity-50"
                     >
                       {sending ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
                     </button>

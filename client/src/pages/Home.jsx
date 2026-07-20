@@ -169,7 +169,7 @@ const Home = () => {
     switch (status) {
       case 'ending-soon':
         return (
-          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
+          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
             <Clock className="w-3 h-3 mr-1" />
             Ending Soon
           </span>

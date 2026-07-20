@@ -99,7 +99,7 @@
 //       <div className="max-w-6xl mx-auto">
 //         {/* Header */}
 //         <div className="flex flex-col md:flex-row justify-between items-center mb-10">
-//           <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+//           <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
 //             My Car Part Listings
 //           </h1>
 //           <div className="mt-4 md:mt-0 relative">
@@ -197,7 +197,7 @@
 //     >
 //       {/* Header */}
 //       <div className="sticky top-0 bg-white dark:bg-gray-850 border-b border-gray-200 dark:border-gray-700 px-6 py-5 flex items-center justify-between z-10 rounded-t-2xl md:rounded-t-3xl">
-//         <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+//         <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
 //           {selectedListing.title}
 //         </h2>
 //         <button
@@ -491,7 +491,7 @@ const MyCarPartListings = () => {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-10">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
             My Car Part Listings
           </h1>
           <div className="mt-4 md:mt-0 relative">
@@ -582,7 +582,7 @@ const MyCarPartListings = () => {
           >
             {/* Header */}
             <div className="sticky top-0 bg-white dark:bg-gray-850 border-b border-gray-200 dark:border-gray-700 px-6 py-5 flex items-center justify-between z-10 rounded-t-2xl md:rounded-t-3xl">
-              <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent truncate max-w-[80%]">
+              <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent truncate max-w-[80%]">
                 {isEditing ? 'Edit Listing' : selectedListing.title}
               </h2>
               <button

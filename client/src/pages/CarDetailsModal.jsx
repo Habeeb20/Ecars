@@ -111,7 +111,7 @@ const CarDetailModal = ({ car, isOpen, onClose, onMakeOffer }) => {
                 <h3 className="font-semibold text-lg mb-4">Seller Information</h3>
                 
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white text-3xl font-bold">
+                  <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-full flex items-center justify-center text-white text-3xl font-bold">
                     {car.postedBy.firstName?.[0]}{car.postedBy.lastName?.[0]}
                   </div>
                   <div>

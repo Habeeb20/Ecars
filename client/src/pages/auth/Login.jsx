@@ -219,7 +219,7 @@
 //             type="button"
 //             onClick={() => setShowAuthModal(true)}
 //             disabled={isLoading}
-//             className="w-full flex justify-center py-3 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold transition-all focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+//             className="w-full flex justify-center py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold transition-all focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
 //           >
 //             Login with E-Auth
 //           </button>
@@ -267,14 +267,14 @@
 //                     value={authEmail}
 //                     onChange={(e) => setAuthEmail(e.target.value.toLowerCase().trim())}
 //                     disabled={isLoading}
-//                     className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 transition-all"
+//                     className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 transition-all"
 //                   />
 //                 </div>
 
 //                 <button
 //                   type="submit"
 //                   disabled={isLoading || !authEmail.trim()}
-//                   className="w-full flex justify-center py-3 px-4 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-semibold transition-all focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
+//                   className="w-full flex justify-center py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
 //                 >
 //                   {isLoading ? (
 //                     <span className="flex items-center">
@@ -553,7 +553,7 @@ const Login = () => {
             type="button"
             onClick={() => setShowAuthModal(true)}
             disabled={isLoading}
-            className="w-full flex justify-center py-3 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold transition-all focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+            className="w-full flex justify-center py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold transition-all focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
           >
             Login with E-Auth
           </button>
@@ -601,14 +601,14 @@ const Login = () => {
                     value={authEmail}
                     onChange={(e) => setAuthEmail(e.target.value.toLowerCase().trim())}
                     disabled={isLoading}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 transition-all"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 transition-all"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={isLoading || !authEmail.trim()}
-                  className="w-full flex justify-center py-3 px-4 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-semibold transition-all focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full flex justify-center py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? (
                     <span className="flex items-center">

@@ -119,7 +119,7 @@ const PublicDealsPage = () => {
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-2xl sm:text-2xl font-extrabold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+          <h1 className="text-2xl sm:text-2xl font-extrabold bg-gradient-to-r from-indigo-600 via-blue-600 to-pink-600 bg-clip-text text-transparent">
             Hot Deals
           </h1>
           <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">
@@ -393,7 +393,7 @@ const PublicDealsPage = () => {
                    <button
                      onClick={sendMessage}
                      disabled={sending || !newMessage.trim()}
-                     className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl flex items-center gap-2 disabled:opacity-50 hover:shadow-lg transition-shadow"
+                     className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-xl flex items-center gap-2 disabled:opacity-50 hover:shadow-lg transition-shadow"
                    >
                      {sending ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
                    </button>

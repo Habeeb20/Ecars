@@ -60,7 +60,7 @@ const MySubscriptions = () => {
   const getPlanInfo = (type) => {
     const plans = {
       featured_listing: { name: 'Featured Listing', icon: Star, color: 'from-yellow-500 to-orange-500', badge: 'STAR' },
-      newest_listings_access: { name: 'Newest Listings Access', icon: Zap, color: 'from-purple-600 to-pink-600', badge: 'ZAP' },
+      newest_listings_access: { name: 'Newest Listings Access', icon: Zap, color: 'from-blue-600 to-pink-600', badge: 'ZAP' },
       featured_dealer: { name: 'Featured Dealer', icon: Crown, color: 'from-amber-500 to-red-600', badge: 'CROWN' },
       featured_service_provider: { name: 'Featured Mechanic', icon: Shield, color: 'from-blue-600 to-cyan-500', badge: 'SHIELD' },
     };
@@ -84,7 +84,7 @@ const MySubscriptions = () => {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-4">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent mb-4">
             My Subscriptions
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300">
@@ -155,7 +155,7 @@ const MySubscriptions = () => {
 
         {/* Subscription History */}
         <div>
-          <h2 className="text-3xl font-bold text-center mb-10 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold text-center mb-10 bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
             Subscription History
           </h2>
 
@@ -217,7 +217,7 @@ const MySubscriptions = () => {
                           <p className="font-bold">{formatDate(sub.startDate)}</p>
                         </div>
                         <div className="bg-gray-50 dark:bg-gray-700 rounded-2xl p-4">
-                          <Calendar className="h-6 w-6 text-purple-600 mx-auto mb-2" />
+                          <Calendar className="h-6 w-6 text-blue-600 mx-auto mb-2" />
                           <p className="text-sm text-gray-600 dark:text-gray-400">Ended</p>
                           <p className="font-bold">{formatDate(sub.endDate)}</p>
                         </div>

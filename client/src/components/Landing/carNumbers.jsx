@@ -62,7 +62,7 @@ const StatsSection = () => {
       icon: Shield,
       label: 'Verified Dealers',
       value: stats.totalDealers,
-      color: 'text-purple-600 dark:text-purple-400',
+      color: 'text-blue-600 dark:text-blue-400',
     },
     {
       icon: TrendingUp,
@@ -75,7 +75,7 @@ const StatsSection = () => {
   return (
     <section className="py-16 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-black">
       <div className="container mx-auto px-4">
-        <h2 className="text-2xl  md:text-2xl font-bold text-center mb-16 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+        <h2 className="text-2xl  md:text-2xl font-bold text-center mb-16 bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
           eCars in Numbers
         </h2>
 <div className="grid grid-cols-4 sm:grid-cols-4   lg:grid-cols-4  ">
@@ -85,11 +85,11 @@ const StatsSection = () => {
               className="group relative overflow-hidden rounded-3xl bg-white dark:bg-gray-800 p-8 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
             >
              
-              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-purple-600/10 dark:from-indigo-500/20 dark:to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-blue-600/10 dark:from-indigo-500/20 dark:to-blue-600/20 opacity-0 group-hover:opacity-100 transition-opacity" />
 
               <div className="relative z-10 text-center">
           
-                <div className="mx-auto w-10 h-10 bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900 dark:to-purple-900 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <div className="mx-auto w-10 h-10 bg-gradient-to-br from-indigo-100 to-blue-100 dark:from-indigo-900 dark:to-blue-900 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                   <stat.icon className={`h-10 w-10 ${stat.color}`} />
                 </div>
 

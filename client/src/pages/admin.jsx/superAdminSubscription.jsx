@@ -71,7 +71,7 @@ const SuperadminSubscriptions = () => {
   const getPlanColor = (type) => {
     const colors = {
       featured_listing: 'from-yellow-500 to-orange-500',
-      newest_listings_access: 'from-purple-600 to-pink-600',
+      newest_listings_access: 'from-blue-600 to-pink-600',
       featured_dealer: 'from-amber-500 to-red-600',
       featured_service_provider: 'from-blue-600 to-cyan-500',
     };
@@ -91,7 +91,7 @@ const SuperadminSubscriptions = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-4">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent mb-4">
             Manage Subscriptions
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300">
@@ -165,7 +165,7 @@ const SuperadminSubscriptions = () => {
                       <button
                         onClick={() => activatePlan(plan._id)}
                         disabled={activating[plan._id]}
-                        className="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold rounded-2xl shadow-lg flex items-center justify-center gap-3 transition"
+                        className="w-full py-4 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold rounded-2xl shadow-lg flex items-center justify-center gap-3 transition"
                       >
                         {activating[plan._id] ? (
                           <Loader2 className="h-6 w-6 animate-spin" />

@@ -97,7 +97,7 @@
 //       <div className="max-w-6xl mx-auto">
 //         {/* Header */}
 //         <div className="flex flex-col md:flex-row justify-between items-center mb-10">
-//           <h1 className="text-3xl font-bold bg-gradient-to-r from-red-600 to-purple-600 bg-clip-text text-transparent">
+//           <h1 className="text-3xl font-bold bg-gradient-to-r from-red-600 to-blue-600 bg-clip-text text-transparent">
 //             Blacklist Management
 //           </h1>
 //           <div className="mt-4 md:mt-0 relative">
@@ -134,7 +134,7 @@
 //             />
 //             <button
 //               onClick={() => handleBlacklist(selectedUser?.id)}
-//               className="md:col-span-2 py-4 px-6 bg-gradient-to-r from-red-600 to-purple-600 text-white font-bold rounded-xl hover:shadow-lg transform hover:scale-105 transition-all"
+//               className="md:col-span-2 py-4 px-6 bg-gradient-to-r from-red-600 to-blue-600 text-white font-bold rounded-xl hover:shadow-lg transform hover:scale-105 transition-all"
 //             >
 //               Blacklist User
 //             </button>
@@ -349,7 +349,7 @@ const AdminBlacklist = () => {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-10">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-red-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-red-600 to-blue-600 bg-clip-text text-transparent">
             Blacklist Management
           </h1>
           <div className="mt-4 md:mt-0 relative">
@@ -409,7 +409,7 @@ const AdminBlacklist = () => {
               <button
                 onClick={handleBlacklist}
                 disabled={!selectedUserId || !blacklistReason.trim()}
-                className="w-full py-3 px-6 bg-gradient-to-r from-red-600 to-purple-600 text-white font-bold rounded-xl hover:shadow-lg transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-3 px-6 bg-gradient-to-r from-red-600 to-blue-600 text-white font-bold rounded-xl hover:shadow-lg transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Blacklist User
               </button>

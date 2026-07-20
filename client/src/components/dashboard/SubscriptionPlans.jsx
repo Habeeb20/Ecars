@@ -28,7 +28,7 @@ const SubscriptionPlans = () => {
 //       id: 'newest_listings_access',
 //       name: 'Newest Listings Access',
 //       icon: Zap,
-//       color: 'from-purple-600 to-pink-600',
+//       color: 'from-blue-600 to-pink-600',
 //       price: { monthly: 2000, yearly: 20000 },
 //       features: [
 //         'See cars before everyone else',
@@ -71,7 +71,7 @@ const plans = [
     id: 'newest_listings_access',
     name: 'Newest Listings Access',
     icon: Zap,
-    color: 'from-purple-600 to-pink-600',
+    color: 'from-blue-600 to-pink-600',
     price: { monthly: 2000, yearly: 20000 },
     features: [
       'See new cars before everyone',
@@ -146,7 +146,7 @@ const plans = [
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-4">
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent mb-4">
             Choose Your Power-Up
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
@@ -182,7 +182,7 @@ const plans = [
             >
               {/* Popular Badge */}
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
                   MOST POPULAR
                 </div>
               )}
@@ -219,7 +219,7 @@ const plans = [
                     disabled={loading}
                     className={`w-full py-4 rounded-2xl font-bold text-lg transition-all transform ${
                       selectedPlan === plan.id
-                        ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-xl'
+                        ? 'bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white shadow-xl'
                         : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                     }`}
                   >
