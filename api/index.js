@@ -24,6 +24,7 @@ import dealsRoutes from "./routers/dealsRouter.js"
 import distanceRouter from "./routers/distanceRoute.js"
 import viewRouter from "./routers/carViewingRoute.js"
 import salesRoutes from "./routers/salesRoute.js"
+import eauctionRoutes from "./routers/auctionRoute.js"
 dotenv.config();
 connectDb()
 
@@ -76,6 +77,7 @@ app.use('/api', distanceRouter);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/dealers', dealerRoutes);
 app.use('/api/sales', salesRoutes);
+app.use("/api/eauction", eauctionRoutes);
 // await User.create({
 //   firstName: 'Admin',
 //   lastName: 'Boss',
@@ -94,6 +96,18 @@ app.listen(port, async () => {
   console.log(`Server is running on port ${port}`);
 
 })
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
