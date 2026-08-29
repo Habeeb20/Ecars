@@ -76,6 +76,16 @@ const carListingSchema = new mongoose.Schema({
   likeCount: { type: Number, default: 0 },
   shareCount: { type: Number, default: 0 },
 
+  // add to carListingSchema
+saleType: {
+  type: String,
+  enum: ['regular', 'distress', 'discount'],
+  default: 'regular',
+},
+originalPrice: { type: Number }, // set automatically when moving to 'discount', used to show % off
+saleReason: { type: String, trim: true, maxlength: 300 }, // e.g. "Relocating abroad, need to sell fast"
+saleExpiresAt: { type: Date }, // optional countdown for urgency
+
   featuredUntil: Date,
 }, { timestamps: true });
 
@@ -83,6 +93,14 @@ carListingSchema.index({ 'likes.user': 1 });
 carListingSchema.index({ make: 'text', model: 'text', title: 'text', stockNumber: 'text' });
 carListingSchema.index({ postedBy: 1, status: 1 });
 
+carListingSchema.index({ saleType: 1, status: 1 });
+
+carListingSchema.virtual('discountPercentage').get(function () {
+  if (this.saleType === 'discount' && this.originalPrice && this.originalPrice > this.price) {
+    return Math.round(((this.originalPrice - this.price) / this.originalPrice) * 100);
+  }
+  return 0;
+});
 // Virtual: how many days the unit has been sitting in stock
 carListingSchema.virtual('ageInDays').get(function () {
   const end = this.status === 'sold' && this.soldAt ? this.soldAt : new Date();

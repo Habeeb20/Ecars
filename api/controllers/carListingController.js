@@ -788,3 +788,97 @@ export const incrementShareCount = async (req, res) => {
   }
 };
  
+
+
+
+
+
+
+export const createSaleListing = async (req, res) => {
+  try {
+    const { saleType, originalPrice, saleReason, saleExpiresAt, ...carData } = req.body;
+
+    if (!['distress', 'discount'].includes(saleType)) {
+      return res.status(400).json({ message: 'saleType must be distress or discount' });
+    }
+    if (saleType === 'discount' && (!originalPrice || originalPrice <= carData.price)) {
+      return res.status(400).json({ message: 'originalPrice must be greater than the sale price' });
+    }
+
+    const listing = await CarListing.create({
+      ...carData,
+      saleType,
+      originalPrice: saleType === 'discount' ? originalPrice : undefined,
+      saleReason,
+      saleExpiresAt,
+      postedBy: req.user._id,
+    });
+
+    res.status(201).json({ success: true, listing });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+
+export const convertListingToSale = async (req, res) => {
+  try {
+    const { listingId } = req.params;
+    const { saleType, price, saleReason, saleExpiresAt } = req.body;
+
+    if (req.user.role !== 'dealer') {
+      return res.status(403).json({ message: 'Only dealers can convert inventory listings' });
+    }
+
+    const listing = await CarListing.findOne({ _id: listingId, postedBy: req.user._id });
+    if (!listing) {
+      return res.status(404).json({ message: 'Listing not found in your inventory' });
+    }
+    if (!['distress', 'discount'].includes(saleType)) {
+      return res.status(400).json({ message: 'saleType must be distress or discount' });
+    }
+
+    if (saleType === 'discount') {
+      if (!price || price >= listing.price) {
+        return res.status(400).json({ message: 'New price must be lower than current price' });
+      }
+      listing.originalPrice = listing.price;
+      listing.price = price;
+    }
+
+    listing.saleType = saleType;
+    listing.saleReason = saleReason;
+    listing.saleExpiresAt = saleExpiresAt;
+
+    await listing.save();
+    res.json({ success: true, listing });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+
+
+
+export const getMyInventory = async (req, res) => {
+  const listings = await CarListing.find({
+    postedBy: req.user._id,
+    status: { $in: ['active', 'pending'] },
+  }).select('title make model year price images status saleType');
+
+  res.json({ success: true, listings });
+};
+
+
+
+export const getSaleListings = async (req, res) => {
+  const { type } = req.query; // 'distress' | 'discount' | undefined
+  const filter = {
+    status: 'active',
+    saleType: type ? type : { $in: ['distress', 'discount'] },
+  };
+  const listings = await CarListing.find(filter).sort('-createdAt');
+  res.json({ success: true, listings });
+};

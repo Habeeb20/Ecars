@@ -541,7 +541,7 @@ const  user = localStorage.getItem("token")
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900 py-10 px-4 sm:px-6 lg:px-8">
+    <div className="` bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900 py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header + Filters */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">

@@ -10,6 +10,34 @@ import { protect } from '../middleware/verifyToken.js';
 import CarListing from '../models/carListing.js';
 import { sendPasswordResetEmail } from '../utils/functions.js';
 import bcrypt from 'bcryptjs';
+import nodemailer from 'nodemailer';
+
+// import createSendToken from wherever your login controller already gets it
+
+// const transporter = nodemailer.createTransport({
+//   host: 'smtp.gmail.com',
+//   port: 465,
+//   secure: true, // must be true for port 465
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS,
+//   },
+// });
+const transporter = nodemailer.createTransport({
+  // host: process.env.EMAIL_HOST,
+  // port: Number(process.env.EMAIL_PORT),
+    host: 'smtp.gmail.com',
+  port: 465,
+  secure: true, // false for port 587 (STARTTLS), true for port 465
+  auth: {
+    user: process.env.EMAIL_USERNAME,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+});
+
+const generateOtp = () => Math.floor(1000 + Math.random() * 9000).toString(); // 4 digits
+const hashOtp = (otp) => crypto.createHash('sha256').update(otp).digest('hex');
+
 // REGISTER → returns token so user logs in immediately
 // controllers/authController.js
 
@@ -287,6 +315,88 @@ export const authLogin = async (req, res) => {
    } 
 };
 
+
+
+
+// STEP 1 — POST /users/auth-login  { email }
+export const requestAuthOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ status: 'fail', message: 'Please provide your email' });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    if (!user) {
+      // Don't reveal whether the email is registered
+      return res.status(200).json({ status: 'success', message: 'If that email exists, an OTP has been sent' });
+    }
+
+    const otp = generateOtp();
+    user.authOtp = hashOtp(otp);
+    user.authOtpExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+    await user.save({ validateBeforeSave: false });
+
+    try {
+      await transporter.sendMail({
+        from: process.env.EMAIL_FROM,
+        to: user.email,
+        subject: 'Your ECARS login code',
+        html: `<p>Your one-time login code is:</p>
+               <h2 style="letter-spacing:6px">${otp}</h2>
+               <p>This code expires in 10 minutes. If you didn't request this, ignore this email.</p>`,
+      });
+    } catch (mailErr) {
+      user.authOtp = undefined;
+      user.authOtpExpires = undefined;
+      await user.save({ validateBeforeSave: false });
+      console.error('Failed to send OTP email:', mailErr);
+      return res.status(500).json({ status: 'fail', message: 'Failed to send OTP email, please try again' });
+    }
+
+    res.status(200).json({ status: 'success', message: 'OTP sent to your email' });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ status: 'fail', message: error.message });
+  }
+};
+
+// STEP 2 — POST /users/verify-auth-otp  { email, otp }
+export const verifyAuthOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    if (!email || !otp) {
+      return res.status(400).json({ status: 'fail', message: 'Please provide your email and the OTP' });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() }).select('+authOtp +authOtpExpires');
+
+    if (!user || !user.authOtp || !user.authOtpExpires) {
+      return res.status(401).json({ status: 'fail', message: 'Invalid or expired OTP' });
+    }
+    if (user.authOtpExpires < Date.now()) {
+      user.authOtp = undefined;
+      user.authOtpExpires = undefined;
+      await user.save({ validateBeforeSave: false });
+      return res.status(401).json({ status: 'fail', message: 'OTP has expired, please request a new one' });
+    }
+    if (hashOtp(otp) !== user.authOtp) {
+      return res.status(401).json({ status: 'fail', message: 'Incorrect OTP' });
+    }
+
+    user.authOtp = undefined;
+    user.authOtpExpires = undefined;
+    user.isOnline = true;
+    user.lastSeen = new Date();
+    user.lastActivity = new Date();
+    await user.save({ validateBeforeSave: false });
+
+    createSendToken(user, 200, res);
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ status: 'fail', message: error.message });
+  }
+};
 
 
 

@@ -1,7 +1,5 @@
 
 
-
-
 // // pages/Register.jsx
 // import { useState } from 'react';
 // import { Link, useNavigate } from 'react-router-dom';
@@ -11,14 +9,10 @@
 //   Briefcase, Wrench, Package, ShoppingBag, CheckCircle2,
 //   Building2, MapPin, Phone, Loader2,
 // } from 'lucide-react';
+// import { useAuth } from '../../contexts/AuthContext';
+// import { statesAndLgas } from '../../utils/stateAndLga';
 
-// const NIGERIAN_STATES = [
-//   'Abia','Adamawa','Akwa Ibom','Anambra','Bauchi','Bayelsa','Benue','Borno',
-//   'Cross River','Delta','Ebonyi','Edo','Ekiti','Enugu','FCT','Gombe','Imo',
-//   'Jigawa','Kaduna','Kano','Katsina','Kebbi','Kogi','Kwara','Lagos','Nasarawa',
-//   'Niger','Ogun','Ondo','Osun','Oyo','Plateau','Rivers','Sokoto','Taraba',
-//   'Yobe','Zamfara',
-// ];
+// const NIGERIAN_STATES = Object.keys(statesAndLgas);
 
 // const SERVICE_PROVIDER_TYPES = [
 //   { value: 'mechanic',         label: 'Mechanic' },
@@ -42,58 +36,80 @@
 // ];
 
 // const ROLES = [
-//   {
-//     value: 'user',
-//     label: 'Buyer',
-//     desc: 'Browse and buy cars, parts, and services',
-//     icon: User,
-//   },
-//   {
-//     value: 'dealer',
-//     label: 'Car Dealer',
-//     desc: 'List and sell vehicles from your dealership',
-//     icon: Briefcase,
-//   },
-//   {
-//     value: 'service-provider',
-//     label: 'Service Provider',
-//     desc: 'Offer mechanic and auto repair services',
-//     icon: Wrench,
-//   },
-//   {
-//     value: 'carPart-seller',
-//     label: 'Car Parts Seller',
-//     desc: 'Sell new or used auto parts',
-//     icon: Package,
-//   },
+//   { value: 'user', label: 'Buyer', desc: 'Browse and buy cars, parts, and services', icon: User },
+//   { value: 'dealer', label: 'Car Dealer', desc: 'List and sell vehicles from your dealership', icon: Briefcase },
+//   { value: 'service-provider', label: 'Service Provider', desc: 'Offer mechanic and auto repair services', icon: Wrench },
+//   { value: 'carPart-seller', label: 'Car Parts Seller', desc: 'Sell new or used auto parts', icon: Package },
 // ];
 
 // const inputCls =
 //   'w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-sm';
 
 // const plainInputCls =
-//   'w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-sm';
+//   'w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed';
 
 // const labelCls = 'block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1.5';
+
+// /* ---------------------------------------------------------------------- */
+// /*  Reusable State + LGA pair. LGA is a dropdown driven by statesAndLgas,  */
+// /*  disabled until a state is picked, and resets whenever state changes.  */
+// /* ---------------------------------------------------------------------- */
+// function StateLgaFields({ state, lga, onStateChange, onLgaChange, disabled = false }) {
+//   const lgaOptions = state && statesAndLgas[state] ? statesAndLgas[state] : [];
+
+//   const handleStateChange = (e) => {
+//     const newState = e.target.value;
+//     onStateChange(newState);
+//     onLgaChange(''); // reset LGA since it belongs to the previous state
+//   };
+
+//   return (
+//     <div className="grid grid-cols-2 gap-3">
+//       <div>
+//         <label className={labelCls}>State *</label>
+//         <select
+//           className={plainInputCls}
+//           value={state}
+//           onChange={handleStateChange}
+//           disabled={disabled}
+//         >
+//           <option value="">Select state</option>
+//           {NIGERIAN_STATES.map((s) => <option key={s} value={s}>{s}</option>)}
+//         </select>
+//       </div>
+//       <div>
+//         <label className={labelCls}>LGA *</label>
+//         <select
+//           className={plainInputCls}
+//           value={lga}
+//           onChange={(e) => onLgaChange(e.target.value)}
+//           disabled={disabled || !state}
+//         >
+//           <option value="">{state ? 'Select LGA' : 'Select state first'}</option>
+//           {lgaOptions.map((l) => <option key={l} value={l}>{l}</option>)}
+//         </select>
+//       </div>
+//     </div>
+//   );
+// }
 
 // const Register = () => {
 //   const navigate = useNavigate();
 //   const backendUrl = import.meta.env.VITE_BACKEND_URL;
+//   const { login } = useAuth();
 
-//   const [step, setStep] = useState(1); // 1 = role, 2 = role-specific info, 3 = account details
+//   const [step, setStep] = useState(1);
 //   const [isLoading, setIsLoading] = useState(false);
 //   const [showPassword, setShowPassword] = useState(false);
 //   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 //   const [role, setRole] = useState('');
 
-//   // Core account fields
 //   const [account, setAccount] = useState({
 //     firstName: '', lastName: '', email: '', password: '', confirmPassword: '',
 //     phoneNumber: '', state: '', lga: '', address: '',
 //   });
 
-//   // Role-specific fields
 //   const [dealerInfo, setDealerInfo] = useState({
 //     businessName: '', businessRegistrationNumber: '', businessAddress: '', state: '', lga: '',
 //   });
@@ -116,7 +132,6 @@
 //   const needsRoleStep = role && role !== 'user';
 //   const totalSteps = needsRoleStep ? 3 : 2;
 
-//   // ── Step validation ──────────────────────────────────────────────────────
 //   const validateRoleSelection = () => {
 //     if (!role) {
 //       toast.error('Select a role to continue');
@@ -156,6 +171,10 @@
 //       toast.error('Enter your email address');
 //       return false;
 //     }
+//     if (role === 'user' && (!account.state || !account.lga)) {
+//       toast.error('Select your state and LGA');
+//       return false;
+//     }
 //     if (account.password.length < 6) {
 //       toast.error('Password must be at least 6 characters');
 //       return false;
@@ -167,7 +186,6 @@
 //     return true;
 //   };
 
-//   // ── Navigation ────────────────────────────────────────────────────────────
 //   const goNext = () => {
 //     if (step === 1) {
 //       if (!validateRoleSelection()) return;
@@ -185,7 +203,6 @@
 //     setStep(1);
 //   };
 
-//   // ── Submit ────────────────────────────────────────────────────────────────
 //   const handleSubmit = async (e) => {
 //     e.preventDefault();
 //     if (!validateAccount()) return;
@@ -233,7 +250,7 @@
 //       const data = await res.json();
 
 //       if (res.ok && data.status !== 'fail') {
-//         localStorage.setItem('token', data.token);
+//         await login(data.token);
 //         toast.success('Account created. Welcome to ECARS');
 //         setTimeout(() => navigate('/dashboard'), 800);
 //       } else {
@@ -247,7 +264,6 @@
 //     }
 //   };
 
-//   // ── Step indicator ───────────────────────────────────────────────────────
 //   const StepDots = () => (
 //     <div className="flex items-center justify-center gap-2 mb-6">
 //       {Array.from({ length: totalSteps }).map((_, i) => {
@@ -270,7 +286,6 @@
 //     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 my-12">
 //       <div className="max-w-xl w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 sm:p-8 space-y-6">
 
-//         {/* Header */}
 //         <div className="text-center">
 //           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">
 //             Create your account
@@ -360,19 +375,12 @@
 //               </div>
 //             </div>
 
-//             <div className="grid grid-cols-2 gap-3">
-//               <div>
-//                 <label className={labelCls}>State *</label>
-//                 <select className={plainInputCls} value={dealerInfo.state} onChange={(e) => setDealer('state', e.target.value)}>
-//                   <option value="">Select state</option>
-//                   {NIGERIAN_STATES.map((s) => <option key={s} value={s}>{s}</option>)}
-//                 </select>
-//               </div>
-//               <div>
-//                 <label className={labelCls}>LGA *</label>
-//                 <input className={plainInputCls} placeholder="Local govt. area" value={dealerInfo.lga} onChange={(e) => setDealer('lga', e.target.value)} />
-//               </div>
-//             </div>
+//             <StateLgaFields
+//               state={dealerInfo.state}
+//               lga={dealerInfo.lga}
+//               onStateChange={(v) => setDealer('state', v)}
+//               onLgaChange={(v) => setDealer('lga', v)}
+//             />
 
 //             <StepNavButtons onBack={goBack} onNext={goNext} />
 //           </div>
@@ -405,19 +413,12 @@
 //               <input className={plainInputCls} placeholder="Workshop / shop address" value={serviceProviderInfo.businessAddress} onChange={(e) => setProvider('businessAddress', e.target.value)} />
 //             </div>
 
-//             <div className="grid grid-cols-2 gap-3">
-//               <div>
-//                 <label className={labelCls}>State *</label>
-//                 <select className={plainInputCls} value={serviceProviderInfo.state} onChange={(e) => setProvider('state', e.target.value)}>
-//                   <option value="">Select state</option>
-//                   {NIGERIAN_STATES.map((s) => <option key={s} value={s}>{s}</option>)}
-//                 </select>
-//               </div>
-//               <div>
-//                 <label className={labelCls}>LGA *</label>
-//                 <input className={plainInputCls} placeholder="Local govt. area" value={serviceProviderInfo.lga} onChange={(e) => setProvider('lga', e.target.value)} />
-//               </div>
-//             </div>
+//             <StateLgaFields
+//               state={serviceProviderInfo.state}
+//               lga={serviceProviderInfo.lga}
+//               onStateChange={(v) => setProvider('state', v)}
+//               onLgaChange={(v) => setProvider('lga', v)}
+//             />
 
 //             <div className="grid grid-cols-2 gap-3">
 //               <div>
@@ -475,19 +476,12 @@
 //               <input className={plainInputCls} placeholder="Shop / market address" value={carPartSellerInfo.businessAddress} onChange={(e) => setPartSeller('businessAddress', e.target.value)} />
 //             </div>
 
-//             <div className="grid grid-cols-2 gap-3">
-//               <div>
-//                 <label className={labelCls}>State *</label>
-//                 <select className={plainInputCls} value={carPartSellerInfo.state} onChange={(e) => setPartSeller('state', e.target.value)}>
-//                   <option value="">Select state</option>
-//                   {NIGERIAN_STATES.map((s) => <option key={s} value={s}>{s}</option>)}
-//                 </select>
-//               </div>
-//               <div>
-//                 <label className={labelCls}>LGA *</label>
-//                 <input className={plainInputCls} placeholder="Local govt. area" value={carPartSellerInfo.lga} onChange={(e) => setPartSeller('lga', e.target.value)} />
-//               </div>
-//             </div>
+//             <StateLgaFields
+//               state={carPartSellerInfo.state}
+//               lga={carPartSellerInfo.lga}
+//               onStateChange={(v) => setPartSeller('state', v)}
+//               onLgaChange={(v) => setPartSeller('lga', v)}
+//             />
 
 //             <div className="grid grid-cols-2 gap-3">
 //               <div>
@@ -548,15 +542,15 @@
 //               <input placeholder="Phone number" className={inputCls} value={account.phoneNumber} onChange={(e) => setAcc('phoneNumber', e.target.value)} disabled={isLoading} />
 //             </div>
 
-//             {/* Only ask for personal state/lga/address if buyer (no business address already given) */}
+//             {/* Only ask for personal state/lga if buyer (no business address already given) */}
 //             {role === 'user' && (
-//               <div className="grid grid-cols-2 gap-3">
-//                 <select className={plainInputCls} value={account.state} onChange={(e) => setAcc('state', e.target.value)} disabled={isLoading}>
-//                   <option value="">Select state</option>
-//                   {NIGERIAN_STATES.map((s) => <option key={s} value={s}>{s}</option>)}
-//                 </select>
-//                 <input placeholder="LGA" className={plainInputCls} value={account.lga} onChange={(e) => setAcc('lga', e.target.value)} disabled={isLoading} />
-//               </div>
+//               <StateLgaFields
+//                 state={account.state}
+//                 lga={account.lga}
+//                 onStateChange={(v) => setAcc('state', v)}
+//                 onLgaChange={(v) => setAcc('lga', v)}
+//                 disabled={isLoading}
+//               />
 //             )}
 
 //             <div className="relative">
@@ -613,7 +607,6 @@
 //           </form>
 //         )}
 
-//         {/* Back to home */}
 //         <div className="text-center pt-1">
 //           <Link to="/" className="inline-flex items-center text-xs text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
 //             <ArrowLeft className="w-3.5 h-3.5 mr-1.5" />
@@ -625,7 +618,6 @@
 //   );
 // };
 
-// // ── shared next/back buttons for step 2 ─────────────────────────────────────
 // const StepNavButtons = ({ onBack, onNext }) => (
 //   <div className="flex gap-3 pt-1">
 //     <button
@@ -648,6 +640,8 @@
 // );
 
 // export default Register;
+
+
 
 
 
@@ -700,6 +694,67 @@ const plainInputCls =
   'w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed';
 
 const labelCls = 'block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1.5';
+
+/* ---------------------------------------------------------------------- */
+/*  Password strength: rules, checker, and the meter UI                   */
+/* ---------------------------------------------------------------------- */
+const getPasswordChecks = (password) => ({
+  length: password.length >= 8,
+  uppercase: /[A-Z]/.test(password),
+  lowercase: /[a-z]/.test(password),
+  number: /[0-9]/.test(password),
+  symbol: /[^A-Za-z0-9]/.test(password),
+});
+
+const isPasswordValid = (password) => Object.values(getPasswordChecks(password)).every(Boolean);
+
+const STRENGTH_LEVELS = [
+  { label: 'Very weak', textColor: 'text-red-500', barColor: 'bg-red-500' },
+  { label: 'Weak', textColor: 'text-orange-500', barColor: 'bg-orange-500' },
+  { label: 'Fair', textColor: 'text-yellow-500', barColor: 'bg-yellow-500' },
+  { label: 'Good', textColor: 'text-blue-500', barColor: 'bg-blue-500' },
+  { label: 'Strong', textColor: 'text-green-600', barColor: 'bg-green-500' },
+];
+
+function PasswordStrengthMeter({ password }) {
+  if (!password) return null;
+
+  const checks = getPasswordChecks(password);
+  const score = Object.values(checks).filter(Boolean).length; // 0–5
+  const level = STRENGTH_LEVELS[Math.max(score - 1, 0)];
+
+  return (
+    <div className="space-y-2 pt-1">
+      <div className="flex gap-1">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div
+            key={i}
+            className={`h-1.5 flex-1 rounded-full transition-colors ${i < score ? level.barColor : 'bg-gray-200 dark:bg-gray-600'}`}
+          />
+        ))}
+      </div>
+      <p className={`text-xs font-semibold ${level.textColor}`}>{level.label}</p>
+      <ul className="grid grid-cols-2 gap-x-3 gap-y-1">
+        <Requirement met={checks.length} label="8+ characters" />
+        <Requirement met={checks.uppercase} label="Uppercase letter" />
+        <Requirement met={checks.lowercase} label="Lowercase letter" />
+        <Requirement met={checks.number} label="Number" />
+        <Requirement met={checks.symbol} label="Symbol" />
+      </ul>
+    </div>
+  );
+}
+
+function Requirement({ met, label }) {
+  return (
+    <li className={`flex items-center gap-1.5 text-xs transition-colors ${met ? 'text-green-600 dark:text-green-400' : 'text-gray-400 dark:text-gray-500'}`}>
+      {met
+        ? <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+        : <span className="w-3.5 h-3.5 rounded-full border border-current inline-block shrink-0" />}
+      {label}
+    </li>
+  );
+}
 
 /* ---------------------------------------------------------------------- */
 /*  Reusable State + LGA pair. LGA is a dropdown driven by statesAndLgas,  */
@@ -783,6 +838,8 @@ const Register = () => {
   const needsRoleStep = role && role !== 'user';
   const totalSteps = needsRoleStep ? 3 : 2;
 
+  const passwordValid = isPasswordValid(account.password);
+
   const validateRoleSelection = () => {
     if (!role) {
       toast.error('Select a role to continue');
@@ -826,8 +883,8 @@ const Register = () => {
       toast.error('Select your state and LGA');
       return false;
     }
-    if (account.password.length < 6) {
-      toast.error('Password must be at least 6 characters');
+    if (!passwordValid) {
+      toast.error('Password must be 8+ characters with an uppercase letter, lowercase letter, number, and symbol');
       return false;
     }
     if (account.password !== account.confirmPassword) {
@@ -1204,20 +1261,28 @@ const Register = () => {
               />
             )}
 
-            <div className="relative">
-              <Lock className="absolute inset-y-0 left-3 my-auto h-4 w-4 text-gray-400" />
-              <input
-                required
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Password"
-                className={`${inputCls} pr-12`}
-                value={account.password}
-                onChange={(e) => setAcc('password', e.target.value)}
-                disabled={isLoading}
-              />
-              <button type="button" onClick={() => setShowPassword((v) => !v)} className="absolute inset-y-0 right-3 my-auto text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
+            <div>
+              <div className="relative">
+                <Lock className="absolute inset-y-0 left-3 my-auto h-4 w-4 text-gray-400" />
+                <input
+                  required
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Password"
+                  className={`${inputCls} pr-12`}
+                  value={account.password}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setAcc('password', value);
+                    // if password changes and no longer matches, clear confirm so the field re-locks cleanly
+                    if (!isPasswordValid(value) && account.confirmPassword) setAcc('confirmPassword', '');
+                  }}
+                  disabled={isLoading}
+                />
+                <button type="button" onClick={() => setShowPassword((v) => !v)} className="absolute inset-y-0 right-3 my-auto text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+              <PasswordStrengthMeter password={account.password} />
             </div>
 
             <div className="relative">
@@ -1225,13 +1290,18 @@ const Register = () => {
               <input
                 required
                 type={showConfirmPassword ? 'text' : 'password'}
-                placeholder="Confirm password"
+                placeholder={passwordValid ? 'Confirm password' : 'Meet the password requirements above first'}
                 className={`${inputCls} pr-12`}
                 value={account.confirmPassword}
                 onChange={(e) => setAcc('confirmPassword', e.target.value)}
-                disabled={isLoading}
+                disabled={isLoading || !passwordValid}
               />
-              <button type="button" onClick={() => setShowConfirmPassword((v) => !v)} className="absolute inset-y-0 right-3 my-auto text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword((v) => !v)}
+                disabled={!passwordValid}
+                className="absolute inset-y-0 right-3 my-auto text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 disabled:opacity-40"
+              >
                 {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
@@ -1248,7 +1318,7 @@ const Register = () => {
               </button>
               <button
                 type="submit"
-                disabled={isLoading}
+                disabled={isLoading || !passwordValid || account.password !== account.confirmPassword}
                 className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition-all disabled:opacity-60"
               >
                 {isLoading && <Loader2 size={16} className="animate-spin" />}

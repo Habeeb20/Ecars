@@ -267,6 +267,8 @@ import PostDealForm from './PostDeal';
 import MyReceivedOffers from './MyRecievedOffer';
 import InventoryDashboard from '../../pages/dealer/InventoryDashboard';
 import SalesAnalyticsDashboard from '../../pages/dealer/SalesAnalytics';
+import PostSalePage from '../../pages/dealer/PostSalesPage';
+import DealerVideoUploadForm from '../../pages/dealer/DealerUploadVideoForm';
 
 // ─── view registry — every renderable panel, keyed by view id ───────────────
 const VIEWS = {
@@ -287,6 +289,8 @@ const VIEWS = {
   compareCars:       <CompareCars />,
   dealeroffers:      <DealerOffers />,
   gallery:           <GalleryFeed />,
+  saledeals:        <PostSalePage />,
+  postvideo:        <DealerVideoUploadForm/>,
   recievedOffer:     <MyReceivedOffers />,
 };
 
@@ -318,6 +322,8 @@ const ROLE_MENUS = {
     { icon: Car,          label: 'Compare cars',         view: 'compareCars' },
     { icon: DollarSign,   label: 'Offers',                view: 'dealeroffers' },
     { icon: Gamepad2,     label: 'Deals',                 view: 'deals' },
+    { icon: Gamepad2,     label: 'Post a video',                 view: 'postvideo' },
+    { icon: Gamepad2,     label: 'Sales Deals',                 view: 'saledeals' },
     { icon: MessageCircle,label: 'My received offers',    view: 'recievedOffer' },
     ...COMMON_FOOTER_ITEMS,
   ],

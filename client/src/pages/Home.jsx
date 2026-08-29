@@ -37,6 +37,9 @@ import PublicDealsPage from '../components/Landing/Deals';
 import ServiceCategoriesGrid from '../components/Landing/ServiceCategoryGrid';
 import AuctionBanner from '../components/Landing/AuctionBanner';
 import AuctionCatalog from '../components/Landing/Actioncar';
+import VehicleBanner from './VehicleBanner';
+import SalesFeed from './SalesFeed';
+import DealerVideoFeed from '../components/Landing/DealerVideoFeed';
 
 // Mock data (kept exactly as in your original code)
 const mockServiceProviders = [
@@ -249,13 +252,17 @@ const Home = () => {
         <FeaturedCar/>
 
            <NewListing/>
+           <SalesFeed />
+           <DealerVideoFeed />
 
       <CarPartsCategories/>
 
       <PublicDealsPage />
       <AuctionBanner/>
+    
 
       <ServiceCategoriesGrid/>
+      <VehicleBanner />
       <AuctionCatalog />
 
       {/* Featured Cars Section */}

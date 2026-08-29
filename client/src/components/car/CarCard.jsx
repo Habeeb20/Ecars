@@ -163,12 +163,23 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, MapPin, Calendar, Fuel, Gauge, Star, ChevronRight, Eye } from 'lucide-react';
+import { Heart, MapPin, Share2, Calendar, Fuel, Gauge, Star, ChevronRight, Eye } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const CarCard = ({ car, showDealerInfo = false, onBookViewing }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [showAllFeatures, setShowAllFeatures] = useState(false);
+
+
+
+  const likes = car.likesCount ?? car.likeCount ?? 0;
+  const views = car.views ?? 0;
+  const shares = car.shareCount ?? 0;
+
+
+
+
+  console.log(car)
 
   const toggleFavorite = (e) => {
     e.preventDefault();
@@ -226,13 +237,20 @@ export const CarCard = ({ car, showDealerInfo = false, onBookViewing }) => {
           {car.isFeatured && (
             <div className="absolute top-3 left-3">
               <span className="px-3 py-1 bg-yellow-500 text-white text-xs font-bold rounded-full">Featured</span>
+              
             </div>
           )}
 
           {/* Status badge */}
           <div className="absolute top-3 right-16">
             <span className="bg-green-600 text-white text-xs px-3 py-1 rounded-full font-medium">For Sale</span>
+
           </div>
+             <div className="absolute top-3 left-5">
+ <p className="bg-blue-600 text-white text-xs px-3 py-1 rounded-full font-medium">{car.postedBy?.role === 'dealer' ? 'Dealer' : 'Personal'}</p>
+             </div>
+
+                       
         </div>
 
         {/* Content */}
@@ -295,7 +313,25 @@ export const CarCard = ({ car, showDealerInfo = false, onBookViewing }) => {
               )}
             </div>
           )}
+        <div className="flex justify-center items-center gap-6 rounded-xl bg-gradient-to-br from-gray-50 to-gray-200 p-3 shadow-sm hover:from-gray-100 hover:to-gray-300 transition-colors">
+      {/* Likes */}
+      <div className="flex items-center gap-1 text-gray-700">
+        <Heart className="h-5 w-5 text-slate-500" />
+        <span className="font-semibold text-gray-900">{likes}</span>
+      </div>
 
+      {/* Views */}
+      <div className="flex items-center gap-1 text-gray-700">
+        <Eye className="h-5 w-5 text-slate-500" />
+        <span className="font-semibold text-gray-900">{views}</span>
+      </div>
+
+      {/* Shares */}
+      <div className="flex items-center gap-1 text-gray-700">
+        <Share2 className="h-5 w-5 text-slate-500" />
+        <span className="font-semibold text-gray-900">{shares}</span>
+      </div>
+    </div>
           {/* Action Buttons */}
           <div className="flex gap-3 mt-4">
             <button

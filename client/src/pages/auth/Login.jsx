@@ -1,25 +1,31 @@
 
 
 
+
 // import { useState } from 'react';
 // import { Link, useNavigate } from 'react-router-dom';
 // import { toast } from 'sonner';
 // import { Mail, Lock, ArrowLeft, Eye, EyeOff, X } from 'lucide-react';
 // import { motion } from 'framer-motion';
 // import { useLocation } from 'react-router-dom';
+// import { useAuth } from '../../contexts/AuthContext';
+
 // const Login = () => {
 //   const [email, setEmail] = useState('');
 //   const [password, setPassword] = useState('');
 //   const [showPassword, setShowPassword] = useState(false);
 //   const [isLoading, setIsLoading] = useState(false);
-//   const location = useLocation()
+//   const location = useLocation();
+//   const { login } = useAuth();
+
 //   // New states for E-Auth modal
 //   const [showAuthModal, setShowAuthModal] = useState(false);
 //   const [authEmail, setAuthEmail] = useState('');
 
 //   const navigate = useNavigate();
 //   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-//  const from = location.state?.from?.pathname || "/dashboard";
+//   const from = location.state?.from?.pathname || '/dashboard';
+
 //   const handleSubmit = async (e) => {
 //     e.preventDefault();
 //     setIsLoading(true);
@@ -39,12 +45,15 @@
 //       const data = await res.json();
 
 //       if (res.ok && data.status === 'success') {
-//         localStorage.setItem('token', data.token);
+//         // Populates AuthContext's `user` state right away — this is what
+//         // was missing before. Previously we only wrote the token to
+//         // localStorage, so context had no idea a user just logged in
+//         // until the app remounted on a hard refresh.
+//         await login(data.token);
 //         toast.success('Welcome back! Login successful');
 
 //         setTimeout(() => {
-//           navigate(from, { replace: true }); 
-//           // navigate('/dashboard');
+//           navigate(from, { replace: true });
 //         }, 800);
 //       } else {
 //         toast.error(data.message || 'Invalid email or password');
@@ -77,12 +86,11 @@
 //       const data = await res.json();
 
 //       if (res.ok && data.status === 'success') {
-//         localStorage.setItem('token', data.token);
+//         await login(data.token);
 //         toast.success('Welcome back! E-Auth login successful');
 
 //         setTimeout(() => {
-//              navigate(from, { replace: true }); 
-//           // navigate('/dashboard');
+//           navigate(from, { replace: true });
 //           setShowAuthModal(false);
 //           setAuthEmail('');
 //         }, 800);
@@ -328,10 +336,14 @@
 
 
 
+
+
+
+
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Mail, Lock, ArrowLeft, Eye, EyeOff, X } from 'lucide-react';
+import { Mail, Lock, ArrowLeft, Eye, EyeOff, X, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
@@ -344,13 +356,24 @@ const Login = () => {
   const location = useLocation();
   const { login } = useAuth();
 
-  // New states for E-Auth modal
+  // E-Auth modal: 'email' step (collect address, request OTP) then 'otp' step (verify + sign in)
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authStep, setAuthStep] = useState('email');
   const [authEmail, setAuthEmail] = useState('');
+  const [otp, setOtp] = useState('');
+  const [otpSubmitting, setOtpSubmitting] = useState(false);
+  const [resending, setResending] = useState(false);
 
   const navigate = useNavigate();
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const from = location.state?.from?.pathname || '/dashboard';
+
+  const closeAuthModal = () => {
+    setShowAuthModal(false);
+    setAuthStep('email');
+    setAuthEmail('');
+    setOtp('');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -371,10 +394,6 @@ const Login = () => {
       const data = await res.json();
 
       if (res.ok && data.status === 'success') {
-        // Populates AuthContext's `user` state right away — this is what
-        // was missing before. Previously we only wrote the token to
-        // localStorage, so context had no idea a user just logged in
-        // until the app remounted on a hard refresh.
         await login(data.token);
         toast.success('Welcome back! Login successful');
 
@@ -392,21 +411,48 @@ const Login = () => {
     }
   };
 
-  const handleAuthLogin = async (e) => {
+  // STEP 1: send the OTP to the entered email
+  const handleRequestOtp = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
-    const loginEmail = authEmail.trim() || email.toLowerCase().trim();
 
     try {
       const res = await fetch(`${backendUrl}/users/auth-login`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: loginEmail,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: authEmail.trim() }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.status === 'success') {
+        toast.success('A 4-digit code has been sent to your email');
+        setAuthStep('otp');
+      } else {
+        toast.error(data.message || 'Could not send the OTP');
+      }
+    } catch (error) {
+      console.error('Request OTP error:', error);
+      toast.error('Network error. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // STEP 2: verify the OTP and sign in
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    if (otp.length !== 4) {
+      toast.error('Enter the 4-digit code sent to your email');
+      return;
+    }
+    setOtpSubmitting(true);
+
+    try {
+      const res = await fetch(`${backendUrl}/users/verify-auth-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: authEmail.trim(), otp }),
       });
 
       const data = await res.json();
@@ -414,20 +460,41 @@ const Login = () => {
       if (res.ok && data.status === 'success') {
         await login(data.token);
         toast.success('Welcome back! E-Auth login successful');
-
         setTimeout(() => {
           navigate(from, { replace: true });
-          setShowAuthModal(false);
-          setAuthEmail('');
+          closeAuthModal();
         }, 800);
       } else {
-        toast.error(data.message || 'E-Auth failed');
+        toast.error(data.message || 'Incorrect or expired code');
       }
     } catch (error) {
-      console.error('Auth login error:', error);
+      console.error('Verify OTP error:', error);
       toast.error('Network error. Please try again.');
     } finally {
-      setIsLoading(false);
+      setOtpSubmitting(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    setResending(true);
+    try {
+      const res = await fetch(`${backendUrl}/users/auth-login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: authEmail.trim() }),
+      });
+      const data = await res.json();
+      if (res.ok && data.status === 'success') {
+        toast.success('A new code has been sent');
+        setOtp('');
+      } else {
+        toast.error(data.message || 'Could not resend the code');
+      }
+    } catch (error) {
+      console.error('Resend OTP error:', error);
+      toast.error('Network error. Please try again.');
+    } finally {
+      setResending(false);
     }
   };
 
@@ -569,73 +636,141 @@ const Login = () => {
             >
               <button
                 type="button"
-                onClick={() => {
-                  setShowAuthModal(false);
-                  setAuthEmail('');
-                }}
+                onClick={closeAuthModal}
                 className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
               >
                 <X className="h-6 w-6" />
               </button>
 
-              <h3 className="text-2xl font-bold text-center mb-4 text-gray-900 dark:text-white">
-                Login with E-Auth
-              </h3>
+              {authStep === 'email' ? (
+                <>
+                  <h3 className="text-2xl font-bold text-center mb-4 text-gray-900 dark:text-white">
+                    Login with E-Auth
+                  </h3>
+                  <p className="text-center text-gray-600 dark:text-gray-400 mb-6 text-sm">
+                    Enter your email to receive a 4-digit login code
+                  </p>
 
-              <p className="text-center text-gray-600 dark:text-gray-400 mb-6 text-sm">
-                Enter your email to receive a secure authentication link
-              </p>
+                  <form onSubmit={handleRequestOtp} className="space-y-6">
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <Mail className="h-5 w-5 text-gray-400" />
+                      </div>
+                      <input
+                        type="email"
+                        required
+                        placeholder="Your email address"
+                        value={authEmail}
+                        onChange={(e) => setAuthEmail(e.target.value.toLowerCase().trim())}
+                        disabled={isLoading}
+                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 transition-all"
+                      />
+                    </div>
 
-              <form
-                onSubmit={handleAuthLogin}
-                className="space-y-6"
-              >
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <Mail className="h-5 w-5 text-gray-400" />
+                    <button
+                      type="submit"
+                      disabled={isLoading || !authEmail.trim()}
+                      className="w-full flex justify-center py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isLoading ? (
+                        <span className="flex items-center">
+                          <svg
+                            className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            />
+                          </svg>
+                          Sending code...
+                        </span>
+                      ) : (
+                        'Send Login Code'
+                      )}
+                    </button>
+                  </form>
+                </>
+              ) : (
+                <>
+                  <div className="flex justify-center mb-4">
+                    <div className="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center">
+                      <ShieldCheck className="h-6 w-6 text-blue-600" />
+                    </div>
                   </div>
-                  <input
-                    type="email"
-                    required
-                    placeholder="Your email address"
-                    value={authEmail}
-                    onChange={(e) => setAuthEmail(e.target.value.toLowerCase().trim())}
-                    disabled={isLoading}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 transition-all"
-                  />
-                </div>
+                  <h3 className="text-2xl font-bold text-center mb-2 text-gray-900 dark:text-white">
+                    Enter your code
+                  </h3>
+                  <p className="text-center text-gray-600 dark:text-gray-400 mb-6 text-sm">
+                    We sent a 4-digit code to <span className="font-medium">{authEmail}</span>
+                  </p>
 
-                <button
-                  type="submit"
-                  disabled={isLoading || !authEmail.trim()}
-                  className="w-full flex justify-center py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isLoading ? (
-                    <span className="flex items-center">
-                      <svg
-                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
+                  <form onSubmit={handleVerifyOtp} className="space-y-6">
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      maxLength={4}
+                      required
+                      autoFocus
+                      placeholder="••••"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                      disabled={otpSubmitting}
+                      className="w-full text-center text-3xl font-bold tracking-[0.6em] pl-2 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 transition-all"
+                    />
+
+                    <button
+                      type="submit"
+                      disabled={otpSubmitting || otp.length !== 4}
+                      className="w-full flex justify-center py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {otpSubmitting ? (
+                        <span className="flex items-center">
+                          <svg
+                            className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            />
+                          </svg>
+                          Verifying...
+                        </span>
+                      ) : (
+                        'Verify & Sign In'
+                      )}
+                    </button>
+
+                    <div className="flex items-center justify-between text-sm">
+                      <button
+                        type="button"
+                        onClick={() => { setAuthStep('email'); setOtp(''); }}
+                        className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 flex items-center gap-1"
                       >
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        />
-                      </svg>
-                      Processing...
-                    </span>
-                  ) : (
-                    'Send Login Link'
-                  )}
-                </button>
-              </form>
-
-              <p className="mt-4 text-center text-xs text-gray-500 dark:text-gray-400">
-                Check your email for the secure login link
-              </p>
+                        <ArrowLeft className="h-3.5 w-3.5" /> Change email
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleResendOtp}
+                        disabled={resending}
+                        className="font-medium text-blue-600 hover:text-blue-700 disabled:opacity-50"
+                      >
+                        {resending ? 'Resending...' : 'Resend code'}
+                      </button>
+                    </div>
+                  </form>
+                </>
+              )}
             </motion.div>
           </div>
         )}

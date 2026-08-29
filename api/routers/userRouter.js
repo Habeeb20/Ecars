@@ -1,6 +1,6 @@
 // routes/authRoutes.js
 import express from 'express';
-import { register, login, forgotPassword, resetPassword, getDashboard, getMe, updateMe, updatePassword, upgradeToDealer, upgradeToServiceProvider, getAllDealers, getAllServiceProviders, searchServiceAndDealers, getFeaturedDealers, searchDealers, getFeaturedServiceProvider, searchServiceProviders, getDealerById, searchBlacklistedUsers, upgradeToCarPartSeller, getAllCarPartSellers, verifyCarPartSeller, searchCarPartSellers, authLogin, toggleLike, shareProvider, incrementProviderView } from '../controllers/userController.js';
+import { register, login, forgotPassword, resetPassword, getDashboard, getMe, updateMe, updatePassword, upgradeToDealer, upgradeToServiceProvider, getAllDealers, getAllServiceProviders, searchServiceAndDealers, getFeaturedDealers, searchDealers, getFeaturedServiceProvider, searchServiceProviders, getDealerById, searchBlacklistedUsers, upgradeToCarPartSeller, getAllCarPartSellers, verifyCarPartSeller, searchCarPartSellers, authLogin, toggleLike, shareProvider, incrementProviderView, requestAuthOtp, verifyAuthOtp } from '../controllers/userController.js';
 import { protect } from '../middleware/verifyToken.js';
 import { sendVerificationEmail } from '../utils/functions.js';
 import { getBlacklistedUsers } from '../controllers/adminController.js';
@@ -13,8 +13,10 @@ router.get('/all-service-providers', getAllServiceProviders);
 
 router.post('/register', register);
 router.post('/login', login);
-router.post('/auth-login', authLogin);
+// router.post('/auth-login', authLogin);
 router.post('/forgotpassword', forgotPassword);
+router.post('/auth-login', requestAuthOtp);       // step 1: send OTP
+router.post('/verify-auth-otp', verifyAuthOtp);    // step 2: verify + log in
 
 router.put('/resetpassword/:token', resetPassword);
 // router.get("/me", protect, getDashboard)

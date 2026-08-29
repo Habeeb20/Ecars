@@ -1,8 +1,9 @@
 import { protect } from '../middleware/verifyToken.js';
-import { createCarListing, getMyCars, updateCarListing, deleteCarListing, getAllCars, searchCars, getCarById, createListingForOthers, recordCarView, toggleLikeCar, getCarLikeStatus, getAllCarsForSearch, getCarFilterOptions } from '../controllers/carListingController.js';
+import { createCarListing, getMyCars, updateCarListing, deleteCarListing, getAllCars, searchCars, getCarById, createListingForOthers, recordCarView, toggleLikeCar, getCarLikeStatus, getAllCarsForSearch, getCarFilterOptions, createSaleListing, convertListingToSale, getMyInventory, getSaleListings } from '../controllers/carListingController.js';
 import express from "express"
 import { getNewestListings } from '../controllers/plansController.js';
 import Car from "../models/carListing.js"
+import { restrictTo } from '../middleware/verifyToken.js';
 import { getCarsByBodyType } from '../controllers/CarPartListingController.js';
 import { getCarById1, getSimilarCars, toggleLikeCar1, incrementShareCount } from '../controllers/carListingController.js';
 const router =express.Router()
@@ -11,6 +12,10 @@ router.post('/create', protect, createCarListing);
 router.get('/my', protect, getMyCars);
 router.get("/allcars", getAllCars)
 router.post("/", createListingForOthers)
+router.post('/sales', protect, createSaleListing);
+router.post('/:listingId/convert-to-sale', protect, restrictTo('dealer'), convertListingToSale);
+router.get('/my-inventory', protect, restrictTo('dealer'), getMyInventory);
+router.get('/sales', getSaleListings);
 router.get('/search', searchCars);
 router.patch('/:id', protect, updateCarListing);     
 router.delete('/:id', protect, deleteCarListing);
@@ -24,6 +29,9 @@ router.get('/:id', getCarById1);
 router.get('/:id/similar', getSimilarCars);
 router.put('/:id/like', protect, toggleLikeCar1);
 router.put('/:id/share', incrementShareCount);
+
+
+
 
 // routes/carRoutes.js
 router.put('/:id/view', recordCarView);                    // record view (can be called on page load)
