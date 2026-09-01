@@ -56,6 +56,10 @@ authOtpExpires: { type: Date, select: false },
     index: true,
   },
 
+  // schemas/User.js (add to existing schema)
+videoCredits: { type: Number, default: 0 },       // remaining posts allowed
+totalVideoCreditsPurchased: { type: Number, default: 0 }, // lifetime, for stats
+
   isActive: { type: Boolean, default: true },
   emailVerified: { type: Boolean, default: false },
   emailVerificationToken: String,

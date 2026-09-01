@@ -1,16 +1,17 @@
 // routes/authRoutes.js
 import express from 'express';
-import { register, login, forgotPassword, resetPassword, getDashboard, getMe, updateMe, updatePassword, upgradeToDealer, upgradeToServiceProvider, getAllDealers, getAllServiceProviders, searchServiceAndDealers, getFeaturedDealers, searchDealers, getFeaturedServiceProvider, searchServiceProviders, getDealerById, searchBlacklistedUsers, upgradeToCarPartSeller, getAllCarPartSellers, verifyCarPartSeller, searchCarPartSellers, authLogin, toggleLike, shareProvider, incrementProviderView, requestAuthOtp, verifyAuthOtp } from '../controllers/userController.js';
+import { register, login, forgotPassword, resetPassword, getDashboard, getMe, updateMe, updatePassword, upgradeToDealer, upgradeToServiceProvider, getAllDealers, getAllServiceProviders, searchServiceAndDealers, getFeaturedDealers, searchDealers, getFeaturedServiceProvider, searchServiceProviders, getDealerById, searchBlacklistedUsers, upgradeToCarPartSeller, getAllCarPartSellers, verifyCarPartSeller, searchCarPartSellers, authLogin, toggleLike, shareProvider, incrementProviderView, requestAuthOtp, verifyAuthOtp, getPublicSellers } from '../controllers/userController.js';
 import { protect } from '../middleware/verifyToken.js';
 import { sendVerificationEmail } from '../utils/functions.js';
 import { getBlacklistedUsers } from '../controllers/adminController.js';
 import User from '../models/user.js';
 import crypto from 'crypto';
+
 const router = express.Router();
 router.get('/alldealers', getAllDealers);
 router.get('/dealers', getAllDealers);
 router.get('/all-service-providers', getAllServiceProviders);
-
+router.get('/sellers', getPublicSellers);
 router.post('/register', register);
 router.post('/login', login);
 // router.post('/auth-login', authLogin);

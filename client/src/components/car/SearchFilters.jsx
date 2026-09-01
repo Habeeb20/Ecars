@@ -794,22 +794,7 @@ const SearchFilters = ({ variant = 'hero', className = '' }) => {
         <form onSubmit={handleSubmit}>
           <div className="flex items-center justify-between mb-5 sm:mb-6">
 
-            <button
-              type="button"
-              onClick={() => setIsAdvancedOpen(true)}
-              className="relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:border-[#0B1B3E] hover:text-[#0B1B3E] dark:hover:text-white transition-colors shrink-0"
-            >
-              <SlidersHorizontal size={16} />
-              <span className="hidden sm:inline">More filters</span>
-              {activeFilterCount > 0 && (
-                <span
-                  className="absolute -top-2 -right-2 w-5 h-5 rounded-full text-[10px] font-bold text-white flex items-center justify-center"
-                  style={{ background: rust }}
-                >
-                  {activeFilterCount}
-                </span>
-              )}
-            </button>
+       
           </div>
 
           {/* Free-text keyword search — soft pill style matching the reference design */}
@@ -862,7 +847,27 @@ const SearchFilters = ({ variant = 'hero', className = '' }) => {
               {loading ? 'Searching...' : 'Search vehicles'}
             </button>
           </div>
-        </form>
+                    
+        <div className="flex justify-center mt-4">
+          <button
+            type="button"
+            onClick={() => setIsAdvancedOpen(true)}
+            className="relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:border-[#0B1B3E] hover:text-[#0B1B3E] dark:hover:text-white transition-colors shrink-0"
+          >
+            <SlidersHorizontal size={16} />
+            <span className="hidden sm:inline">Advanced Search</span>
+            {activeFilterCount > 0 && (
+              <span
+                className="absolute -top-2 -right-2 w-5 h-5 rounded-full text-[10px] font-bold text-white flex items-center justify-center"
+                style={{ background: rust }}
+              >
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
+        </div>
+      </form>
+        
       </div>
 
       {/* ====================== ADVANCED SEARCH MODAL ====================== */}

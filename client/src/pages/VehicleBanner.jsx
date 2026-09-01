@@ -24,7 +24,7 @@ const VehicleBanner = () => {
       {/* Content */}
       <div className="relative z-10 max-w-2xl px-4 text-center text-white md:px-0">
         <h1 className="mb-4 text-3xl font-extrabold leading-tight md:text-5xl">
-          Register Your Vehicle & Get All Docs Instantly
+       Register and renew all your vehicle documents
         </h1>
 
         <p className="mb-8 text-base md:text-lg">

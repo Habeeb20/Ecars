@@ -2,6 +2,7 @@
 import DealerVideo from '../models/dealerVideo.js';
 import User from "../models/user.js"
 // Dealer only: post a new video
+
 export const createDealerVideo = async (req, res) => {
   try {
     if (req.user.role !== 'dealer') {
@@ -13,6 +14,22 @@ export const createDealerVideo = async (req, res) => {
       return res.status(400).json({ message: 'videoUrl is required' });
     }
 
+    // Atomic decrement: only succeeds if videoCredits > 0, prevents race conditions
+    const dealer = await User.findOneAndUpdate(
+      { _id: req.user._id, videoCredits: { $gt: 0 } },
+      { $inc: { videoCredits: -1 } },
+      { new: true }
+    ).select('videoCredits');
+
+    if (!dealer) {
+      return res.status(402).json({
+        message: 'You have no video credits left. Pay ₦5,000 to get 10 more video posts.',
+        code: 'NO_VIDEO_CREDITS',
+        packPrice: 5000,
+        packCredits: 10,
+      });
+    }
+
     const video = await DealerVideo.create({
       postedBy: req.user._id,
       title,
@@ -22,7 +39,11 @@ export const createDealerVideo = async (req, res) => {
       duration,
     });
 
-    res.status(201).json({ success: true, video });
+    res.status(201).json({
+      success: true,
+      video,
+      videoCreditsRemaining: dealer.videoCredits,
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

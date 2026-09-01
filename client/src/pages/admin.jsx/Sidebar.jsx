@@ -15,6 +15,7 @@ import AdminContacts from './ContactDetails';
 import AdminSightings from './AdminReportSighting';
 import MyReceivedOffers from '../../components/dashboard/MyRecievedOffer';
 import InventoryDashboard from '../dealer/InventoryDashboard';
+import AdminCarVerification from './AdminverifiedCars';
 // import UsersList from './UsersList';
 // import DealersList from './DealersList';
 // import ServiceProvidersList from './ServiceProvidersList';
@@ -28,6 +29,7 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     { name: 'Dealers', icon: Car, component: <DealersList /> },
     { name: 'All Reports', icon: Car, component: <ReportsPage /> },
     { name: 'Contacts', icon: Car, component: <AdminContacts /> },
+    { name: 'Verify cars', icon: Car, component: <AdminCarVerification /> },
   
     { name: 'Blog', icon: Car, component: <BlogManagement /> },
     { name: 'stolen Cars Reports', icon: MessagesSquare, component: <AdminSightings /> },

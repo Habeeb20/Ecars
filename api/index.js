@@ -26,6 +26,7 @@ import viewRouter from "./routers/carViewingRoute.js"
 import salesRoutes from "./routers/salesRoute.js"
 import eauctionRoutes from "./routers/auctionRoute.js"
 import dealerVideoRoutes from "./routers/dealervideoRoutes.js"
+import videoCreditRoutes from "./routers/videoCreditRoute.js"
 dotenv.config();
 connectDb()
 
@@ -63,6 +64,7 @@ app.use("/api/auth", router)
 app.use("/api/admin", adminRouter)
 app.use("/api/cars", carListingRouter)
 app.use("/api/car-listings", carListingRouter)
+
 app.use("/api/stats", statsRoute)
 app.use("/api/reports", reportRouter)
 app.use("/api/payments", paymentRouter)
@@ -82,6 +84,8 @@ app.use('/api/sales', salesRoutes);
 app.use("/api/eauction", eauctionRoutes);
 // app.js
 app.use('/api/dealer-videos', dealerVideoRoutes);
+
+app.use('/api/video-credits', videoCreditRoutes);
 // await User.create({
 //   firstName: 'Admin',
 //   lastName: 'Boss',

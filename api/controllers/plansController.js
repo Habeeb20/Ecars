@@ -51,7 +51,7 @@ export const getFeaturedCars = async (req, res) => {
 export const getNewestListings = async (req, res) => {
   try {
     const newestCars = await CarListing.find({ status: 'active' })
-      .populate('postedBy', 'firstName lastName role dealerInfo')
+      .populate('postedBy', 'firstName lastName role phoneNumber dealerInfo')
       .sort('-createdAt')
       .limit(50);
 

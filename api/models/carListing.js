@@ -47,6 +47,9 @@ const carListingSchema = new mongoose.Schema({
   images: [{ type: String, required: [true, 'At least one image is required'] }],
   phoneNumber: { type: String, required: false },
   features: [String],
+isVerified: { type: Boolean, default: false },
+verifiedAt: { type: Date },
+verifiedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 
   // === Inventory / stock specific fields ===
   stockNumber: { type: String, trim: true, index: true }, // dealer-facing internal SKU, auto-generated

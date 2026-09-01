@@ -39,6 +39,9 @@ import InventoryDashboard from './pages/dealer/InventoryDashboard';
 import DealerStorefront from './pages/dealer/DealerStoreFront';
 import MyCarDetails from './pages/dealer/MyCarDetails';
 import CarDetailPage from './pages/CarDetailsPageBySlug';
+import ProviderDetailPage from './components/Landing/ProviderDetailspage';
+import ProductDetailPage from './components/Landing/CarProductDetailsPage';
+import DealerVideoUploadForm from './pages/dealer/DealerUploadVideoForm';
 // import Blog from './pages/Blog';
 
 function ScrollToTop() {
@@ -98,12 +101,19 @@ const App = () => {
         <Route path="/car-parts" element={<AllCarParts />} />
         <Route path="/car-parts/all-categories" element={<AllCarPartsCategories />} />
         <Route path="/vehicles/body-type/:bodyType" element={<VehiclesByBodyType />} />
-        
+
+
         <Route path="/blacklist" element={<Blacklist />} />
+        <Route path="/dealer/videos" element={<DealerVideoUploadForm />} />
         
         <Route path="/service-providers" element={<ServiceProvider />} />
-        
+      
 
+<Route path="/provider/:id" element={<ProviderDetailPage />} />
+
+
+
+<Route path="/product/:id" element={<ProductDetailPage />} />
 
           {/* Add more pages here */}
         </Route>

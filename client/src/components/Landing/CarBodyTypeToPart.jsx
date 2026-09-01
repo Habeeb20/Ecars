@@ -8,7 +8,9 @@ const BODY_TYPES = [
   { value: 'suv', label: 'SUV', icon: '🚙', description: 'Crossover & off-road capable' },
   { value: 'hatchback', label: 'Hatchback', icon: '🏎️', description: 'Compact & practical' },
   { value: 'truck', label: 'Truck', icon: '🛻', description: 'Pickup & heavy-duty' },
+  { value: 'trailer', label: 'Trailer', icon: '🚛', description: 'Trailer' },
   { value: 'van', label: 'Van', icon: '🚐', description: 'Minivans & cargo' },
+{ value: 'bicycle', label: 'Bicycle', icon: '🚲', description: 'Bicycle' },
   { value: 'coupe', label: 'Coupe', icon: '🛞', description: 'Sporty 2-door' },
   { value: 'convertible', label: 'Convertible', icon: '🚘', description: 'Open-top & fun' }
 ];
@@ -156,7 +158,7 @@ const CarBodyTypesToParts = () => {
         </div>
 
         {/* Body Types Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-5 mb-12">
+        <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-5 mb-12">
           {BODY_TYPES.map((type) => (
             <div
               key={type.value}

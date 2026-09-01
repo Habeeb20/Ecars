@@ -26,9 +26,9 @@ import ReportAndRequestSection from '../components/Landing/reportCar';
 import FeaturedCar from '../components/Landing/FeaturedCar';
 import NewListing from '../components/Landing/NewListing';
 import FeaturedDealers from '../components/Landing/FeaturedDealers';
-import { FeaturedServiceProvider } from '../components/Landing/FeaturedServiceProvider';
+import ProvidersSection from '../components/Landing/FeaturedServiceProvider';
 import Blog from '../components/Landing/Blog';
-import FeaturedCarPartSellers from '../components/Landing/FeaturedCarPartSeller';
+
 import Banner from '../components/Landing/Banner';
 import CarPartsCategories from '../components/Landing/CarPartCategories';
 import CarBodyTypesToParts from '../components/Landing/CarBodyTypeToPart';
@@ -40,6 +40,10 @@ import AuctionCatalog from '../components/Landing/Actioncar';
 import VehicleBanner from './VehicleBanner';
 import SalesFeed from './SalesFeed';
 import DealerVideoFeed from '../components/Landing/DealerVideoFeed';
+import VerifiedCarsSection from '../components/Landing/VerifiedCarsSection';
+import PublicSellerSections from '../components/Landing/PublicSellers';
+import CarPartsSection from '../components/Landing/FeaturedCarPartSeller';
+import PromoBanners, { DriversSection } from '../components/Landing/Banners';
 
 // Mock data (kept exactly as in your original code)
 const mockServiceProviders = [
@@ -217,12 +221,12 @@ const Home = () => {
 
       
         <div className="container relative z-10 pt-8 sm:pt-10 md:pt-0"> {/* Mobile padding added */}
-  <div className="max-w-lg md:max-w-2xl px-4 sm:px-8"> {/* Added horizontal padding on mobile */}
+  <div className="max-w-lg mt-5 md:max-w-2xl px-4 sm:px-8"> {/* Added horizontal padding on mobile */}
     <motion.h1 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="text-white text-3xl sm:text-3xl mt-40 md:text-5xl font-bold leading-tight"
+      className="text-white text-3xl sm:text-3xl mt-80 md:text-5xl font-bold leading-tight"
     >
       Find Your Perfect Car Today
     </motion.h1>
@@ -246,10 +250,13 @@ const Home = () => {
 </div>
       </section>
       <BodyTypeSelector />
-
+<PromoBanners />
       <StatsSection/>
 
         <FeaturedCar/>
+        <VerifiedCarsSection />
+        <PublicSellerSections />
+        <DriversSection />
 
            <NewListing/>
            <SalesFeed />
@@ -269,7 +276,7 @@ const Home = () => {
   
 
 
-    <FeaturedCarPartSellers/>
+  <CarPartsSection />
 
       {/* Value Your Asset & Sell Your Car Sections */}
       <section className="py-16 bg-gray-50 dark:bg-gray-900">
@@ -338,7 +345,8 @@ const Home = () => {
       <FeaturedDealers/>
 
 <CarBodyTypesToParts />
-      <FeaturedServiceProvider/>
+<ProvidersSection/>
+      {/* <FeaturedServiceProvider/> */}
 
       <Banner/>
 

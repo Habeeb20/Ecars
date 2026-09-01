@@ -33,7 +33,7 @@ const [showViewingModal, setShowViewingModal] = useState(false);
     try {
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/cars/newest`);
       const data = await res.json();
-
+      console.log(data.data.cars)
       if (data.status === 'success') {
         setNewestListings(data.data.cars);
       } else {

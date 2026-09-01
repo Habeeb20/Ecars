@@ -5,6 +5,8 @@ import Car from '../models/carListing.js';
 import User from '../models/user.js';
 import Subscription from '../models/subscriptionSchema.js';
 import mongoose from 'mongoose';
+
+
 export const createCarListing = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -881,4 +883,185 @@ export const getSaleListings = async (req, res) => {
   };
   const listings = await CarListing.find(filter).sort('-createdAt');
   res.json({ success: true, listings });
+};
+
+
+
+
+
+// @desc    Get all cars pending verification
+// @route   GET /api/admin/cars/unverified
+// @access  Private/Admin
+export const getUnverifiedCars = async (req, res) => {
+  try {
+    const { page = 1, limit = 20 } = req.query;
+
+    const cars = await CarListing.find({ isVerified: false, status: { $ne: 'draft' } })
+      .populate('postedBy', 'name email phoneNumber')
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
+
+    const total = await CarListing.countDocuments({ isVerified: false, status: { $ne: 'draft' } });
+
+    res.status(200).json({
+      success: true,
+      count: cars.length,
+      total,
+      page: Number(page),
+      pages: Math.ceil(total / limit),
+      data: cars,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to fetch unverified cars', error: error.message });
+  }
+};
+
+// @desc    Verify a car listing
+// @route   PATCH /api/admin/cars/:id/verify
+// @access  Private/Admin
+export const verifyCar = async (req, res) => {
+  try {
+    const car = await CarListing.findById(req.params.id);
+
+    if (!car) {
+      return res.status(404).json({ success: false, message: 'Car listing not found' });
+    }
+
+    car.isVerified = true;
+    car.verifiedAt = new Date();
+    car.verifiedBy = req.user?._id;
+
+    await car.save();
+
+    res.status(200).json({ success: true, message: 'Car verified successfully', data: car });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to verify car', error: error.message });
+  }
+};
+
+// @desc    Unverify a car listing
+// @route   PATCH /api/admin/cars/:id/unverify
+// @access  Private/Admin
+export const unverifyCar = async (req, res) => {
+  try {
+    const car = await CarListing.findById(req.params.id);
+
+    if (!car) {
+      return res.status(404).json({ success: false, message: 'Car listing not found' });
+    }
+
+    car.isVerified = false;
+    car.verifiedAt = undefined;
+    car.verifiedBy = undefined;
+
+    await car.save();
+
+    res.status(200).json({ success: true, message: 'Car unverified', data: car });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to unverify car', error: error.message });
+  }
+};
+
+// @desc    Toggle verification status (single endpoint alternative)
+// @route   PATCH /api/admin/cars/:id/toggle-verify
+// @access  Private/Admin
+export const toggleVerifyCar = async (req, res) => {
+  try {
+    const car = await CarListing.findById(req.params.id);
+
+    if (!car) {
+      return res.status(404).json({ success: false, message: 'Car listing not found' });
+    }
+
+    car.isVerified = !car.isVerified;
+    car.verifiedAt = car.isVerified ? new Date() : undefined;
+    car.verifiedBy = car.isVerified ? req.user?._id : undefined;
+
+    await car.save();
+
+    res.status(200).json({
+      success: true,
+      message: car.isVerified ? 'Car verified successfully' : 'Car unverified',
+      data: car,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to update verification', error: error.message });
+  }
+};
+
+// @desc    Get all verified cars (public-facing section)
+// @route   GET /api/cars/verified
+// @access  Public
+export const getVerifiedCars = async (req, res) => {
+  try {
+    const { page = 1, limit = 12 } = req.query;
+
+    const cars = await CarListing.find({ isVerified: true, status: 'active' })
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
+
+    const total = await CarListing.countDocuments({ isVerified: true, status: 'active' });
+
+    res.status(200).json({
+      success: true,
+      count: cars.length,
+      total,
+      page: Number(page),
+      pages: Math.ceil(total / limit),
+      data: cars,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to fetch verified cars', error: error.message });
+  }
+};
+
+
+
+
+
+// @desc    Get all cars for admin (with optional status/verification filters)
+// @route   GET /api/admin/cars
+// @access  Private/Admin
+export const getAllCarsForAdmin = async (req, res) => {
+  try {
+    const { page = 1, limit = 20, verified, status, search } = req.query;
+
+    const query = {};
+
+    if (verified === 'true') query.isVerified = true;
+    if (verified === 'false') query.isVerified = false;
+
+    if (status) query.status = status;
+
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { make: { $regex: search, $options: 'i' } },
+        { model: { $regex: search, $options: 'i' } },
+        { stockNumber: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    const cars = await CarListing.find(query)
+      .populate('postedBy', 'name email phoneNumber')
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
+
+    const total = await CarListing.countDocuments(query);
+
+    res.status(200).json({
+      success: true,
+      count: cars.length,
+      total,
+      page: Number(page),
+      pages: Math.ceil(total / limit),
+      data: cars,
+    });
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ success: false, message: 'Failed to fetch cars', error: error.message });
+  }
 };

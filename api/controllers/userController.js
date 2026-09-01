@@ -1470,3 +1470,73 @@ export const incrementProviderView = async (req, res) => {
   }
 };
 
+
+
+
+
+
+
+
+
+
+export const getPublicSellers = async (req, res) => {
+  try {
+    const { dealerLimit = 8, privateLimit = 8 } = req.query;
+
+    const baseLookup = [
+      {
+        $lookup: {
+          from: 'carlistings',
+          let: { userId: '$_id' },
+          pipeline: [
+            { $match: { $expr: { $and: [{ $eq: ['$postedBy', '$$userId'] }, { $eq: ['$status', 'active'] }] } } },
+          ],
+          as: 'carListings',
+        },
+      },
+      { $addFields: { carListingsCount: { $size: '$carListings' } } },
+      { $match: { blacklisted: { $ne: true }, isActive: true } },
+    ];
+
+    const publicProjection = {
+      firstName: 1,
+      lastName: 1,
+      avatar: 1,
+      slug: 1,
+      state: 1,
+      lga: 1,
+      role: 1,
+      carListingsCount: 1,
+      'dealerInfo.businessName': 1,
+      'dealerInfo.state': 1,
+      'dealerInfo.lga': 1,
+      'dealerInfo.verified': 1,
+      'dealerInfo.isFeatured': 1,
+    };
+
+    const [dealers, privateSellers] = await Promise.all([
+      User.aggregate([
+        { $match: { role: 'dealer' } },
+        ...baseLookup,
+        { $project: publicProjection },
+        { $sort: { 'dealerInfo.isFeatured': -1, carListingsCount: -1 } },
+        { $limit: Number(dealerLimit) },
+      ]),
+      User.aggregate([
+        { $match: { role: { $ne: 'dealer' } } },
+        ...baseLookup,
+        { $match: { carListingsCount: { $gt: 0 } } },
+        { $project: publicProjection },
+        { $sort: { carListingsCount: -1 } },
+        { $limit: Number(privateLimit) },
+      ]),
+    ]);
+
+    res.status(200).json({
+      status: 'success',
+      data: { dealers, privateSellers },
+    });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Failed to fetch sellers', error: err.message });
+  }
+};
