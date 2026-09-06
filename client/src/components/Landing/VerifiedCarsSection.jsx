@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { BadgeCheck, Loader2, Gauge, Fuel } from 'lucide-react';
+import { BadgeCheck, Loader2, Gauge, Fuel, Eye, Heart, Share2 } from 'lucide-react';
 
 const backendUrl = import.meta.env.VITE_API_URL;
 
@@ -88,6 +88,17 @@ export default function VerifiedCarsSection() {
                   <Fuel size={11} /> {car.fuelType}
                 </span>
               </div>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 dark:text-gray-400 mb-4">
+               <span className="flex items-center gap-1">
+                  <Eye size={12} /> Views: {Number(car.views || 0).toLocaleString()}
+                </span>
+                <span className="flex items-center gap-1">
+                  <Heart size={12} /> Likes: {Number(car.likeCount || 0).toLocaleString()}
+                </span>
+                <span className="flex items-center gap-1">
+                  <Share2 size={12} /> Shares: {Number(car.shareCount || 0).toLocaleString()}
+                </span>
+                </div>
 
               <p className="text-sm sm:text-lg font-bold text-gray-900 dark:text-white">
                 ₦{car.price?.toLocaleString()}

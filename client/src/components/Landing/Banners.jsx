@@ -122,6 +122,13 @@ export default function PromoBanners() {
           subtitle="Compare specs, prices, and features side by side"
           gradient="bg-gradient-to-br from-violet-600 to-purple-700"
         />
+        <InternalBanner
+          to="/https://edrivers.ng"
+          icon={<GitCompare size={26} className="text-white" />}
+          title="Find a driver"
+          subtitle="Compare specs, prices, and features side by side"
+          gradient="bg-gradient-to-br from-cyan-600 to-cyan-900"
+        />
       </div>
     </section>
   );

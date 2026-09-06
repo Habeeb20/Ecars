@@ -1,6 +1,6 @@
 // src/pages/PublicDealsPage.jsx
 import React, { useState, useEffect } from 'react';
-import { Loader2, X, Phone, MapPin, Building, MessageCircle, Send, ShieldCheck, Eye } from 'lucide-react';
+import { Loader2, X, Phone, MapPin, Building, MessageCircle, Send, ShieldCheck, Eye, Heart, Share2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 const PublicDealsPage = () => {
@@ -195,6 +195,18 @@ const PublicDealsPage = () => {
                   <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
                  • Fuel Type: <span className='font-bold text-1xl'>{deal.fuelType}</span>
                   </p>
+
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 dark:text-gray-400 mb-4">
+                   <span className="flex items-center gap-1">
+                      <Eye size={12} /> Views: {Number(deal.views || 0).toLocaleString()}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Heart size={12} /> Likes: {Number(deal.likeCount || 0).toLocaleString()}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Share2 size={12} /> Shares: {Number(deal.shareCount || 0).toLocaleString()}
+                    </span>
+                    </div>
 
                   <div className="flex gap-3">
                     <button

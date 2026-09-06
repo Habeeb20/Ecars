@@ -16,6 +16,7 @@ import AdminSightings from './AdminReportSighting';
 import MyReceivedOffers from '../../components/dashboard/MyRecievedOffer';
 import InventoryDashboard from '../dealer/InventoryDashboard';
 import AdminCarVerification from './AdminverifiedCars';
+import AdminVehicleRegistrations from './AdminVehicleRegistration';
 // import UsersList from './UsersList';
 // import DealersList from './DealersList';
 // import ServiceProvidersList from './ServiceProvidersList';
@@ -39,6 +40,7 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     { name: 'subscription', icon: DollarSign, component: <SuperadminSubscriptions /> },
     { name: 'Blacklist', icon: SettingsIcon, component: <AdminBlacklist /> },
     { name: 'View Messages', icon: MessagesSquare, component: <AdminMessages /> },
+    { name: 'vehicle', icon: MessagesSquare, component: <AdminVehicleRegistrations /> },
   
   
   ];

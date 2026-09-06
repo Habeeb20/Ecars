@@ -27,6 +27,9 @@ import salesRoutes from "./routers/salesRoute.js"
 import eauctionRoutes from "./routers/auctionRoute.js"
 import dealerVideoRoutes from "./routers/dealervideoRoutes.js"
 import videoCreditRoutes from "./routers/videoCreditRoute.js"
+
+
+import vehicleRegistrationRoutes from './routers/vehilcleRegistrationRoutes.js';
 dotenv.config();
 connectDb()
 
@@ -86,6 +89,8 @@ app.use("/api/eauction", eauctionRoutes);
 app.use('/api/dealer-videos', dealerVideoRoutes);
 
 app.use('/api/video-credits', videoCreditRoutes);
+
+app.use('/api/vehicle-registrations', vehicleRegistrationRoutes);
 // await User.create({
 //   firstName: 'Admin',
 //   lastName: 'Boss',

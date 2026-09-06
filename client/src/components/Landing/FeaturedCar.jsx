@@ -268,7 +268,8 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, MessageCircle, X, Loader2, MapPin, Gauge, Calendar } from 'lucide-react';
+import { Heart, Share2, Eye, Calendar, Gauge, MapPin, ArrowRight, MessageCircle } from 'lucide-react';
+import {   X, Loader2,  } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '../../contexts/AuthContext';
 import { buildCarSlug } from '../../utils/carSlug';
@@ -425,16 +426,27 @@ const FeaturedCar = () => {
                     <p className="text-xl font-black mb-3" style={{ color: rust }}>
                       ₦{Number(car.price).toLocaleString()}
                     </p>
-
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 dark:text-gray-400 mb-4">
-                      <span className="flex items-center gap-1"><Calendar size={12} /> {car.year}</span>
-                      {car.mileage != null && (
-                        <span className="flex items-center gap-1"><Gauge size={12} /> {Number(car.mileage).toLocaleString()} km</span>
-                      )}
-                      {car.location?.state && (
-                        <span className="flex items-center gap-1"><MapPin size={12} /> {car.location.state}</span>
-                      )}
-                    </div>
+<div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 dark:text-gray-400 mb-4">
+  <span className="flex items-center gap-1"><Calendar size={12} /> {car.year}</span>
+  {car.mileage != null && (
+    <span className="flex items-center gap-1"><Gauge size={12} /> {Number(car.mileage).toLocaleString()} km</span>
+  )}
+  {car.location?.state && (
+    <span className="flex items-center gap-1"><MapPin size={12} /> {car.location.state}</span>
+  )}
+ 
+</div>
+<div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 dark:text-gray-400 mb-4">
+ <span className="flex items-center gap-1">
+    <Eye size={12} /> Views: {Number(car.views || 0).toLocaleString()}
+  </span>
+  <span className="flex items-center gap-1">
+    <Heart size={12} /> Likes: {Number(car.likeCount || 0).toLocaleString()}
+  </span>
+  <span className="flex items-center gap-1">
+    <Share2 size={12} /> Shares: {Number(car.shareCount || 0).toLocaleString()}
+  </span>
+  </div>
 
                     <button
                       onClick={(e) => openChat(e, car)}
@@ -504,3 +516,12 @@ const FeaturedCar = () => {
 };
 
 export default FeaturedCar;
+
+
+
+
+
+
+
+
+

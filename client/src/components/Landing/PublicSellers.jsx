@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Loader2, Building2, UserCircle2, BadgeCheck, MapPin, Car, ArrowRight } from 'lucide-react';
+import { Loader2, Building2, UserCircle2, BadgeCheck, MapPin, Car, ArrowRight, Eye, Heart, Share2 } from 'lucide-react';
 
 const backendUrl = import.meta.env.VITE_API_URL;
 
@@ -42,7 +42,7 @@ export default function PublicSellerSections() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-14">
       <SellerSection
-        title="Trusted Dealers"
+        title="Verified Car Dealers"
         subtitle="Verified dealerships with active inventory"
         icon={<Building2 size={20} className="text-[#0B1B3E]" />}
         users={dealers}
@@ -156,6 +156,17 @@ function SellerCard({ user, onClick, variant }) {
           <Car size={12} className="shrink-0" />
           {user.carListingsCount} listing{user.carListingsCount !== 1 ? 's' : ''}
         </span>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 dark:text-gray-400 mb-4">
+         <span className="flex items-center gap-1">
+            <Eye size={12} /> Views: {Number(user.views || 0).toLocaleString()}
+          </span>
+          <span className="flex items-center gap-1">
+            <Heart size={12} /> Likes: {Number(user.likeCount || 0).toLocaleString()}
+          </span>
+          <span className="flex items-center gap-1">
+            <Share2 size={12} /> Shares: {Number(user.shareCount || 0).toLocaleString()}
+          </span>
+          </div>
       </div>
     </div>
   );
