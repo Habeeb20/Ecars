@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 const sightingSchema = new mongoose.Schema({
   reportId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'StolenCarReport', // ← reference to your stolen car report model
+    ref: 'Report', // ← reference to your stolen car report model
     required: true,
   },
   reporter: {

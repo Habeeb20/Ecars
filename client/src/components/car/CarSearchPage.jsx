@@ -4,12 +4,16 @@ import SearchFilters from './SearchFilters'; // your search component
 import { CarCard } from './CarCard';        // ← your provided CarCard
 import { X, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import BookViewingModal from '../appointment/BookViewingModal';
 
 export default function CarsSearchPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+const [bookingCar, setBookingCar] = useState(null);
+const [cars, setCars] = useState([]);
 
   const handleSearch = async (filters) => {
     setLoading(true);
@@ -152,6 +156,7 @@ export default function CarsSearchPage() {
                       <CarCard 
                         key={car._id} 
                         car={car} 
+                        onBookViewing={setBookingCar} 
                         showDealerInfo={true} // optional - show dealer if you want
                       />
                     ))}
@@ -172,6 +177,20 @@ export default function CarsSearchPage() {
           </div>
         )}
       </div>
+      <BookViewingModal
+  car={bookingCar}
+  open={!!bookingCar}
+  onClose={() => setBookingCar(null)}
+  onBooked={() =>
+    setCars((list) =>
+      list.map((c) => (c._id === bookingCar._id ? { ...c, bookingsCount: (c.bookingsCount ?? 0) + 1 } : c))
+    )
+  }
+  />
     </div>
   );
 }
+
+
+
+

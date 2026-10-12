@@ -4,11 +4,16 @@ import { MapPin, Phone, Star, ArrowLeft } from 'lucide-react';
 import { featuredDealers } from '../data/dealers';
 import { mockInventory } from '../data/cars';
 import { CarCard } from '../components/car/CarCard';
-
+import BookViewingModal from '../components/appointment/BookViewingModal';
+import { useState } from 'react';
 const DealerDetails = () => {
   const { id } = useParams();
   const dealer = featuredDealers.find(d => d.id === id);
   const inventory = mockInventory[id ] || [];
+
+  const [bookingCar, setBookingCar] = useState(null);
+  const [cars, setCars] = useState([]);
+  
 
   if (!dealer) {
     return (
@@ -93,7 +98,7 @@ const DealerDetails = () => {
       {inventory.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {inventory.map(car => (
-            <CarCard key={car.id} car={car} />
+            <CarCard key={car.id} car={car} onBookViewing={setBookingCar} />
           ))}
         </div>
       ) : (
@@ -102,6 +107,16 @@ const DealerDetails = () => {
           <p className="text-gray-600 dark:text-gray-400">This dealer currently has no vehicles listed.</p>
         </div>
       )}
+      <BookViewingModal
+        car={bookingCar}
+        open={!!bookingCar}
+        onClose={() => setBookingCar(null)}
+        onBooked={() =>
+          setCars((list) =>
+            list.map((c) => (c._id === bookingCar._id ? { ...c, bookingsCount: (c.bookingsCount ?? 0) + 1 } : c))
+          )
+        }
+      />
     </div>
   );
 };

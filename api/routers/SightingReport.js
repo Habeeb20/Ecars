@@ -12,7 +12,7 @@ const router = express.Router();
 router.post('/sightings', createSighting);
 router.get("/stolencars", getStolenCars)
 // Admin-only routes
-router.get('/sightings', protect,  getAllSightings);
+router.get('/sightings',   getAllSightings);
 router.get('/reports/:reportId/sightings', protect,  getSightingsByReport);
 
 export default router;

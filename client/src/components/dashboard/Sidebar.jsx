@@ -30,6 +30,7 @@ import InventoryDashboard from '../../pages/dealer/InventoryDashboard';
 import SalesAnalyticsDashboard from '../../pages/dealer/SalesAnalytics';
 import PostSalePage from '../../pages/dealer/PostSalesPage';
 import DealerVideoUploadForm from '../../pages/dealer/DealerUploadVideoForm';
+import AppointmentsPage from '../appointment/AppointmentPage';
 
 // ─── view registry — every renderable panel, keyed by view id ───────────────
 const VIEWS = {
@@ -53,6 +54,9 @@ const VIEWS = {
   saledeals:        <PostSalePage />,
   postvideo:        <DealerVideoUploadForm/>,
   recievedOffer:     <MyReceivedOffers />,
+  appointment: <AppointmentsPage mode="owner" />,
+  myAppointment: <AppointmentsPage mode="client" />,
+
 };
 
 // ─── per-role menu configs ────────────────────────────────────────────────────

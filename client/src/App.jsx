@@ -42,6 +42,9 @@ import CarDetailPage from './pages/CarDetailsPageBySlug';
 import ProviderDetailPage from './components/Landing/ProviderDetailspage';
 import ProductDetailPage from './components/Landing/CarProductDetailsPage';
 import DealerVideoUploadForm from './pages/dealer/DealerUploadVideoForm';
+import AppointmentsPage from './components/appointment/AppointmentPage';
+import VehicleRegistrationPage from './components/Landing/VehicleRegForm';
+import RecoveredCarsPage from './components/Landing/RecoveredPage';
 // import Blog from './pages/Blog';
 
 function ScrollToTop() {
@@ -76,6 +79,7 @@ const App = () => {
         <Route element={<MainLayout />}>
        
           <Route path="/" element={<Home />} />
+          <Route path="/vehicles-register-form" element={<VehicleRegistrationPage />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/cars" element={<Listings/>} />
@@ -87,6 +91,8 @@ const App = () => {
         <Route path="/reset-password/:token" element={<ResetPassword/>} />
         <Route path="/payment/success" element={<PaymentSuccess/>} />
         <Route path="/stolen-cars" element={<StolenCars/>} />
+        <Route path="/vehicles/stolen" element={<StolenCars/>} />
+        <Route path="/vehicles/recovered" element={<RecoveredCarsPage/>} />
         <Route path="/verify-email" element={<VerifyEmail/>} />
         <Route path="/vehicles" element={<Vehicles/>} />
         <Route path="/blog/:id" element={<Article/>} />
@@ -101,6 +107,8 @@ const App = () => {
         <Route path="/car-parts" element={<AllCarParts />} />
         <Route path="/car-parts/all-categories" element={<AllCarPartsCategories />} />
         <Route path="/vehicles/body-type/:bodyType" element={<VehiclesByBodyType />} />
+        <Route path="/my-appointments" element={<AppointmentsPage mode="client" />} />
+        <Route path="/dashboard/viewings" element={<AppointmentsPage mode="owner" />} />
 
 
         <Route path="/blacklist" element={<Blacklist />} />

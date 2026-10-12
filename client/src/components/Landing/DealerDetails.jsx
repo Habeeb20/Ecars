@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import { useAuth } from '../../contexts/AuthContext';
 import { CarCard } from '../car/CarCard';
 import car from "../../assets/car.jpeg"
+import BookViewingModal from '../appointment/BookViewingModal';
 
 const DealerDetails = () => {
   const { id } = useParams();
@@ -24,6 +25,8 @@ const DealerDetails = () => {
   const [chatLoading, setChatLoading] = useState(false);
 const [selectedDealer, setSelectedDealer] = useState([])
   const { isLoggedIn } = useAuth();
+
+const [bookingCar, setBookingCar] = useState(null);
 
   useEffect(() => {
     fetchDealerDetails();
@@ -186,7 +189,7 @@ console.log(data)
       {cars.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {cars.map(car => (
-            <CarCard key={car._id} car={car} />
+            <CarCard key={car._id} car={car} onBookViewing={setBookingCar} />
           ))}
         </div>
       ) : (
@@ -231,6 +234,17 @@ console.log(data)
           </div>
         </div>
       )}
+
+      <BookViewingModal
+        car={bookingCar}
+        open={!!bookingCar}
+        onClose={() => setBookingCar(null)}
+        onBooked={() =>
+          setCars((list) =>
+            list.map((c) => (c._id === bookingCar._id ? { ...c, bookingsCount: (c.bookingsCount ?? 0) + 1 } : c))
+          )
+        }
+      />
     </div>
   );
 };

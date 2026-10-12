@@ -4,6 +4,7 @@ import { CarCard } from '../components/car/CarCard';
 import SearchFilters from '../components/car/SearchFilters';
 import { ChevronDown, SlidersHorizontal, Search } from 'lucide-react';
 import { mockInventory } from '../data/cars';
+import BookViewingModal from '../components/appointment/BookViewingModal';
 
 const allCars = Object.values(mockInventory).flat();
 
@@ -23,6 +24,9 @@ const conditionOptions = [
 
 const Listings = () => {
   const [cars, setCars] = useState(allCars);
+
+const [bookingCar, setBookingCar] = useState(null);
+
   const [filteredCars, setFilteredCars] = useState(allCars);
   const [sortBy, setSortBy] = useState('newest');
   const [showFilters, setShowFilters] = useState(false);
@@ -251,7 +255,7 @@ const Listings = () => {
             {cars.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                 {cars.map((car) => (
-                  <CarCard key={car.id} car={car} />
+                  <CarCard key={car.id} car={car} onBookViewing={setBookingCar} />
                 ))}
               </div>
             ) : (
@@ -319,6 +323,16 @@ const Listings = () => {
           </div>
         </div>
       </div>
+      <BookViewingModal
+        car={bookingCar}
+        open={!!bookingCar}
+        onClose={() => setBookingCar(null)}
+        onBooked={() =>
+          setCars((list) =>
+            list.map((c) => (c._id === bookingCar._id ? { ...c, bookingsCount: (c.bookingsCount ?? 0) + 1 } : c))
+          )
+        }
+      />
     </div>
   );
 };

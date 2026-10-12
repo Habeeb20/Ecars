@@ -44,7 +44,10 @@ import VerifiedCarsSection from '../components/Landing/VerifiedCarsSection';
 import PublicSellerSections from '../components/Landing/PublicSellers';
 import CarPartsSection from '../components/Landing/FeaturedCarPartSeller';
 import PromoBanners, { DriversSection } from '../components/Landing/Banners';
-
+import CarRepairBanner from '../components/Landing/CarRepairBanner';
+import RecoveredCarsBanner from '../components/Landing/Recovered';
+import VehicleRegistrationEntry from '../components/Landing/VehicleRegistrationEntry';
+import RegisterVehicleBanner from '../components/Landing/RegisterVehicle';
 // Mock data (kept exactly as in your original code)
 const mockServiceProviders = [
   {
@@ -252,37 +255,10 @@ const Home = () => {
       <BodyTypeSelector />
 <PromoBanners />
       <StatsSection/>
-
-        <FeaturedCar/>
-        <VerifiedCarsSection />
-        <PublicSellerSections />
-        <DriversSection />
-
-           <NewListing/>
-           <SalesFeed />
-           <DealerVideoFeed />
-
-      <CarPartsCategories/>
-
-      <PublicDealsPage />
-      <AuctionBanner/>
-    
-
-      <ServiceCategoriesGrid/>
-      <VehicleBanner />
-      <AuctionCatalog />
-
-      {/* Featured Cars Section */}
-  
-
-
-  <CarPartsSection />
-
-      {/* Value Your Asset & Sell Your Car Sections */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-900">
+  <section className="py-16 bg-gray-50 dark:bg-gray-900">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Value Your Asset Section */}
+           
             <div className="relative text-white overflow-hidden rounded-2xl">
               <div className="absolute inset-0 z-0">
                 <img
@@ -308,7 +284,7 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Sell Your Car Section */}
+    
             <div className="relative text-white overflow-hidden rounded-2xl">
               <div className="absolute inset-0 z-0">
                 <img
@@ -337,6 +313,35 @@ const Home = () => {
         </div>
       </section>
 
+        <FeaturedCar/>
+        <VerifiedCarsSection />
+        <PublicSellerSections />
+        <DriversSection />
+      
+
+           <NewListing/>
+           {/* <RegisterVehicleBanner/> */}
+             <VehicleRegistrationEntry />
+           <SalesFeed />
+           <DealerVideoFeed />
+
+      {/* <CarPartsCategories/> */}
+
+      <PublicDealsPage />
+      <AuctionBanner/>
+    
+
+      <ServiceCategoriesGrid/>
+      <VehicleBanner />
+      <AuctionCatalog />
+
+      {/* Featured Cars Section */}
+  
+
+
+  <CarPartsSection />
+<CarRepairBanner />
+    
      
 
       {/* Recent Listings */}
@@ -345,6 +350,17 @@ const Home = () => {
       <FeaturedDealers/>
 
 <CarBodyTypesToParts />
+
+
+
+{/* <RecoveredCarsBanner
+  ctaHref="/vehicles-register-form"
+  secondaryHref="/report-stolen"
+  stats={[
+    { value: '[N]', label: 'Vehicles recovered' },
+    { value: '[N]', label: 'Reunited with owners' },
+  ]}
+/> */}
 <ProvidersSection/>
       {/* <FeaturedServiceProvider/> */}
 

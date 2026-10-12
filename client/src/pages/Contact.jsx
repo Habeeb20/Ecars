@@ -405,14 +405,14 @@ const Contact = () => {
                 <Phone className="h-6 w-6 mr-4 mt-1" />
                 <div>
                   <p className="text-sm font-medium">Phone</p>
-                  <p className="text-base">+234 901 234 5678</p>
+                  <p className="text-base">+234 7000 555 666</p>
                 </div>
               </div>
               <div className="flex items-start">
                 <Mail className="h-6 w-6 mr-4 mt-1" />
                 <div>
                   <p className="text-sm font-medium">Email</p>
-                  <p className="text-base">info@autohub.ng</p>
+                  <p className="text-base">ecarsupport@gmail.com</p>
                 </div>
               </div>
               <div className="flex items-start">
@@ -420,7 +420,7 @@ const Contact = () => {
                 <div>
                   <p className="text-sm font-medium">Address</p>
                   <p className="text-base">
-                    456 Motor Road, Surulere, Lagos, Nigeria
+                  24, iyalla street, ikeja Lagos, Nigeria
                   </p>
                 </div>
               </div>

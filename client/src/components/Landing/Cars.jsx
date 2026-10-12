@@ -326,6 +326,7 @@ import { toast } from 'sonner';
 import { CarCard } from '../car/CarCard';
 import SearchFilters from '../car/SearchFilters';
 import { Loader2 } from 'lucide-react';
+import BookViewingModal from '../appointment/BookViewingModal';
 
 const sortOptions = [
   { value: 'newest', label: 'Newest First' },
@@ -348,6 +349,9 @@ const Listings = () => {
   const [sortBy, setSortBy] = useState('newest');
   const [showFilters, setShowFilters] = useState(false);
   const [selectedCondition, setSelectedCondition] = useState('');
+
+const [bookingCar, setBookingCar] = useState(null);
+
 
   const [currentFilters, setCurrentFilters] = useState({
     make: '',
@@ -599,7 +603,7 @@ const Listings = () => {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 xl:gap-8">
                 {cars.map((car) => (
-                  <CarCard key={car._id} car={car} />
+                  <CarCard key={car._id} car={car} onBookViewing={setBookingCar} />
                 ))}
               </div>
             )}
@@ -626,6 +630,16 @@ const Listings = () => {
           </div>
         </div>
       </div>
+      <BookViewingModal
+        car={bookingCar}
+        open={!!bookingCar}
+        onClose={() => setBookingCar(null)}
+        onBooked={() =>
+          setCars((list) =>
+            list.map((c) => (c._id === bookingCar._id ? { ...c, bookingsCount: (c.bookingsCount ?? 0) + 1 } : c))
+          )
+        }
+      />
     </div>
   );
 };

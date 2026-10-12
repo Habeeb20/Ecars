@@ -24,7 +24,7 @@ const Footer = () => {
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               The premier marketplace for buying and selling cars online. Find your dream car or sell your vehicle with ease.
             </p>
-            <div className="flex space-x-4">
+            {/* <div className="flex space-x-4">
               <a href="#" className="text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400">
                 <Facebook size={20} />
                 <span className="sr-only">Facebook</span>
@@ -41,7 +41,7 @@ const Footer = () => {
                 <Youtube size={20} />
                 <span className="sr-only">YouTube</span>
               </a>
-            </div>
+            </div> */}
           </div>
 
           {/* Quick Links */}
@@ -121,13 +121,13 @@ const Footer = () => {
               <li className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 text-primary-600 dark:text-primary-500" />
                 <span className="text-gray-600 dark:text-gray-400">
-                  +234 8155446666
+                  +234 7000 555 666
                 </span>
               </li>
               <li className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-primary-600 dark:text-primary-500" />
                 <span className="text-gray-600 dark:text-gray-400">
-                essentila01@gmail.com
+                ecarsupport@gmail.com
                 </span>
               </li>
             </ul>
