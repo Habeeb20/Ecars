@@ -214,9 +214,25 @@ const ListCar = () => {
                 <option value="hybrid">Hybrid</option>
                 <option value="electric">Electric</option>
               </select>
-              <select value={form.bodyType} onChange={(e) => setForm({ ...form, bodyType: e.target.value })} class="input">
+              {/* <select value={form.bodyType} onChange={(e) => setForm({ ...form, bodyType: e.target.value })} class="input"> */}
    
-              </select>
+   <select
+  value={form.bodyType}
+  onChange={(e) => setForm({ ...form, bodyType: e.target.value })}
+  className="input"
+  required
+>
+  <option value="sedan">Sedan</option>
+  <option value="suv">SUV</option>
+  <option value="hatchback">Hatchback</option>
+  <option value="coupe">Coupe</option>
+  <option value="convertible">Convertible</option>
+  <option value="wagon">Wagon</option>
+  <option value="pickup">Pickup</option>
+  <option value="van">Van</option>
+  <option value="minivan">Minivan / Bus</option>
+</select>
+              {/* </select> */}
               <select value={form.condition} onChange={(e) => setForm({ ...form, condition: e.target.value })} class="input">
                 <option value="brand new">Brand New</option>
                 <option value="foreign used">Foreign Used</option>

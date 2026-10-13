@@ -333,7 +333,7 @@ export default function PromoBanners() {
         />
 
         <Banner
-          href="https://edirect.ng/category/petrol-stations"
+          href="https://edirect.ng/category/Petroleum-distribution"
           icon={<Fuel size={26} className="text-white" />}
           title="Petrol Stations"
           subtitle="Locate fuel stations across Nigeria"
