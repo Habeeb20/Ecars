@@ -6,8 +6,8 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { generateUniqueSlug } from '../utils/slugify.js';
-
-
+import { AGENT_SIGNUP_POINTS } from '../config/agent.js';
+import crypto from "crypto"
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'dealer', 'service-provider', 'carPart-seller', 'superadmin'],
+    enum: ['user', 'dealer', 'agent', 'service-provider', 'carPart-seller', 'superadmin'],
     default: 'user',
   },
   uniqueNumber: {
@@ -43,6 +43,10 @@ const userSchema = new mongoose.Schema({
     unique: true,
     sparse: true,
   },
+
+  loyaltyPoints: { type: Number, default: 0, min: 0 },
+referralCode: { type: String, unique: true, sparse: true, uppercase: true, trim: true }, // agents only
+signedUpByAgent: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null, index: true },
   // add to userSchema, alongside the other auth fields
 authOtp: { type: String, select: false },
 authOtpExpires: { type: Date, select: false },
@@ -266,6 +270,21 @@ userSchema.pre('save', async function () {
 
   if (!this.slug || nameChanged) {
     this.slug = await generateUniqueSlug(this.constructor, businessName, this._id);
+  }
+});
+
+
+userSchema.pre('save', async function () {
+  if (this.role !== 'agent') return;
+  if (this.isNew && !this.loyaltyPoints) this.loyaltyPoints = AGENT_SIGNUP_POINTS;
+  if (!this.referralCode) {
+    for (let i = 0; i < 10; i++) {
+      const code = crypto.randomBytes(4).toString('hex').toUpperCase();
+      if (!(await this.constructor.exists({ referralCode: code }))) {
+        this.referralCode = code;
+        break;
+      }
+    }
   }
 });
 // Password comparison

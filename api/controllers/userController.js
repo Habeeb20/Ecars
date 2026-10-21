@@ -11,6 +11,16 @@ import CarListing from '../models/carListing.js';
 import { sendPasswordResetEmail } from '../utils/functions.js';
 import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
+import { linkAgentToUser } from '../services/agentService.js';
+
+
+
+
+// whitelist roles. Never trust the role from the body:
+const PUBLIC_ROLES = ['user', 'dealer', 'service-provider', 'carPart-seller', 'agent'];
+
+
+
 
 // import createSendToken from wherever your login controller already gets it
 
@@ -110,6 +120,151 @@ const hashOtp = (otp) => crypto.createHash('sha256').update(otp).digest('hex');
 // };
 
 
+// export const register = async (req, res) => {
+//    try {
+//     const {
+//       firstName, lastName, email, password, role, phoneNumber, state, lga, address,
+//       dealerInfo, serviceProviderInfo, carPartSellerInfo,
+//     } = req.body;
+
+//     const finalRole = role || 'user';
+//     if (!PUBLIC_ROLES.includes(finalRole)) {
+//       return res.status(400).json({ status: 'fail', message: 'Invalid role' });
+//     }
+
+//     // find the agent behind the signup link BEFORE building the payload
+//     let agent = null;
+//     if (req.body.referralCode) {
+//       agent = await User.findOne({
+//         role: 'agent',
+//         referralCode: String(req.body.referralCode).toUpperCase().trim(),
+//       });
+//     }
+
+//     const userPayload = {
+//       firstName,
+//       lastName,
+//       email: email.toLowerCase(),
+//       password,
+//       role: finalRole,
+//       phoneNumber,
+//       state,
+//       lga,
+//       address,
+//       signedUpByAgent: agent && finalRole !== 'agent' ? agent._id : undefined,
+//     };
+
+//     // Attach the correct nested object based on selected role
+//     if (role === 'dealer' && dealerInfo) {
+//       userPayload.dealerInfo = {
+//         businessName:               dealerInfo.businessName,
+//         businessRegistrationNumber: dealerInfo.businessRegistrationNumber,
+//         businessAddress:            dealerInfo.businessAddress,
+//         state:                      dealerInfo.state,
+//         lga:                        dealerInfo.lga,
+//       };
+//     }
+
+//     if (role === 'service-provider' && serviceProviderInfo) {
+//       userPayload.serviceProviderInfo = {
+//         type:               serviceProviderInfo.type,
+//         businessName:       serviceProviderInfo.businessName,
+//         businessAddress:    serviceProviderInfo.businessAddress,
+//         state:              serviceProviderInfo.state,
+//         lga:                serviceProviderInfo.lga,
+//         phoneNumber:        serviceProviderInfo.phoneNumber,
+//         whatsappNumber:     serviceProviderInfo.whatsappNumber,
+//         yearsOfExperience:  serviceProviderInfo.yearsOfExperience,
+//         servicesOffered:    serviceProviderInfo.servicesOffered || [],
+//       };
+//     }
+
+//     if (role === 'carPart-seller' && carPartSellerInfo) {
+//       userPayload.carPartSellerInfo = {
+//         type:               carPartSellerInfo.type,
+//         businessName:       carPartSellerInfo.businessName,
+//         businessAddress:    carPartSellerInfo.businessAddress,
+//         state:              carPartSellerInfo.state,
+//         lga:                carPartSellerInfo.lga,
+//         phoneNumber:        carPartSellerInfo.phoneNumber,
+//         whatsappNumber:     carPartSellerInfo.whatsappNumber,
+//         website:            carPartSellerInfo.website,
+//         yearsOfExperience:  carPartSellerInfo.yearsOfExperience,
+//         specialties:        carPartSellerInfo.specialties || [],
+//       };
+//     }
+
+//     const newUser = await User.create(userPayload);
+
+
+// // after the user is created
+//     if (agent && newUser.role !== 'agent') {
+//     linkAgentToUser(agent, newUser).catch((e) => console.error('Agent link failed:', e.message));
+//     }
+
+//     // Cross-platform registration (kept exactly as before)
+//     try {
+//       await axios.post('https://auth.edirect.ng/api/auth/register', {
+//         platform: 'ecars',
+//         first_name: firstName,
+//         last_name: lastName,
+//         email: email.toLowerCase(),
+//         password,
+//         role,
+//       });
+//       console.log('Edirect auth registration successful');
+//     } catch (err) {
+//       console.error('Edirect auth failed:', err.response?.data || err.message);
+//     }
+
+//     try {
+//       await axios.post('https://backend-efixit.ereligion.ng/api/auth/register', {
+//         first_name: firstName,
+//         last_name: lastName,
+//         email: email.toLowerCase(),
+//         password,
+//         role: 'client',
+//       });
+//       console.log('Efixit auth registration successful');
+//     } catch (err) {
+//       console.error('Efixit auth failed:', err.response?.data || err.message);
+//     }
+
+//     createSendToken(newUser, 201, res);
+//   } catch (err) {
+//     console.log(err);
+//     if (err.code === 11000 || err.message.includes('duplicate key')) {
+//       const field = Object.keys(err.keyPattern || {})[0];
+//       const friendlyField = field === 'email'
+//         ? 'email'
+//         : field === 'dealerInfo.businessRegistrationNumber'
+//         ? 'business registration number'
+//         : field;
+//       return res.status(409).json({
+//         status: 'fail',
+//         message: field === 'email'
+//           ? 'This email is already registered. Please login instead.'
+//           : `This ${friendlyField} is already registered.`,
+//       });
+//     }
+
+//     if (err.name === 'ValidationError') {
+//       const messages = Object.values(err.errors).map((el) => el.message);
+//       return res.status(400).json({
+//         status: 'fail',
+//         message: messages.join(', '),
+//       });
+//     }
+
+//     res.status(400).json({
+//       status: 'fail',
+//       message: 'Registration failed. Please try again.',
+//     });
+//   }
+// };
+
+
+
 export const register = async (req, res) => {
   try {
     const {
@@ -122,6 +277,7 @@ export const register = async (req, res) => {
       state,
       lga,
       address,
+      referralCode,
 
       // role-specific payloads sent from the frontend, only one will be populated
       dealerInfo,
@@ -129,103 +285,134 @@ export const register = async (req, res) => {
       carPartSellerInfo,
     } = req.body;
 
+    // 1. Validate the role (this check lives INSIDE the function, where `res` and `role` exist)
+    const finalRole = role || 'user';
+    if (!PUBLIC_ROLES.includes(finalRole)) {
+      return res.status(400).json({ status: 'fail', message: 'Invalid role' });
+    }
+
+    // 2. Find the agent behind the signup link, if any (before building the payload)
+    let agent = null;
+    if (referralCode) {
+      agent = await User.findOne({
+        role: 'agent',
+        referralCode: String(referralCode).toUpperCase().trim(),
+      });
+    }
+
+    // 3. Base payload
     const userPayload = {
       firstName,
       lastName,
       email: email.toLowerCase(),
       password,
-      role: role || 'user',
+      role: finalRole,
       phoneNumber,
       state,
       lga,
       address,
+      signedUpByAgent: agent && finalRole !== 'agent' ? agent._id : undefined,
     };
 
-    // Attach the correct nested object based on selected role
-    if (role === 'dealer' && dealerInfo) {
+    // 4. Attach the nested object for the selected role
+    if (finalRole === 'dealer' && dealerInfo) {
       userPayload.dealerInfo = {
-        businessName:               dealerInfo.businessName,
+        businessName: dealerInfo.businessName,
         businessRegistrationNumber: dealerInfo.businessRegistrationNumber,
-        businessAddress:            dealerInfo.businessAddress,
-        state:                      dealerInfo.state,
-        lga:                        dealerInfo.lga,
+        businessAddress: dealerInfo.businessAddress,
+        state: dealerInfo.state,
+        lga: dealerInfo.lga,
       };
     }
 
-    if (role === 'service-provider' && serviceProviderInfo) {
+    if (finalRole === 'service-provider' && serviceProviderInfo) {
       userPayload.serviceProviderInfo = {
-        type:               serviceProviderInfo.type,
-        businessName:       serviceProviderInfo.businessName,
-        businessAddress:    serviceProviderInfo.businessAddress,
-        state:              serviceProviderInfo.state,
-        lga:                serviceProviderInfo.lga,
-        phoneNumber:        serviceProviderInfo.phoneNumber,
-        whatsappNumber:     serviceProviderInfo.whatsappNumber,
-        yearsOfExperience:  serviceProviderInfo.yearsOfExperience,
-        servicesOffered:    serviceProviderInfo.servicesOffered || [],
+        type: serviceProviderInfo.type,
+        businessName: serviceProviderInfo.businessName,
+        businessAddress: serviceProviderInfo.businessAddress,
+        state: serviceProviderInfo.state,
+        lga: serviceProviderInfo.lga,
+        phoneNumber: serviceProviderInfo.phoneNumber,
+        whatsappNumber: serviceProviderInfo.whatsappNumber,
+        yearsOfExperience: serviceProviderInfo.yearsOfExperience,
+        servicesOffered: serviceProviderInfo.servicesOffered || [],
       };
     }
 
-    if (role === 'carPart-seller' && carPartSellerInfo) {
+    if (finalRole === 'carPart-seller' && carPartSellerInfo) {
       userPayload.carPartSellerInfo = {
-        type:               carPartSellerInfo.type,
-        businessName:       carPartSellerInfo.businessName,
-        businessAddress:    carPartSellerInfo.businessAddress,
-        state:              carPartSellerInfo.state,
-        lga:                carPartSellerInfo.lga,
-        phoneNumber:        carPartSellerInfo.phoneNumber,
-        whatsappNumber:     carPartSellerInfo.whatsappNumber,
-        website:            carPartSellerInfo.website,
-        yearsOfExperience:  carPartSellerInfo.yearsOfExperience,
-        specialties:        carPartSellerInfo.specialties || [],
+        type: carPartSellerInfo.type,
+        businessName: carPartSellerInfo.businessName,
+        businessAddress: carPartSellerInfo.businessAddress,
+        state: carPartSellerInfo.state,
+        lga: carPartSellerInfo.lga,
+        phoneNumber: carPartSellerInfo.phoneNumber,
+        whatsappNumber: carPartSellerInfo.whatsappNumber,
+        website: carPartSellerInfo.website,
+        yearsOfExperience: carPartSellerInfo.yearsOfExperience,
+        specialties: carPartSellerInfo.specialties || [],
       };
     }
 
+    // 5. Create the user (the User model hashes the password and, for agents,
+    //    adds the 20 points and the referral code in its pre-save hooks)
     const newUser = await User.create(userPayload);
 
-    // Cross-platform registration (kept exactly as before)
-    try {
-      await axios.post('https://auth.edirect.ng/api/auth/register', {
-        platform: 'ecars',
-        first_name: firstName,
-        last_name: lastName,
-        email: email.toLowerCase(),
-        password,
-        role,
-      });
-      console.log('Edirect auth registration successful');
-    } catch (err) {
-      console.error('Edirect auth failed:', err.response?.data || err.message);
+    // 6. Credit the agent (does not block or fail the signup)
+    if (agent && newUser.role !== 'agent') {
+      linkAgentToUser(agent, newUser).catch((e) =>
+        console.error('Agent link failed:', e.message)
+      );
     }
 
-    try {
-      await axios.post('https://backend-efixit.ereligion.ng/api/auth/register', {
-        first_name: firstName,
-        last_name: lastName,
-        email: email.toLowerCase(),
-        password,
-        role: 'client',
-      });
-      console.log('Efixit auth registration successful');
-    } catch (err) {
-      console.error('Efixit auth failed:', err.response?.data || err.message);
+    // 7. Cross-platform registration (agents are staff, not marketplace users, so skip them)
+    if (finalRole !== 'agent') {
+      try {
+        await axios.post('https://auth.edirect.ng/api/auth/register', {
+          platform: 'ecars',
+          first_name: firstName,
+          last_name: lastName,
+          email: email.toLowerCase(),
+          password,
+          role: finalRole,
+        });
+        console.log('Edirect auth registration successful');
+      } catch (err) {
+        console.error('Edirect auth failed:', err.response?.data || err.message);
+      }
+
+      try {
+        await axios.post('https://backend-efixit.ereligion.ng/api/auth/register', {
+          first_name: firstName,
+          last_name: lastName,
+          email: email.toLowerCase(),
+          password,
+          role: 'client',
+        });
+        console.log('Efixit auth registration successful');
+      } catch (err) {
+        console.error('Efixit auth failed:', err.response?.data || err.message);
+      }
     }
 
     createSendToken(newUser, 201, res);
   } catch (err) {
     console.log(err);
-    if (err.code === 11000 || err.message.includes('duplicate key')) {
+
+    if (err.code === 11000 || err.message?.includes('duplicate key')) {
       const field = Object.keys(err.keyPattern || {})[0];
-      const friendlyField = field === 'email'
-        ? 'email'
-        : field === 'dealerInfo.businessRegistrationNumber'
-        ? 'business registration number'
-        : field;
+      const friendlyField =
+        field === 'email'
+          ? 'email'
+          : field === 'dealerInfo.businessRegistrationNumber'
+          ? 'business registration number'
+          : field;
       return res.status(409).json({
         status: 'fail',
-        message: field === 'email'
-          ? 'This email is already registered. Please login instead.'
-          : `This ${friendlyField} is already registered.`,
+        message:
+          field === 'email'
+            ? 'This email is already registered. Please login instead.'
+            : `This ${friendlyField} is already registered.`,
       });
     }
 
@@ -243,7 +430,6 @@ export const register = async (req, res) => {
     });
   }
 };
-
 // LOGIN
 export const login = async (req, res) => {
     try {
@@ -1540,3 +1726,17 @@ export const getPublicSellers = async (req, res) => {
     res.status(500).json({ status: 'error', message: 'Failed to fetch sellers', error: err.message });
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+

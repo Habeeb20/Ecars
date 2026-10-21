@@ -31,6 +31,10 @@ import SalesAnalyticsDashboard from '../../pages/dealer/SalesAnalytics';
 import PostSalePage from '../../pages/dealer/PostSalesPage';
 import DealerVideoUploadForm from '../../pages/dealer/DealerUploadVideoForm';
 import AppointmentsPage from '../appointment/AppointmentPage';
+import { Navigate } from 'react-router-dom';
+
+
+
 
 // ─── view registry — every renderable panel, keyed by view id ───────────────
 const VIEWS = {
@@ -133,6 +137,8 @@ const ADMIN_MENU_ITEMS = [
 const Sidebar = ({ onClose, setCurrentView }) => {
   const { user, logout } = useAuth();
   const [activeView, setActiveView] = useState('overview');
+
+if (user?.role === 'agent') return <Navigate to="/agent" replace />;
 
   const isAdmin = user?.role === 'superadmin';
   const menuItems = ROLE_MENUS[user?.role] || ROLE_MENUS.user;

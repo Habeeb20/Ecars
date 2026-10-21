@@ -17,6 +17,10 @@ import MyReceivedOffers from '../../components/dashboard/MyRecievedOffer';
 import InventoryDashboard from '../dealer/InventoryDashboard';
 import AdminCarVerification from './AdminverifiedCars';
 import AdminVehicleRegistrations from './AdminVehicleRegistration';
+import AdminAgentPayouts from './AdminAgentPayout';
+import AdminAgents from './AdminAgent';
+
+
 // import UsersList from './UsersList';
 // import DealersList from './DealersList';
 // import ServiceProvidersList from './ServiceProvidersList';
@@ -31,7 +35,7 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     { name: 'All Reports', icon: Car, component: <ReportsPage /> },
     { name: 'Contacts', icon: Car, component: <AdminContacts /> },
     { name: 'Verify cars', icon: Car, component: <AdminCarVerification /> },
-  
+
     { name: 'Blog', icon: Car, component: <BlogManagement /> },
     { name: 'stolen Cars Reports', icon: MessagesSquare, component: <AdminSightings /> },
     { name: 'ValuedAssets', icon: Car, component: <AdminValuedCars /> },
@@ -41,6 +45,10 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     { name: 'Blacklist', icon: SettingsIcon, component: <AdminBlacklist /> },
     { name: 'View Messages', icon: MessagesSquare, component: <AdminMessages /> },
     { name: 'vehicle', icon: MessagesSquare, component: <AdminVehicleRegistrations /> },
+    { name: 'agents', icon: MessagesSquare, component: <AdminAgents /> },
+    { name: 'agent-payouts', icon: MessagesSquare, component: <AdminAgentPayouts /> },
+
+
   
   
   ];

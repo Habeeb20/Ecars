@@ -1,4 +1,3 @@
-
 import Sighting from "../models/reportSighing.js"
 import StolenCarReport from "../models/reportSchema.js"
 export const createSighting = async (req, res) => {

@@ -45,6 +45,7 @@ import DealerVideoUploadForm from './pages/dealer/DealerUploadVideoForm';
 import AppointmentsPage from './components/appointment/AppointmentPage';
 import VehicleRegistrationPage from './components/Landing/VehicleRegForm';
 import RecoveredCarsPage from './components/Landing/RecoveredPage';
+  import AgentDashboard from './pages/agent/AgentDashboard';
 // import Blog from './pages/Blog';
 
 function ScrollToTop() {
@@ -131,6 +132,8 @@ const App = () => {
         <Route path="/dashboard" element={<DashboardLayout />} />
             
         <Route path="/admin/dashboard" element={<AdminDashboardLayout />} />
+      
+<Route path="/agent" element={<AgentDashboard />} />
       
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/carss/:id" element={< MyCarDetails/>} />

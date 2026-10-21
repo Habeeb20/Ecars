@@ -30,6 +30,8 @@ import videoCreditRoutes from "./routers/videoCreditRoute.js"
 import appointmentRoutes from './routers/appointmentRoute.js';
 
 import vehicleRegistrationRoutes from './routers/vehilcleRegistrationRoutes.js';
+import adminAgentRoutes from "./routers/adminAgentRoutes.js"
+import agentRoutes from "./routers/agentRoutes.js"
 dotenv.config();
 connectDb()
 
@@ -91,7 +93,8 @@ app.use('/api/dealer-videos', dealerVideoRoutes);
 app.use('/api/appointments', appointmentRoutes);
 
 app.use('/api/video-credits', videoCreditRoutes);
-
+app.use('/api/agent', agentRoutes);
+app.use('/api/admin/agent-network', adminAgentRoutes);
 app.use('/api/vehicles', vehicleRegistrationRoutes);
 app.use('/api/vehicle-registrations', vehicleRegistrationRoutes);
 // await User.create({
