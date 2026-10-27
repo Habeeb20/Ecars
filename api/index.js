@@ -32,6 +32,10 @@ import appointmentRoutes from './routers/appointmentRoute.js';
 import vehicleRegistrationRoutes from './routers/vehilcleRegistrationRoutes.js';
 import adminAgentRoutes from "./routers/adminAgentRoutes.js"
 import agentRoutes from "./routers/agentRoutes.js"
+  import swaggerUi from 'swagger-ui-express';
+
+  import { swaggerSpec } from "./swagger.js";
+
 dotenv.config();
 connectDb()
 
@@ -62,13 +66,17 @@ app.get("/", (req, res) => {
 });
 
 
-
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  app.get('/api-docs.json', (req, res) => res.json(swaggerSpec));
+  
 app.use("/api/users", router)
 app.use("/api/car-viewings", viewRouter)
 app.use("/api/auth", router)
 app.use("/api/admin", adminRouter)
 app.use("/api/cars", carListingRouter)
 app.use("/api/car-listings", carListingRouter)
+
+
 
 app.use("/api/stats", statsRoute)
 app.use("/api/reports", reportRouter)
@@ -115,6 +123,34 @@ app.listen(port, async () => {
   console.log(`Server is running on port ${port}`);
 
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

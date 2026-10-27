@@ -191,7 +191,7 @@ export const createUserByAgent = async (req, res) => {
       return res.status(400).json({ status: false, message: 'Choose a valid account type' });
     }
     if (!firstName?.trim() || !lastName?.trim()) {
-      return res.status(400).json({ status: false, message: 'First name, last name  are required' });
+      return res.status(400).json({ status: false, message: 'First name and last name are required' });
     }
     if (!strongPassword(password)) {
       return res.status(400).json({
@@ -200,24 +200,36 @@ export const createUserByAgent = async (req, res) => {
       });
     }
 
-    const cleanEmail = email.toLowerCase().trim();
-    if (await User.findOne({ email: cleanEmail })) {
+    // Email is optional: only keep it when something real was typed
+    const cleanEmail = typeof email === 'string' ? email.trim().toLowerCase() : '';
+    const cleanPhone = typeof phoneNumber === 'string' ? phoneNumber.trim() : '';
+
+    // With no email, the phone number is the only way to identify the user
+    if (!cleanEmail && !cleanPhone) {
+      return res.status(400).json({ status: false, message: 'Provide a phone number or an email' });
+    }
+
+    if (cleanEmail && (await User.exists({ email: cleanEmail }))) {
       return res.status(400).json({ status: false, message: 'Email already exists' });
+    }
+    if (cleanPhone && (await User.exists({ phoneNumber: cleanPhone }))) {
+      return res.status(400).json({ status: false, message: 'Phone number already exists' });
     }
 
     // The password is hashed by the User model's pre-save hook, so pass it as plain text
     const doc = {
       firstName: firstName.trim(),
       lastName: lastName.trim(),
-      email: cleanEmail,
       password,
       role,
-      phoneNumber,
       state,
       lga,
       address,
       signedUpByAgent: req.user._id,
     };
+    if (cleanEmail) doc.email = cleanEmail;       // left out entirely when empty
+    if (cleanPhone) doc.phoneNumber = cleanPhone;
+
     if (role === 'dealer') doc.dealerInfo = dealerInfo;
     if (role === 'service-provider') doc.serviceProviderInfo = serviceProviderInfo;
     if (role === 'carPart-seller') doc.carPartSellerInfo = carPartSellerInfo;
@@ -233,15 +245,10 @@ export const createUserByAgent = async (req, res) => {
     res.status(201).json({
       status: true,
       message: 'Account created',
-      data: { _id: user._id, email: user.email, role: user.role },
+      data: { _id: user._id, email: user.email, phoneNumber: user.phoneNumber, role: user.role },
     });
   } catch (err) {
-    if (err.name === 'ValidationError') {
-      return res.status(400).json({ status: false, message: Object.values(err.errors).map((e) => e.message).join('. ') });
-    }
-    if (err.code === 11000) {
-      return res.status(400).json({ status: false, message: 'That email or business registration number is already in use' });
-    }
+ 
     console.error('Agent create user error:', err);
     res.status(500).json({ status: false, message: 'Server error' });
   }

@@ -5,13 +5,15 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Mail, Lock, ArrowLeft, Eye, EyeOff, X, ShieldCheck } from 'lucide-react';
+import { Mail, Phone, Lock, ArrowLeft, Eye, EyeOff, X, ShieldCheck } from 'lucide-react';
+// import { Mail, Lock, ArrowLeft, Eye, EyeOff, X, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  // const [email, setEmail] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,9 +50,15 @@ const Login = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: email.toLowerCase().trim(),
-          password,
-        }),
+  identifier: identifier.includes('@')
+    ? identifier.toLowerCase().trim()
+    : identifier.trim(),
+  password,
+}),
+        // body: JSON.stringify({
+        //   email: email.toLowerCase().trim(),
+        //   password,
+        // }),
       });
 
       const data = await res.json();
@@ -183,7 +191,7 @@ const Login = () => {
         {/* Main Login Form */}
         <form className="space-y-6" onSubmit={handleSubmit}>
           {/* Email */}
-          <div className="relative">
+          {/* <div className="relative">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3">
               <Mail className="h-5 w-5 text-gray-400" />
             </div>
@@ -196,7 +204,29 @@ const Login = () => {
               disabled={isLoading}
               className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 transition-all"
             />
-          </div>
+          </div> */}
+
+
+          {/* Email or phone */}
+<div className="relative">
+  <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+    {identifier && !identifier.includes('@') ? (
+      <Phone className="h-5 w-5 text-gray-400" />
+    ) : (
+      <Mail className="h-5 w-5 text-gray-400" />
+    )}
+  </div>
+  <input
+    type="text"
+    required
+    autoComplete="username"
+    placeholder="Email or phone number"
+    value={identifier}
+    onChange={(e) => setIdentifier(e.target.value)}
+    disabled={isLoading}
+    className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 transition-all"
+  />
+</div>
 
           {/* Password */}
           <div className="relative">

@@ -431,40 +431,123 @@ export const register = async (req, res) => {
   }
 };
 // LOGIN
-export const login = async (req, res) => {
-    try {
-         const { email, password } = req.body;
 
-    if (!email || !password) {
+
+// Turns "0801 234 5678", "+2348012345678", "2348012345678" or "8012345678"
+// into every format a number might be stored in. Returns null if invalid.
+// Field(s) in your User schema that hold the phone number.
+// Keep only the one that really exists once you've confirmed it.
+const PHONE_FIELDS = ['phoneNumber', 'phone'];
+
+// Turns "0805 560 3221", "+2348055603221", "2348055603221" or "8055603221"
+// into every format a number might be stored in. Returns null if invalid.
+const getPhoneVariants = (input) => {
+  let digits = String(input).replace(/[\s\-()]/g, '');
+  if (digits.startsWith('+')) digits = digits.slice(1);
+  if (!/^\d+$/.test(digits)) return null;
+
+  let local = digits;
+  if (digits.startsWith('234') && digits.length === 13) local = `0${digits.slice(3)}`;
+  else if (digits.length === 10) local = `0${digits}`;
+
+  if (!/^0\d{10}$/.test(local)) return null;
+
+  const national = local.slice(1);
+  return [local, `234${national}`, `+234${national}`];
+};
+
+export const login = async (req, res) => {
+  try {
+    // "identifier" is the new field; email/phone are accepted so older clients keep working
+    const { identifier, email, phone, password } = req.body;
+    const rawId = String(identifier || email || phone || '').trim();
+
+    if (!rawId || !password) {
       return res.status(400).json({
         status: 'fail',
-        message: 'Please provide email and password',
+        message: 'Please provide your email or phone number and password',
       });
     }
-     const user = await User.findOne({ email }).select('+password');
 
+    let query;
+    if (rawId.includes('@')) {
+      query = { email: rawId.toLowerCase() };
+    } else {
+      const variants = getPhoneVariants(rawId);
+      if (!variants) {
+        return res.status(400).json({
+          status: 'fail',
+          message: 'Enter a valid email address or phone number',
+        });
+      }
+      query = {
+        $or: PHONE_FIELDS.map((field) => ({ [field]: { $in: variants } })),
+      };
+    }
+
+    const user = await User.findOne(query).select('+password');
+
+    // Same message for "no user" and "wrong password" so accounts can't be probed
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({
         status: 'fail',
-        message: 'Incorrect email or password',
+        message: 'Incorrect email/phone or password',
       });
-  } 
+    }
+
     // === ONLINE TRACKING LOGIC ===
     user.isOnline = true;
     user.lastSeen = new Date();
     user.lastActivity = new Date();
-
-    // Save the updates (we modify the existing user document)
     await user.save({ validateBeforeSave: false });
 
     createSendToken(user, 200, res);
-    } catch (error) {
-           res.status(400).json({
+  } catch (error) {
+    console.error('Login error:', error.message);
+    res.status(400).json({
       status: 'fail',
       message: error.message,
     });
-   } 
+  }
 };
+
+// export const login = async (req, res) => {
+//     try {
+//          const { email, password } = req.body;
+
+//     if (!email || !password) {
+//       return res.status(400).json({
+//         status: 'fail',
+//         message: 'Please provide email and password',
+//       });
+//     }
+//      const user = await User.findOne({ email }).select('+password');
+
+//     if (!user || !(await user.comparePassword(password))) {
+//       return res.status(401).json({
+//         status: 'fail',
+//         message: 'Incorrect email or password',
+//       });
+//   } 
+//     // === ONLINE TRACKING LOGIC ===
+//     user.isOnline = true;
+//     user.lastSeen = new Date();
+//     user.lastActivity = new Date();
+
+//     // Save the updates (we modify the existing user document)
+//     await user.save({ validateBeforeSave: false });
+
+//     createSendToken(user, 200, res);
+//     } catch (error) {
+//            res.status(400).json({
+//       status: 'fail',
+//       message: error.message,
+//     });
+//    } 
+// };
+
+
+
 export const authLogin = async (req, res) => {
     try {
          const { email } = req.body;
