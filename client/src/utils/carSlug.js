@@ -14,7 +14,8 @@ export function slugify(text = '') {
 export function buildCarSlug(car) {
   const parts = [car.make, car.model, car.year].filter(Boolean).map(slugify).filter(Boolean);
   const id = car._id ? String(car._id) : '';
-  return [...parts, id].filter(Boolean).join('-');
+  return [ id].filter(Boolean).join('-');
+  // return [...parts, id].filter(Boolean).join('-');
 }
 
 export function buildCarUrl(car) {

@@ -138,6 +138,9 @@ const App = () => {
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/carss/:id" element={< MyCarDetails/>} />
               <Route path="/:slug" element={<DealerStorefront />} />
+              <Route path="/dealerships/:slug" element={<DealerStorefront />} />
+              <Route path="/car-parts/:slug" element={<DealerStorefront />} />
+              <Route path="/service-providers/:slug" element={<DealerStorefront />} />
         <Route path="/dashboard/inventory" element={<InventoryDashboard />} />
         <Route path="/cars/:slug" element={<CarDetailPage/>} />
 

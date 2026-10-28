@@ -426,7 +426,8 @@ const FeaturedCar = () => {
                     <p className="text-xl font-black mb-3" style={{ color: rust }}>
                       ₦{Number(car.price).toLocaleString()}
                     </p>
-<div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 dark:text-gray-400 mb-4">
+                   
+<div className="flex flex-wrap  items-center gap-x-4 gap-y-1 text-1xl font-bold text-gray-500 dark:text-gray-400 mb-4">
   <span className="flex items-center gap-1"><Calendar size={12} /> {car.year}</span>
   {car.mileage != null && (
     <span className="flex items-center gap-1"><Gauge size={12} /> {Number(car.mileage).toLocaleString()} km</span>
@@ -436,7 +437,7 @@ const FeaturedCar = () => {
   )}
  
 </div>
-<div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 dark:text-gray-400 mb-4">
+<div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-1xl font-bold text-gray-500 dark:text-gray-400 mb-4">
  <span className="flex items-center gap-1">
     <Eye size={12} /> Views: {Number(car.views || 0).toLocaleString()}
   </span>

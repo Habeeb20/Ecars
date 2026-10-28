@@ -9,7 +9,7 @@ import {
   MapPin, 
   Phone 
 } from 'lucide-react';
-
+import ecars from "../../assets/ecarsLogo.png"
 const Footer = () => {
   return (
     <footer className="bg-gray-100 dark:bg-gray-800 pt-12 pb-8">
@@ -17,10 +17,13 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand and About */}
           <div>
-            <Link to="/" className="flex items-center space-x-2 mb-4">
-              <Car className="h-8 w-8 text-primary-600 dark:text-primary-500" />
-              <span className="text-xl font-bold text-gray-900 dark:text-white">E-Cars</span>
-            </Link>
+         <Link to="/" className="flex items-center" aria-label="E-Cars home">
+           <img
+             src={ecars}
+             alt="E-Cars"
+             className="h-10 w-auto object-contain md:h-12"
+           />
+         </Link>
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               The premier marketplace for buying and selling cars online. Find your dream car or sell your vehicle with ease.
             </p>

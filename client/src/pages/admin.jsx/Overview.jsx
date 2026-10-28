@@ -14,7 +14,7 @@ const Overview = () => {
   });
   const [loading, setLoading] = useState(true);
 
-  const token = localStorage.getItem("myToken"); // or "token" — check your localStorage key
+  const token = localStorage.getItem("myToken") || localStorage.getItem("token"); // or "token" — check your localStorage key
 
   useEffect(() => {
     const fetchStats = async () => {

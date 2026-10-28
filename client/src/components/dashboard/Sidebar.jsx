@@ -33,7 +33,7 @@ import DealerVideoUploadForm from '../../pages/dealer/DealerUploadVideoForm';
 import AppointmentsPage from '../appointment/AppointmentPage';
 import { Navigate } from 'react-router-dom';
 
-
+import { useNavigate } from 'react-router-dom';
 
 
 // ─── view registry — every renderable panel, keyed by view id ───────────────
@@ -137,7 +137,7 @@ const ADMIN_MENU_ITEMS = [
 const Sidebar = ({ onClose, setCurrentView }) => {
   const { user, logout } = useAuth();
   const [activeView, setActiveView] = useState('overview');
-
+  const navigate = useNavigate()
 if (user?.role === 'agent') return <Navigate to="/agent" replace />;
 
   const isAdmin = user?.role === 'superadmin';
@@ -148,6 +148,7 @@ if (user?.role === 'agent') return <Navigate to="/agent" replace />;
     setCurrentView(VIEWS[viewKey]);
     onClose?.();
   };
+
 
   return (
     <div className="h-full bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
@@ -168,7 +169,7 @@ if (user?.role === 'agent') return <Navigate to="/agent" replace />;
               alt="User"
               className="h-12 w-12 rounded-full object-cover ring-2 ring-indigo-500"
             />
-            <div className="min-w-0">
+            <div onClick={() => navigate("/")} className="min-w-0">
               <p className="font-semibold text-gray-900 dark:text-white truncate">
                 {user?.firstName} {user?.lastName}
               </p>

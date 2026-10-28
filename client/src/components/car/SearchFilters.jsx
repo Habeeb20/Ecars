@@ -2,7 +2,6 @@
 
 
 
-
 // import React, { useState, useEffect } from 'react';
 // import {
 //   Search, ChevronDown, X, Loader2, SlidersHorizontal, Share2,
@@ -216,6 +215,7 @@
 //     make: '', model: '', priceRange: '', year: '', bodyType: '',
 //     condition: '', fuelType: '', transmission: '', state: '',
 //   });
+//   const [keyword, setKeyword] = useState(''); // free-text search
 
 //   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
 //   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -238,7 +238,7 @@
 //     return () => { document.body.style.overflow = ''; };
 //   }, [isAdvancedOpen, isModalOpen]);
 
-//   const activeFilterCount = Object.values(filters).filter(Boolean).length;
+//   const activeFilterCount = Object.values(filters).filter(Boolean).length + (keyword.trim() ? 1 : 0);
 
 //   const handleSubmit = async (e) => {
 //     e.preventDefault();
@@ -247,6 +247,7 @@
 
 //     try {
 //       const params = new URLSearchParams();
+//       if (keyword.trim()) params.append('keyword', keyword.trim());
 //       Object.keys(filters).forEach((key) => {
 //         if (filters[key]) params.append(key, filters[key]);
 //       });
@@ -278,6 +279,7 @@
 //       make: '', model: '', priceRange: '', year: '', bodyType: '',
 //       condition: '', fuelType: '', transmission: '', state: '',
 //     });
+//     setKeyword('');
 //     toast('Filters cleared', { icon: '🧹' });
 //   };
 
@@ -291,23 +293,31 @@
 //       <div className={`rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800 p-5 sm:p-7 bg-white dark:bg-gray-900 w-full lg:w-[1000px] mb-10 sm:mb-16 lg:mb-24 ${className}`}>
 //         <form onSubmit={handleSubmit}>
 //           <div className="flex items-center justify-between mb-5 sm:mb-6">
-           
-//             <button
-//               type="button"
-//               onClick={() => setIsAdvancedOpen(true)}
-//               className="relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:border-[#0B1B3E] hover:text-[#0B1B3E] dark:hover:text-white transition-colors shrink-0"
-//             >
-//               <SlidersHorizontal size={16} />
-//               <span className="hidden sm:inline">More filters</span>
-//               {activeFilterCount > 0 && (
-//                 <span
-//                   className="absolute -top-2 -right-2 w-5 h-5 rounded-full text-[10px] font-bold text-white flex items-center justify-center"
-//                   style={{ background: rust }}
+
+       
+//           </div>
+
+//           {/* Free-text keyword search — soft pill style matching the reference design */}
+//           <div className="mb-4">
+//             <div className="relative">
+//               <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+//               <input
+//                 type="text"
+//                 value={keyword}
+//                 onChange={(e) => setKeyword(e.target.value)}
+//                 placeholder="What are you looking for? e.g. Toyota Camry 2020"
+//                 className="w-full h-14 pl-14 pr-12 bg-gray-50 dark:bg-gray-800 border-0 rounded-2xl text-base text-gray-700 dark:text-gray-100 placeholder:text-gray-400 focus:ring-2 focus:ring-[#0B1B3E]/20 outline-none transition-all"
+//               />
+//               {keyword && (
+//                 <button
+//                   type="button"
+//                   onClick={() => setKeyword('')}
+//                   className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors"
 //                 >
-//                   {activeFilterCount}
-//                 </span>
+//                   <X size={16} className="text-gray-400" />
+//                 </button>
 //               )}
-//             </button>
+//             </div>
 //           </div>
 
 //           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
@@ -337,7 +347,27 @@
 //               {loading ? 'Searching...' : 'Search vehicles'}
 //             </button>
 //           </div>
-//         </form>
+                    
+//         <div className="flex justify-center mt-4">
+//           <button
+//             type="button"
+//             onClick={() => setIsAdvancedOpen(true)}
+//             className="relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:border-[#0B1B3E] hover:text-[#0B1B3E] dark:hover:text-white transition-colors shrink-0"
+//           >
+//             <SlidersHorizontal size={16} />
+//             <span className="hidden sm:inline">Advanced Search</span>
+//             {activeFilterCount > 0 && (
+//               <span
+//                 className="absolute -top-2 -right-2 w-5 h-5 rounded-full text-[10px] font-bold text-white flex items-center justify-center"
+//                 style={{ background: rust }}
+//               >
+//                 {activeFilterCount}
+//               </span>
+//             )}
+//           </button>
+//         </div>
+//       </form>
+        
 //       </div>
 
 //       {/* ====================== ADVANCED SEARCH MODAL ====================== */}
@@ -501,8 +531,7 @@
 
 
 
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Search, ChevronDown, X, Loader2, SlidersHorizontal, Share2,
   MessageCircle, Facebook, Twitter, Link as LinkIcon, Send,
@@ -513,26 +542,18 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { buildCarSlug, buildCarUrl } from '../../utils/carSlug';
 
+import { CAR_MAKES } from './carMakesModels';
 const navy = '#2563eb';
 const rust = '#2563eb';
 // const navy = '#0B1B3E';
 // const rust = '#C2532A';
 
+// Makes sorted A–Z from the shared makes/models data
+const SORTED_MAKES = [...CAR_MAKES].sort((a, b) => a.name.localeCompare(b.name));
+
 const makeOptions = [
   { value: '', label: 'All Makes' },
-  { value: 'toyota', label: 'Toyota' },
-  { value: 'honda', label: 'Honda' },
-  { value: 'ford', label: 'Ford' },
-  { value: 'bmw', label: 'BMW' },
-  { value: 'mercedes', label: 'Mercedes-Benz' },
-  { value: 'audi', label: 'Audi' },
-  { value: 'lexus', label: 'Lexus' },
-  { value: 'nissan', label: 'Nissan' },
-  { value: 'tesla', label: 'Tesla' },
-  { value: 'subaru', label: 'Subaru' },
-  { value: 'jeep', label: 'Jeep' },
-  { value: 'kia', label: 'Kia' },
-  { value: 'hyundai', label: 'Hyundai' },
+  ...SORTED_MAKES.map((m) => ({ value: m.name, label: m.name })),
 ];
 
 const priceRangeOptions = [
@@ -575,7 +596,7 @@ const bodyTypeOptions = [
 ];
 
 /* ------------------------- Reusable select field ------------------------- */
-function SelectField({ label, name, value, onChange, options }) {
+function SelectField({ label, name, value, onChange, options, disabled = false }) {
   return (
     <div>
       <label className="block text-xs font-semibold uppercase tracking-wide mb-1.5 text-gray-500 dark:text-gray-400">
@@ -586,7 +607,8 @@ function SelectField({ label, name, value, onChange, options }) {
           name={name}
           value={value}
           onChange={onChange}
-          className="w-full h-12 pl-4 pr-9 border-2 border-gray-200 dark:border-gray-700 rounded-xl dark:bg-gray-800 text-sm text-gray-800 dark:text-gray-100 appearance-none focus:ring-4 focus:ring-[#0B1B3E]/5 focus:border-[#0B1B3E] outline-none transition-all cursor-pointer"
+          disabled={disabled}
+          className="w-full h-12 pl-4 pr-9 border-2 border-gray-200 dark:border-gray-700 rounded-xl dark:bg-gray-800 text-sm text-gray-800 dark:text-gray-100 appearance-none focus:ring-4 focus:ring-[#0B1B3E]/5 focus:border-[#0B1B3E] outline-none transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {options.map((opt) => (
             <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -708,13 +730,15 @@ const SimpleCarCard = ({ car, onClick }) => (
 
 /* --------------------------------------------------------------------- */
 
+const EMPTY_FILTERS = {
+  make: '', model: '', priceRange: '', year: '', bodyType: '',
+  condition: '', fuelType: '', transmission: '', state: '',
+};
+
 const SearchFilters = ({ variant = 'hero', className = '' }) => {
   const navigate = useNavigate();
 
-  const [filters, setFilters] = useState({
-    make: '', model: '', priceRange: '', year: '', bodyType: '',
-    condition: '', fuelType: '', transmission: '', state: '',
-  });
+  const [filters, setFilters] = useState(EMPTY_FILTERS);
   const [keyword, setKeyword] = useState(''); // free-text search
 
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
@@ -723,14 +747,23 @@ const SearchFilters = ({ variant = 'hero', className = '' }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Models depend on the selected make
+  const modelOptions = useMemo(() => {
+    const selected = CAR_MAKES.find((m) => m.name === filters.make);
+    if (!selected) return [{ value: '', label: 'Select make first' }];
+    return [
+      { value: '', label: 'All Models' },
+      ...[...selected.models]
+        .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+        .map((model) => ({ value: model, label: model })),
+    ];
+  }, [filters.make]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFilters((prev) => ({ ...prev, [name]: value }));
+    // Changing the make resets the model in the same update (no stale model)
+    setFilters((prev) => (name === 'make' ? { ...prev, make: value, model: '' } : { ...prev, [name]: value }));
   };
-
-  useEffect(() => {
-    setFilters((prev) => ({ ...prev, model: '' }));
-  }, [filters.make]);
 
   // Lock body scroll behind open modals
   useEffect(() => {
@@ -775,10 +808,7 @@ const SearchFilters = ({ variant = 'hero', className = '' }) => {
   };
 
   const clearFilters = () => {
-    setFilters({
-      make: '', model: '', priceRange: '', year: '', bodyType: '',
-      condition: '', fuelType: '', transmission: '', state: '',
-    });
+    setFilters(EMPTY_FILTERS);
     setKeyword('');
     toast('Filters cleared', { icon: '🧹' });
   };
@@ -794,7 +824,7 @@ const SearchFilters = ({ variant = 'hero', className = '' }) => {
         <form onSubmit={handleSubmit}>
           <div className="flex items-center justify-between mb-5 sm:mb-6">
 
-       
+
           </div>
 
           {/* Free-text keyword search — soft pill style matching the reference design */}
@@ -822,7 +852,10 @@ const SearchFilters = ({ variant = 'hero', className = '' }) => {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             <SelectField label="Make" name="make" value={filters.make} onChange={handleChange} options={makeOptions} />
-            <SelectField label="Body type" name="bodyType" value={filters.bodyType} onChange={handleChange} options={bodyTypeOptions} />
+            <SelectField
+              label="Model" name="model" value={filters.model} onChange={handleChange}
+              options={modelOptions} disabled={!filters.make}
+            />
             <SelectField label="Condition" name="condition" value={filters.condition} onChange={handleChange} options={conditionType} />
             <SelectField label="Year" name="year" value={filters.year} onChange={handleChange} options={yearOptions} />
           </div>
@@ -847,27 +880,26 @@ const SearchFilters = ({ variant = 'hero', className = '' }) => {
               {loading ? 'Searching...' : 'Search vehicles'}
             </button>
           </div>
-                    
-        <div className="flex justify-center mt-4">
-          <button
-            type="button"
-            onClick={() => setIsAdvancedOpen(true)}
-            className="relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:border-[#0B1B3E] hover:text-[#0B1B3E] dark:hover:text-white transition-colors shrink-0"
-          >
-            <SlidersHorizontal size={16} />
-            <span className="hidden sm:inline">Advanced Search</span>
-            {activeFilterCount > 0 && (
-              <span
-                className="absolute -top-2 -right-2 w-5 h-5 rounded-full text-[10px] font-bold text-white flex items-center justify-center"
-                style={{ background: rust }}
-              >
-                {activeFilterCount}
-              </span>
-            )}
-          </button>
-        </div>
-      </form>
-        
+
+          <div className="flex justify-center mt-4">
+            <button
+              type="button"
+              onClick={() => setIsAdvancedOpen(true)}
+              className="relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:border-[#0B1B3E] hover:text-[#0B1B3E] dark:hover:text-white transition-colors shrink-0"
+            >
+              <SlidersHorizontal size={16} />
+              <span className="hidden sm:inline">Advanced Search</span>
+              {activeFilterCount > 0 && (
+                <span
+                  className="absolute -top-2 -right-2 w-5 h-5 rounded-full text-[10px] font-bold text-white flex items-center justify-center"
+                  style={{ background: rust }}
+                >
+                  {activeFilterCount}
+                </span>
+              )}
+            </button>
+          </div>
+        </form>
       </div>
 
       {/* ====================== ADVANCED SEARCH MODAL ====================== */}
@@ -900,6 +932,7 @@ const SearchFilters = ({ variant = 'hero', className = '' }) => {
               </div>
 
               <div className="p-6 overflow-y-auto flex-1 space-y-5">
+                <SelectField label="Body type" name="bodyType" value={filters.bodyType} onChange={handleChange} options={bodyTypeOptions} />
                 <SelectField label="Price range" name="priceRange" value={filters.priceRange} onChange={handleChange} options={priceRangeOptions} />
                 <SelectField
                   label="Fuel type" name="fuelType" value={filters.fuelType} onChange={handleChange}

@@ -77,11 +77,11 @@ function SellerSection({ title, subtitle, icon, users, emptyText, onSelect, onVi
             {icon}
             <h2 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">{title}</h2>
           </div>
-          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{subtitle}</p>
+          <p className="text-xl sm:text-xl text-gray-500 dark:text-gray-400">{subtitle}</p>
         </div>
         <button
           onClick={onViewAll}
-          className="hidden sm:flex items-center gap-1 text-sm font-semibold text-[#0B1B3E] dark:text-white hover:gap-2 transition-all shrink-0"
+          className="hidden sm:flex items-center gap-1 text-xl font-semibold text-[#0B1B3E] dark:text-white hover:gap-2 transition-all shrink-0"
         >
           View all <ArrowRight size={15} />
         </button>
@@ -95,7 +95,7 @@ function SellerSection({ title, subtitle, icon, users, emptyText, onSelect, onVi
 
       <button
         onClick={onViewAll}
-        className="sm:hidden flex items-center justify-center gap-1 w-full mt-4 text-sm font-semibold text-[#0B1B3E] dark:text-white"
+        className="sm:hidden flex items-center justify-center gap-1 w-full mt-4 text-xl font-semibold text-[#0B1B3E] dark:text-white"
       >
         View all {title.toLowerCase()} <ArrowRight size={15} />
       </button>
@@ -138,15 +138,15 @@ function SellerCard({ user, onClick, variant }) {
           )}
         </div>
         <div className="min-w-0">
-          <p className="font-semibold text-sm text-gray-900 dark:text-white truncate flex items-center gap-1">
+          <p className="font-semibold text-xl text-gray-900 dark:text-white truncate flex items-center gap-1">
             {displayName}
             {verified && <BadgeCheck size={13} className="text-emerald-600 shrink-0" />}
           </p>
-          <p className="text-xs text-gray-400">{isDealer ? 'Dealer' : 'Private seller'}</p>
+          <p className="text-xl text-gray-400">{isDealer ? 'Dealer' : 'Private seller'}</p>
         </div>
       </div>
 
-      <div className="flex flex-col gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+      <div className="flex flex-col gap-1.5 text-xl text-gray-500 dark:text-gray-400">
         {location && (
           <span className="flex items-center gap-1.5 truncate">
             <MapPin size={12} className="shrink-0" /> {location}
@@ -156,7 +156,7 @@ function SellerCard({ user, onClick, variant }) {
           <Car size={12} className="shrink-0" />
           {user.carListingsCount} listing{user.carListingsCount !== 1 ? 's' : ''}
         </span>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 dark:text-gray-400 mb-4">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xl text-gray-500 dark:text-gray-400 mb-4">
          <span className="flex items-center gap-1">
             <Eye size={12} /> Views: {Number(user.views || 0).toLocaleString()}
           </span>

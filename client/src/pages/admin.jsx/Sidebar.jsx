@@ -19,6 +19,7 @@ import AdminCarVerification from './AdminverifiedCars';
 import AdminVehicleRegistrations from './AdminVehicleRegistration';
 import AdminAgentPayouts from './AdminAgentPayout';
 import AdminAgents from './AdminAgent';
+import AgentStats from './AgentStats';
 
 
 // import UsersList from './UsersList';
@@ -46,6 +47,7 @@ const Sidebar = ({ onClose, setCurrentView }) => {
     { name: 'View Messages', icon: MessagesSquare, component: <AdminMessages /> },
     { name: 'vehicle', icon: MessagesSquare, component: <AdminVehicleRegistrations /> },
     { name: 'agents', icon: MessagesSquare, component: <AdminAgents /> },
+    { name: 'agentStats', icon: MessagesSquare, component: <AgentStats /> },
     { name: 'agent-payouts', icon: MessagesSquare, component: <AdminAgentPayouts /> },
 
 

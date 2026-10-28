@@ -76,11 +76,11 @@ export default function VerifiedCarsSection() {
               <h3 className="font-semibold text-sm sm:text-base text-gray-900 dark:text-white truncate">
                 {car.title}
               </h3>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mb-1.5">
+              <p className="text-sm font-bold text-gray-500 dark:text-gray-400 mb-1.5">
                 {car.year} · {car.make} {car.model}
               </p>
 
-              <div className="flex items-center gap-3 text-[11px] text-gray-400 mb-2">
+              <div className="flex items-center gap-3 text-[21px] text-gray-400 mb-2">
                 <span className="flex items-center gap-1">
                   <Gauge size={11} /> {car.mileage?.toLocaleString()} km
                 </span>
@@ -88,7 +88,7 @@ export default function VerifiedCarsSection() {
                   <Fuel size={11} /> {car.fuelType}
                 </span>
               </div>
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500 dark:text-gray-400 mb-4">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm font-bold text-gray-500 dark:text-gray-400 mb-4">
                <span className="flex items-center gap-1">
                   <Eye size={12} /> Views: {Number(car.views || 0).toLocaleString()}
                 </span>
