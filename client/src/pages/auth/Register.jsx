@@ -41,8 +41,8 @@ const CAR_PART_TYPES = [
 const ROLES = [
   { value: 'user', label: 'Buyer', desc: 'Browse and buy cars, parts, and services', icon: User },
   { value: 'dealer', label: 'Car Dealer', desc: 'List and sell vehicles from your dealership', icon: Briefcase },
-  { value: 'service-provider', label: 'Service Provider', desc: 'Offer mechanic and auto repair services', icon: Wrench },
-  { value: 'carPart-seller', label: 'Car Parts Seller', desc: 'Sell new or used auto parts', icon: Package },
+  // { value: 'service-provider', label: 'Service Provider', desc: 'Offer mechanic and auto repair services', icon: Wrench },
+  // { value: 'carPart-seller', label: 'Car Parts Seller', desc: 'Sell new or used auto parts', icon: Package },
   { value: 'agent', label: 'Agent', desc: 'Sign people up and earn from their activity', icon: Users },
 ];
 
@@ -167,7 +167,8 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+// Keeps letters only (any language, including accented letters). Removes digits, spaces and symbols.
+const cleanName = (value) => value.replace(/[^\p{L}]/gu, "");
   const [role, setRole] = useState('');
 
   const [account, setAccount] = useState({
@@ -597,18 +598,38 @@ useEffect(() => {
             <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
               Your account
             </p>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="relative">
-                <User className="absolute inset-y-0 left-3 my-auto h-4 w-4 text-gray-400" />
-                <input required placeholder="First name" className={inputCls} value={account.firstName} onChange={(e) => setAcc('firstName', e.target.value)} disabled={isLoading} />
-              </div>
-              <div className="relative">
-                <User className="absolute inset-y-0 left-3 my-auto h-4 w-4 text-gray-400" />
-                <input required placeholder="Last name" className={inputCls} value={account.lastName} onChange={(e) => setAcc('lastName', e.target.value)} disabled={isLoading} />
-              </div>
-            </div>
-
+<div className="grid grid-cols-2 gap-3">
+  <div className="relative">
+    <User className="absolute inset-y-0 left-3 my-auto h-4 w-4 text-gray-400" />
+    <input
+      required
+      placeholder="First name"
+      className={inputCls}
+      value={account.firstName}
+      onChange={(e) => setAcc('firstName', cleanName(e.target.value))}
+      disabled={isLoading}
+      autoComplete="given-name"
+      maxLength={50}
+      pattern="\p{L}+"
+      title="Letters only, no numbers or special characters"
+    />
+  </div>
+  <div className="relative">
+    <User className="absolute inset-y-0 left-3 my-auto h-4 w-4 text-gray-400" />
+    <input
+      required
+      placeholder="Last name"
+      className={inputCls}
+      value={account.lastName}
+      onChange={(e) => setAcc('lastName', cleanName(e.target.value))}
+      disabled={isLoading}
+      autoComplete="family-name"
+      maxLength={50}
+      pattern="\p{L}+"
+      title="Letters only, no numbers or special characters"
+    />
+  </div>
+</div>
             <div className="relative">
               <Mail className="absolute inset-y-0 left-3 my-auto h-4 w-4 text-gray-400" />
               <input required type="email" placeholder="Email address" className={inputCls} value={account.email} onChange={(e) => setAcc('email', e.target.value)} disabled={isLoading} />

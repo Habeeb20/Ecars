@@ -27,13 +27,13 @@ import salesRoutes from "./routers/salesRoute.js"
 import eauctionRoutes from "./routers/auctionRoute.js"
 import dealerVideoRoutes from "./routers/dealervideoRoutes.js"
 import videoCreditRoutes from "./routers/videoCreditRoute.js"
-import appointmentRoutes from './routers/appointmentRoute.js';
+import appointmentRoutes from './routers/appointmentRoute.js'; import { paystackWebhook } from './controllers/paymentController.js';
 
 import vehicleRegistrationRoutes from './routers/vehilcleRegistrationRoutes.js';
 import adminAgentRoutes from "./routers/adminAgentRoutes.js"
 import agentRoutes from "./routers/agentRoutes.js"
   import swaggerUi from 'swagger-ui-express';
-
+import faceRoutes from "./routers/faceVerificationRoutes.js"
   import { swaggerSpec } from "./swagger.js";
 
 dotenv.config();
@@ -66,6 +66,8 @@ app.get("/", (req, res) => {
 });
 
 
+    app.post('/api/payments/webhook', express.raw({ type: 'application/json' }), paystackWebhook);
+
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
   app.get('/api-docs.json', (req, res) => res.json(swaggerSpec));
   
@@ -95,6 +97,7 @@ app.use('/api/inventory', inventoryRoutes);
 app.use('/api/dealers', dealerRoutes);
 app.use('/api/sales', salesRoutes);
 app.use("/api/eauction", eauctionRoutes);
+app.use("/api/face-verification", faceRoutes)
 // app.js
 app.use('/api/dealer-videos', dealerVideoRoutes);
 

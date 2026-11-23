@@ -2,233 +2,6 @@
 
 
 
-
-// /* eslint-disable no-unused-vars */
-// import React, { useState } from 'react';
-// import { Link } from 'react-router-dom';
-// import { Heart, MapPin, Share2, Calendar, Fuel, Gauge, Star, ChevronRight, Eye, MessageCircle } from 'lucide-react';
-// import { motion } from 'framer-motion';
-
-// export const CarCard = ({ car, showDealerInfo = false, onBookViewing }) => {
-//   const [isFavorite, setIsFavorite] = useState(false);
-//   const [showAllFeatures, setShowAllFeatures] = useState(false);
-
-//   const likes = car.likesCount ?? car.likeCount ?? 0;
-//   const views = car.views ?? 0;
-//   const shares = car.shareCount ?? 0;
-
-//   const toggleFavorite = (e) => {
-//     e.preventDefault();
-//     e.stopPropagation();
-//     setIsFavorite(!isFavorite);
-//   };
-
-//   const toggleFeatures = (e) => {
-//     e.preventDefault();
-//     e.stopPropagation();
-//     setShowAllFeatures(!showAllFeatures);
-//   };
-
-//   const displayedFeatures = car.features
-//     ? showAllFeatures
-//       ? car.features
-//       : car.features.slice(0, 2)
-//     : [];
-
-//   const handleBookViewing = (e) => {
-//     e.preventDefault();
-//     e.stopPropagation();
-//     if (onBookViewing) {
-//       onBookViewing(car);
-//     }
-//   };
-
-//   // Normalize Nigerian numbers (080..., +234..., 234...) into wa.me's required format (no +, no leading 0)
-//   const formatPhoneForWhatsApp = (phone) => {
-//     if (!phone) return null;
-//     const digits = phone.replace(/\D/g, ''); // strip spaces, +, dashes, etc.
-//     if (digits.startsWith('234')) return digits;
-//     if (digits.startsWith('0')) return `234${digits.slice(1)}`;
-//     return digits;
-//   };
-
-//   const whatsappNumber = formatPhoneForWhatsApp(car.postedBy?.phoneNumber);
-//   const whatsappMessage = "Hello, I found your business on eCars and would like to make an enquiry about some cars.";
-//   const whatsappLink = whatsappNumber
-//     ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`
-//     : null;
-
-//   const handleWhatsAppClick = (e) => {
-//     e.preventDefault();
-//     e.stopPropagation();
-//     if (whatsappLink) {
-//       window.open(whatsappLink, '_blank', 'noopener,noreferrer');
-//     }
-//   };
-
-//   return (
-//     <motion.div
-//       initial={{ opacity: 0, y: 20 }}
-//       animate={{ opacity: 1, y: 0 }}
-//       transition={{ duration: 0.3 }}
-//       className="card overflow-hidden group cursor-pointer bg-white dark:bg-gray-900 rounded-2xl shadow-md hover:shadow-xl transition-all"
-//     >
-//       <Link to={`/cars/${car._id}`} className="block">
-//         {/* Image container */}
-//         <div className="relative h-48 overflow-hidden bg-gray-100 dark:bg-gray-800 rounded-t-2xl">
-//           <img
-//             src={car.images?.[0] || '/placeholder-car.jpg'}
-//             alt={car.title}
-//             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-//           />
-
-//           <button
-//             onClick={toggleFavorite}
-//             className="absolute top-3 right-3 p-2 bg-white/90 dark:bg-gray-800/90 rounded-full shadow-md hover:bg-white transition-all"
-//           >
-//             <Heart
-//               className={`h-4 w-4 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-500 dark:text-gray-400'}`}
-//             />
-//           </button>
-
-//           {car.isFeatured && (
-//             <div className="absolute top-3 left-3">
-//               <span className="px-3 py-1 bg-yellow-500 text-white text-xs font-bold rounded-full">Featured</span>
-//             </div>
-//           )}
-
-//           <div className="absolute top-3 right-16">
-//             <span className="bg-green-600 text-white text-xs px-3 py-1 rounded-full font-medium">For Sale</span>
-//           </div>
-//           <div className="absolute top-3 left-5">
-//             <p className="bg-blue-600 text-white text-xs px-3 py-1 rounded-full font-medium">
-//               {car.postedBy?.role === 'dealer' ? 'Dealer' : 'Personal'}
-//             </p>
-//           </div>
-//         </div>
-
-//         {/* Content */}
-//         <div className="p-4">
-//           <h3 className="text-lg font-semibold text-gray-900 dark:text-white line-clamp-1 mb-1">
-//             {car.title}
-//           </h3>
-
-//           <div className="mb-3">
-//             <span className="text-2xl font-bold text-green-600">
-//               ₦{car.price?.toLocaleString() || 'N/A'}
-//             </span>
-//           </div>
-
-//           <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-gray-600 dark:text-gray-400 mb-4">
-//             <div className="flex items-center gap-1.5">
-//               <Calendar className="h-4 w-4" />
-//               <span>{car.year}</span>
-//             </div>
-//             <div className="flex items-center gap-1.5">
-//               <Gauge className="h-4 w-4" />
-//               <span>{car.mileage?.toLocaleString()} km</span>
-//             </div>
-//             <div className="flex items-center gap-1.5">
-//               <Fuel className="h-4 w-4" />
-//               <span>{car.fuelType}</span>
-//             </div>
-//             <div className="flex items-center gap-1.5">
-//               <MapPin className="h-4 w-4" />
-//               <span className="truncate">{car.location?.state}, {car.location?.lga}</span>
-//             </div>
-//             <div className="flex items-center gap-1.5">
-//               <Fuel className="h-4 w-4" />
-//               <span>{car.condition}</span>
-//             </div>
-//             <div className="flex items-center gap-1.5">
-//               <MapPin className="h-4 w-4" />
-//               <span>{car.transmission}</span>
-//             </div>
-//           </div>
-
-//           {car.features && car.features.length > 0 && (
-//             <div className="mb-4">
-//               <div className="flex flex-wrap gap-1.5">
-//                 {displayedFeatures.map((feature, i) => (
-//                   <span key={i} className="text-xs px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-full">
-//                     {feature}
-//                   </span>
-//                 ))}
-//               </div>
-//               {car.features.length > 2 && (
-//                 <button
-//                   onClick={toggleFeatures}
-//                   className="text-xs text-blue-600 mt-1 hover:underline"
-//                 >
-//                   {showAllFeatures ? 'Show less' : `+${car.features.length - 2} more`}
-//                 </button>
-//               )}
-//             </div>
-//           )}
-
-//           <div className="flex justify-center items-center gap-6 rounded-xl bg-gradient-to-br from-gray-50 to-gray-200 p-3 shadow-sm hover:from-gray-100 hover:to-gray-300 transition-colors">
-//             <div className="flex items-center gap-1 text-gray-700">
-//               <Heart className="h-5 w-5 text-slate-500" />
-//               <span className="font-semibold text-gray-900">Likes {likes}</span>
-//             </div>
-//             <div className="flex items-center gap-1 text-gray-700">
-//               <Eye className="h-5 w-5 text-slate-500" />
-//               <span className="font-semibold text-gray-900">Views {views}</span>
-//             </div>
-//             <div className="flex items-center gap-1 text-gray-700">
-//               <Share2 className="h-5 w-5 text-slate-500" />
-//               <span className="font-semibold text-gray-900">Shares {shares}</span>
-//             </div>
-//           </div>
-
-//           {/* Action Buttons */}
-//           <div className="flex gap-3 mt-4">
-//             <button
-//               onClick={handleBookViewing}
-//               className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition flex items-center justify-center gap-2"
-//             >
-//               <Eye className="h-5 w-5" />
-//               Book Viewing
-//             </button>
-
-//             <Link
-//               to={`/cars/${car._id}`}
-//               className="flex-1 py-3 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 font-semibold rounded-xl text-center transition"
-//             >
-//               View Details
-//             </Link>
-//           </div>
-
-//           {whatsappLink && (
-//             <button
-//               onClick={handleWhatsAppClick}
-//               className="w-full mt-3 py-3 bg-white hover:bg-white text-green-800 font-semibold rounded-xl transition flex items-center justify-center gap-2"
-//             >
-//               <MessageCircle className="h-5 w-5" />
-//               Chat on WhatsApp
-//             </button>
-//           )}
-
-//           {/* Dealer Info (optional) */}
-//           {showDealerInfo && car.postedBy && (
-//             <div className="mt-3 pt-3 border-t text-xs text-gray-500">
-//               Sold by: {car.postedBy.firstName} {car.postedBy.lastName}
-//             </div>
-//           )}
-//         </div>
-//       </Link>
-//     </motion.div>
-//   );
-// };
-
-
-
-
-
-
-
-
-
 /* eslint-disable no-unused-vars */
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -238,9 +11,42 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
-
+import { Zap, ArrowUpRight } from 'lucide-react';
 // Same check BookViewingModal uses
 const isLoggedIn = () => !!localStorage.getItem('token');
+
+
+function ChatButton({ href, icon: Icon, name, tone }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`group relative flex w-full items-center gap-3 overflow-hidden rounded-2xl px-4 py-3 text-white shadow-lg transition duration-200 hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:translate-y-0 ${tone}`}
+    >
+      {/* soft light sweep on top edge */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/15 to-transparent"
+      />
+
+      <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/20 ring-1 ring-inset ring-white/25">
+        <Icon className="h-5 w-5" strokeWidth={2.2} />
+      </span>
+
+      <span className="relative flex min-w-0 flex-col items-start leading-tight">
+        <span className="text-xs text-white/85">Chat on</span>
+        <span className="text-base font-semibold">{name}</span>
+      </span>
+
+      <ArrowUpRight
+        aria-hidden="true"
+        className="relative ml-auto h-5 w-5 shrink-0 text-white/70 transition duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-white motion-reduce:transition-none"
+      />
+    </a>
+  );
+}
+
 
 // Normalize Nigerian numbers (080..., +234..., 234...) into wa.me's required format (no +, no leading 0)
 const formatPhoneForWhatsApp = (phone) => {
@@ -268,7 +74,7 @@ const Stat = ({ icon: Icon, label, value }) => (
   </div>
 );
 
-export const CarCard = ({ car, showDealerInfo = false, onBookViewing }) => {
+export const CarCard = ({ car,  dealer, showDealerInfo = false, onBookViewing }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isFavorite, setIsFavorite] = useState(false);
@@ -289,6 +95,36 @@ export const CarCard = ({ car, showDealerInfo = false, onBookViewing }) => {
   const whatsappLink = whatsappNumber
     ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`
     : null;
+
+     const d = dealer?.dealerInfo;
+  const rawName =
+    d?.businessName ||
+    d?.firstName ||
+    [d?.firstName, d?.lastName].filter(Boolean).join(" ") ||
+    "";
+  const sellerName = rawName.toLowerCase().replace(/\s+/g, "");
+  const showaLink = sellerName
+    ? `https://api.showapp.ng/api/showa/chat/${encodeURIComponent(sellerName)}`
+    : null;
+
+  const buttons = [
+    whatsappLink && {
+      key: "whatsapp",
+      href: whatsappLink,
+      icon: MessageCircle,
+      name: "WhatsApp",
+      tone: "bg-gradient-to-br from-green-600 to-green-700 shadow-green-700/25 focus-visible:ring-green-600",
+    },
+    showaLink && {
+      key: "showa",
+      href: showaLink,
+      icon: Zap,
+      name: "Showa",
+      tone: "bg-gradient-to-br from-[#0A66C2] to-[#2C7BE5] shadow-blue-700/25 focus-visible:ring-[#0A66C2]",
+    },
+  ].filter(Boolean);
+
+  if (buttons.length === 0) return null;
 
   // The modal only opens for logged-in users. Everyone else is sent to login
   // and can return here afterwards via location.state.from.
@@ -416,17 +252,14 @@ export const CarCard = ({ car, showDealerInfo = false, onBookViewing }) => {
           </Link>
         </div>
 
-        {whatsappLink && (
-          <a
-            href={whatsappLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-green-600 py-3 font-semibold text-green-700 transition hover:bg-green-50"
-          >
-            <MessageCircle className="h-5 w-5" />
-            Chat on WhatsApp
-          </a>
-        )}
+         <div className={`mt-3 grid gap-3 ${buttons.length === 2 ? "sm:grid-cols-2" : "grid-cols-1"}`}>
+      {buttons.map(({ key, ...props }) => (
+        <ChatButton key={key} {...props} />
+      ))}
+    </div>
+
+        
+
 
         {showDealerInfo && car.postedBy && (
           <div className="mt-3 border-t pt-3 text-xs text-gray-500">
@@ -437,3 +270,25 @@ export const CarCard = ({ car, showDealerInfo = false, onBookViewing }) => {
     </motion.div>
   );
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

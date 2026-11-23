@@ -2,7 +2,7 @@
 import CarListing from '../models/carListing.js';
 import User from '../models/user.js';
 import Subscription from '../models/subscriptionSchema.js';
-
+import { activateFeatures } from '../services/subscriptionService.js';
 // Get Featured Cars (active featured subscriptions)
 export const getFeaturedCars = async (req, res) => {
   try {
@@ -187,58 +187,29 @@ export const getAllSubscriptions = async (req, res) => {
 // Manually activate any subscription
 export const activateSubscription = async (req, res) => {
   try {
-    const { id } = req.params;
-
     const subscription = await Subscription.findByIdAndUpdate(
-      id,
+      req.params.id,
       { status: 'active' },
       { new: true }
-    ).populate('user').populate('listing');
+    ).populate('user');
 
     if (!subscription) {
       return res.status(404).json({ status: 'fail', message: 'Subscription not found' });
     }
 
-    const endDate = new Date(subscription.endDate);
+    await activateFeatures(subscription);
 
-    // ACTIVATE THE CORRECT FEATURE
-    switch (subscription.type) {
-      case 'featured_listing':
-        if (subscription.listing) {
-          await CarListing.findByIdAndUpdate(subscription.listing, {
-            isFeatured: true,
-            featuredUntil: endDate,
-          });
-        }
-        break;
-
-      case 'featured_dealer':
-        await User.findByIdAndUpdate(subscription.user._id, {
-          'dealerInfo.isFeatured': true,
-          'dealerInfo.featuredUntil': endDate,
-        });
-        break;
-
-      case 'featured_service_provider':
-        await User.findByIdAndUpdate(subscription.user._id, {
-          'serviceProviderInfo.isFeatured': true,
-          'serviceProviderInfo.featuredUntil': endDate,
-        });
-        break;
-
-      case 'newest_listings_access':
-        // Nothing to do — just active
-        break;
-    }
-
-    res.status(200).json({
-      status: 'success',
-      message: 'Subscription activated manually!',
-      data: { subscription },
-    });
+    res.status(200).json({ status: 'success', message: 'Subscription activated manually!', data: { subscription } });
   } catch (err) {
     console.error(err);
     res.status(500).json({ status: 'error', message: 'Activation failed' });
   }
 };
+
+
+
+
+
+
+
 

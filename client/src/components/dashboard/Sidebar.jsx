@@ -34,6 +34,7 @@ import AppointmentsPage from '../appointment/AppointmentPage';
 import { Navigate } from 'react-router-dom';
 
 import { useNavigate } from 'react-router-dom';
+import FaceVerify from '../../pages/FaceVerify';
 
 
 // ─── view registry — every renderable panel, keyed by view id ───────────────
@@ -58,6 +59,7 @@ const VIEWS = {
   saledeals:        <PostSalePage />,
   postvideo:        <DealerVideoUploadForm/>,
   recievedOffer:     <MyReceivedOffers />,
+  face:             <FaceVerify />,
   appointment: <AppointmentsPage mode="owner" />,
   myAppointment: <AppointmentsPage mode="client" />,
 
@@ -72,11 +74,10 @@ const COMMON_ITEMS = [
 ];
 
 const COMMON_FOOTER_ITEMS = [
-  { icon: Package,        label: 'My plans',          view: 'myplans' },
-  { icon: DollarSign,     label: 'Subscribe to plans', view: 'subscription' },
+
   { icon: User,           label: 'Profile',           view: 'profile' },
   { icon: MessageCircle,  label: 'Messages',          view: 'message' },
-  { icon: Image,          label: 'Gallery',           view: 'gallery' },
+
 ];
 
 const ROLE_MENUS = {
@@ -94,6 +95,10 @@ const ROLE_MENUS = {
     { icon: Gamepad2,     label: 'Post a video',                 view: 'postvideo' },
     { icon: Gamepad2,     label: 'Sales Deals',                 view: 'saledeals' },
     { icon: MessageCircle,label: 'My received offers',    view: 'recievedOffer' },
+      { icon: Image,          label: 'Gallery',           view: 'gallery' },
+        { icon: Package,        label: 'My plans',          view: 'myplans' },
+  { icon: DollarSign,     label: 'Subscribe to plans', view: 'subscription' },
+    { icon: MessageCircle,label: 'Verify',    view: 'face' },
     ...COMMON_FOOTER_ITEMS,
   ],
 

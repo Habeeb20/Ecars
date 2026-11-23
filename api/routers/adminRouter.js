@@ -3,6 +3,7 @@ import { adminLogin, approveDealer, approveServiceProvider, blacklistUser, creat
 import { protect } from "../middleware/verifyToken.js";
 import { restrictTo } from "../middleware/verifyToken.js";
 import { getAllCarPartSellers, unverifyCarPartSeller, verifyCarPartSeller } from "../controllers/userController.js";
+import { getFaceVerificationById, listFaceVerifications, reviewFaceVerification } from "../controllers/adminFaceVerificationController.js";
 
 const adminRouter = express.Router()
 
@@ -43,6 +44,9 @@ adminRouter.post("/blacklist", blacklistUser)
 adminRouter.delete('/blacklist/:userId', unblacklistUser)
 adminRouter.get('/blacklisted', getBlacklistedUsers)
 adminRouter.get('/messages', getAllMessages)
+adminRouter.get("/face-verifications",  listFaceVerifications);
+adminRouter.get("/face-verifications/:id",  getFaceVerificationById);
+adminRouter.put("/face-verifications/:id/review",  reviewFaceVerification);
 
 
 export default adminRouter

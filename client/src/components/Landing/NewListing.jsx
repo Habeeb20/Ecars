@@ -124,6 +124,7 @@ const [showViewingModal, setShowViewingModal] = useState(false);
                   className="cursor-pointer hover:scale-105 transition-transform"
                 >
                   <CarCard car={car}
+                  dealer = {car.postedBy}
                     onBookViewing={handleBookViewing}  />
                 </div>
               ))}
