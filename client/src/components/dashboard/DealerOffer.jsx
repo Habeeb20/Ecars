@@ -112,12 +112,14 @@ const DealerOffers = () => {
           content: newMessage,
         }),
       });
+      console.log(recipient)
       const data = await res.json();
       if (data.status === 'success') {
         setMessages(prev => [...prev, data.data.message]);
         setNewMessage('');
       }
     } catch (err) {
+      console.log(err)
       toast.error('Failed to send message');
     } finally {
       setSending(false);
@@ -216,7 +218,7 @@ const DealerOffers = () => {
             <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <img src={selectedOffer?.user.avatar} alt={selectedOffer?.user.firstName} className="h-10 w-10 rounded-full" />
-                <span className="font-bold">{selectedOffer.user.firstName} {selectedOffer.user.lastName}</span>
+                <span className="font-bold">{selectedOffer?.user.firstName} {selectedOffer?.user.lastName}</span>
               </div>
               <button onClick={() => setChatOpen(false)}>
                 <X className="h-6 w-6" />
